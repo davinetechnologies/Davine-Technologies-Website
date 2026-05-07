@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Davine Admin Dashboard
+    </title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:sans-serif;
+        }
+
+        body{
+            background:#0f172a;
+            color:white;
+        }
+
+        .dashboard{
+            display:flex;
+            min-height:100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar{
+            width:260px;
+            background:#111827;
+            padding:30px;
+        }
+
+        .sidebar h2{
+            margin-bottom:40px;
+            color:#6c63ff;
+        }
+
+        .sidebar ul{
+            list-style:none;
+        }
+
+        .sidebar ul li{
+            padding:15px 0;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .sidebar ul li:hover{
+            color:#6c63ff;
+        }
+
+        /* MAIN */
+
+        .main{
+            flex:1;
+            padding:40px;
+        }
+
+        .main h1{
+            margin-bottom:30px;
+        }
+
+        /* STATS */
+
+        .stats{
+            display:flex;
+            gap:20px;
+            margin-bottom:40px;
+            flex-wrap:wrap;
+        }
+
+        .stat-card{
+            background:#111827;
+            padding:25px;
+            border-radius:14px;
+            flex:1;
+            min-width:250px;
+        }
+
+        .stat-card h3{
+            margin-bottom:10px;
+        }
+
+        .stat-card p{
+            font-size:32px;
+            font-weight:bold;
+            color:#6c63ff;
+        }
+
+        /* SEARCH */
+
+        #searchInput{
+            width:100%;
+            padding:14px;
+            border:none;
+            border-radius:10px;
+            margin-bottom:30px;
+            outline:none;
+        }
+
+        /* SECTION */
+
+        .section-title{
+            margin:40px 0 20px;
+        }
+
+        /* CARD */
+
+        .card{
+            background:#111827;
+            padding:20px;
+            border-radius:14px;
+            margin-bottom:20px;
+        }
+
+        .card h3{
+            margin-bottom:10px;
+        }
+
+        .card p{
+            margin:8px 0;
+        }
+
+        /* BUTTONS */
+
+        .btn{
+            padding:10px 16px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            margin-top:10px;
+            margin-right:10px;
+        }
+
+        .resume-btn{
+            background:#6c63ff;
+            color:white;
+            text-decoration:none;
+            display:inline-block;
+        }
+
+        .delete-btn{
+            background:red;
+            color:white;
+        }
+
+        /* CHARTS */
+
+        .charts{
+            display:flex;
+            gap:20px;
+            margin-bottom:40px;
+            flex-wrap:wrap;
+        }
+
+        .chart-card{
+            background:#111827;
+            padding:20px;
+            border-radius:14px;
+            flex:1;
+            min-width:300px;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:768px){
+
+            .dashboard{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                width:100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <h2>
+            Davine Admin
+        </h2>
+
+        <ul>
+
+            <li>
+                Dashboard
+            </li>
+
+            <li>
+                Applications
+            </li>
+
+            <li>
+                Contacts
+            </li>
+
+            <li onclick="logout()">
+                Logout
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+        <h1>
+            Admin Dashboard
+        </h1><button
+    class="btn resume-btn"
+    onclick="exportExcel()"
+>
+
+    Export Excel
+
+</button>
+
+        <!-- STATS -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <h3>
+                    Total Applications
+                </h3>
+
+                <p id="totalApplications">
+                    0
+                </p>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>
+                    Total Contacts
+                </h3>
+
+                <p id="totalContacts">
+                    0
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- CHARTS -->
+
+        <div class="charts">
+
+            <div class="chart-card">
+
+                <canvas id="applicationsChart">
+
+                </canvas>
+
+            </div>
+
+            <div class="chart-card">
+
+                <canvas id="contactsChart">
+
+                </canvas>
+
+            </div>
+
+        </div>
+
+        <!-- SEARCH -->
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search..."
+            onkeyup="searchData()"
+        >
+
+        <!-- APPLICATIONS -->
+
+        <h2 class="section-title">
+            Internship Applications
+        </h2>
+
+        <div id="applicationsContainer">
+
+        </div>
+
+        <!-- CONTACTS -->
+
+        <h2 class="section-title">
+            Contact Messages
+        </h2>
+
+        <div id="contactsContainer">
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+// ================= CHECK LOGIN =================
+
+const token =
+localStorage.getItem("adminToken");
+
+if (!token) {
+
+    alert("Please Login First");
+
+    window.location.href =
+    "login.html";
+
+}
+
+// ================= CHARTS =================
+
+let appChart;
+let contactChart;
+
+function renderCharts(
+    applications,
+    contacts
+) {
+
+    const appCount =
+    applications.length;
+
+    const contactCount =
+    contacts.length;
+
+    // DESTROY OLD CHARTS
+
+    if (appChart) {
+        appChart.destroy();
+    }
+
+    if (contactChart) {
+        contactChart.destroy();
+    }
+
+    // APPLICATION CHART
+
+    appChart = new Chart(
+
+        document.getElementById(
+            "applicationsChart"
+        ),
+
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+                    "Applications",
+                ],
+
+                datasets: [{
+
+                    data: [
+                        appCount,
+                    ],
+
+                    backgroundColor: [
+                        "#6c63ff",
+                    ],
+
+                }],
+
+            },
+
+        }
+
+    );
+
+    // CONTACT CHART
+
+    contactChart = new Chart(
+
+        document.getElementById(
+            "contactsChart"
+        ),
+
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels: [
+                    "Contacts",
+                ],
+
+                datasets: [{
+
+                    data: [
+                        contactCount,
+                    ],
+
+                    backgroundColor: [
+                        "#00c896",
+                    ],
+
+                }],
+
+            },
+
+        }
+
+    );
+
+}
+
+// ================= STATS =================
+
+function updateStats(
+    applications,
+    contacts
+) {
+
+    document.getElementById(
+        "totalApplications"
+    ).innerText =
+    applications.length;
+
+    document.getElementById(
+        "totalContacts"
+    ).innerText =
+    contacts.length;
+
+    renderCharts(
+        applications,
+        contacts
+    );
+
+}
+
+// ================= LOAD APPLICATIONS =================
+
+async function loadApplications() {
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:5000/api/applications"
+        );
+
+        const applications =
+        await response.json();
+
+        window.totalApplicationsData =
+        applications;
+
+        updateStats(
+            applications,
+            window.totalContactsData || []
+        );
+
+        const container =
+        document.getElementById(
+            "applicationsContainer"
+        );
+
+        container.innerHTML = "";
+
+        applications.forEach((app) => {
+
+            container.innerHTML += `
+
+                <div class="card">
+
+                    <h3>${app.fullName}</h3>
+
+                    <p>
+                        <strong>Email:</strong>
+                        ${app.email}
+                    </p>
+
+                    <p>
+                        <strong>Role:</strong>
+                        ${app.role}
+                    </p>
+
+                    <a
+                        href="http://localhost:5000/uploads/${app.resume}"
+                        target="_blank"
+                        class="btn resume-btn"
+                    >
+                        View Resume
+                    </a>
+
+                    <button
+                        class="btn delete-btn"
+                        onclick="deleteApplication('${app._id}')"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            `;
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+// ================= DELETE APPLICATION =================
+
+async function deleteApplication(id) {
+
+    try {
+
+        await fetch(
+            `http://localhost:5000/api/applications/${id}`,
+            {
+                method: "DELETE",
+            }
+        );
+
+        alert("Application Deleted");
+
+        loadApplications();
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+// ================= LOAD CONTACTS =================
+
+async function loadContacts() {
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:5000/api/contact"
+        );
+
+        const contacts =
+        await response.json();
+
+        window.totalContactsData =
+        contacts;
+
+        updateStats(
+            window.totalApplicationsData || [],
+            contacts
+        );
+
+        const container =
+        document.getElementById(
+            "contactsContainer"
+        );
+
+        container.innerHTML = "";
+
+        contacts.forEach((contact) => {
+
+            container.innerHTML += `
+
+                <div class="card">
+
+                    <h3>${contact.name}</h3>
+
+                    <p>
+                        <strong>Email:</strong>
+                        ${contact.email}
+                    </p>
+
+                    <p>
+                        <strong>Subject:</strong>
+                        ${contact.subject}
+                    </p>
+
+                    <p>
+                        <strong>Message:</strong>
+                        ${contact.message}
+                    </p>
+
+                    <button
+                        class="btn delete-btn"
+                        onclick="deleteContact('${contact._id}')"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            `;
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+// ================= DELETE CONTACT =================
+
+async function deleteContact(id) {
+
+    try {
+
+        await fetch(
+            `http://localhost:5000/api/contact/${id}`,
+            {
+                method: "DELETE",
+            }
+        );
+
+        alert("Message Deleted");
+
+        loadContacts();
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+// ================= SEARCH =================
+
+function searchData() {
+
+    const value =
+    document.getElementById(
+        "searchInput"
+    ).value.toLowerCase();
+
+    const cards =
+    document.querySelectorAll(".card");
+
+    cards.forEach((card) => {
+
+        if (
+            card.innerText
+            .toLowerCase()
+            .includes(value)
+        ) {
+
+            card.style.display =
+            "block";
+
+        } else {
+
+            card.style.display =
+            "none";
+
+        }
+
+    });
+
+}
+// ================= EXPORT EXCEL =================
+
+function exportExcel() {
+
+    window.open(
+
+        "http://localhost:5000/api/applications/export/excel"
+
+    );
+
+}
+// ================= LOGOUT =================
+
+function logout() {
+
+    localStorage.removeItem(
+        "adminToken"
+    );
+
+    window.location.href =
+    "login.html";
+
+}
+
+// ================= INITIAL LOAD =================
+
+loadApplications();
+
+loadContacts();
+
+</script>
+
+</body>
+
+</html>
