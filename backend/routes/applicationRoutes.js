@@ -1,3 +1,4 @@
+const axios = require("axios");
 const XLSX = require("xlsx");
 const transporter = require("../config/mailConfig");
 
@@ -62,123 +63,82 @@ router.post(
             });
 
             // ================= ADMIN EMAIL =================
+await axios.post(
+  "https://api.brevo.com/v3/smtp/email",
+  {
+    sender: {
+      name: "Davine Technologies",
+      email: process.env.EMAIL_USER,
+    },
 
-            transporter.sendMail({
+    to: [
+      {
+        email: process.env.EMAIL_USER,
+      },
+    ],
 
-                from: process.env.EMAIL_USER,
+    subject: "New Internship Application",
 
-                to: process.env.EMAIL_USER,
+    htmlContent: `
+      <h2>New Internship Application</h2>
 
-                subject: "New Internship Application",
+      <p><strong>Name:</strong> ${fullName}</p>
 
-                html: `
+      <p><strong>Email:</strong> ${email}</p>
 
-                    <h2>New Internship Application</h2>
+      <p><strong>Role:</strong> ${role}</p>
+    `,
+  },
 
-                    <p><strong>Name:</strong> ${fullName}</p>
+  {
+    headers: {
+      "api-key": process.env.BREVO_API_KEY,
+      "Content-Type": "application/json",
+    },
+  }
+);
 
-                    <p><strong>Email:</strong> ${email}</p>
-
-                    <p><strong>Role:</strong> ${role}</p>
-
-                `,
-
-                attachments: [
-                    {
-                        filename: req.file.filename,
-                        path: `uploads/${req.file.filename}`,
-                    },
-                ],
-
-            })
-            .then(() => {
-
-                console.log("Admin Email Sent");
-
-            })
-            .catch((error) => {
-
-                console.log("Admin Email Error:", error);
-
-            });
-
+console.log("Admin Email Sent");
             // ================= USER EMAIL =================
 
-            transporter.sendMail({
+  await axios.post(
+  "https://api.brevo.com/v3/smtp/email",
+  {
+    sender: {
+      name: "Davine Technologies",
+      email: process.env.EMAIL_USER,
+    },
 
-                from: process.env.EMAIL_USER,
+    to: [
+      {
+        email: email,
+      },
+    ],
 
-                to: email,
+    subject: "Application Received - Davine Technologies",
 
-                subject:
-                "Application Received - Davine Technologies",
+    htmlContent: `
+      <h2>Thank You For Applying</h2>
 
-                html: `
+      <p>Hello ${fullName},</p>
 
-                    <h2>Thank You For Applying</h2>
+      <p>
+        We have received your application for
+        <strong>${role}</strong>.
+      </p>
+    `,
+  },
 
-                    <p>Hello ${fullName},</p>
-
-                    <p>
-
-                        Thank you for applying for the
-                        <strong>${role}</strong>
-                        position at Davine Technologies.
-
-                    </p>
-
-                    <p>
-
-                        We have successfully received your
-                        application and resume.
-
-                    </p>
-
-                    <p>
-
-                        Our team will review your profile
-                        and contact you shortly.
-
-                    </p>
-
-                    <br>
-
-                    <p>
-                        Best Regards,
-                    </p>
-
-                    <p>
-                        <strong>Davine Technologies</strong>
-                    </p>
-
-                `,
-
-            })
-            .then(() => {
-
-                console.log("User Email Sent");
-
-            })
-            .catch((error) => {
-
-                console.log("User Email Error:", error);
-
-            });
-
-        } catch (error) {
-
-            console.log("ERROR:", error);
-
-            res.status(500).json({
-                success: false,
-                message: "Server Error",
-                error: error.message,
-            });
-
-        }
-
-    }
+  {
+    headers: {
+      "api-key": process.env.BREVO_API_KEY,
+      "Content-Type": "application/json",
+    },
+  }
 );
+
+console.log("User Email Sent");
+
 // ================= GET ALL APPLICATIONS =================
 
 router.get("/", async (req, res) => {
