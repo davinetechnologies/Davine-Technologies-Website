@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -44,7 +46,11 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+const uploadsPath = path.join(__dirname, "uploads");
 
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+}
 // ================= ROUTES =================
 
 const applicationRoutes =
