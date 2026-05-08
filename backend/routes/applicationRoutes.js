@@ -123,7 +123,7 @@ router.post(
 
             <p>
 
-              Thank you for applying for the
+              Applying for the
               <strong>${role}</strong>
               position at Davine Technologies.
 
