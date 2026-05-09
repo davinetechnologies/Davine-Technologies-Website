@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const axios = require("axios");
 const XLSX = require("xlsx");
 
@@ -83,6 +85,22 @@ router.post(
             <p><strong>Role:</strong> ${role}</p>
 
           `,
+          attachment: req.file
+  ? [
+      {
+        content: fs.readFileSync(
+          path.join(
+            __dirname,
+            "../uploads",
+            req.file.filename
+          ),
+          { encoding: "base64" }
+        ),
+
+        name: req.file.originalname,
+      },
+    ]
+  : [],
         },
 
         {
