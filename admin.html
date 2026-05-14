@@ -473,7 +473,7 @@ async function loadApplications() {
     try {
 
         const response = await fetch(
-            "http://localhost:5000/api/applications"
+            "https://davine-technologies-website.onrender.com/api/applications"
         );
 
         const applications =
@@ -511,9 +511,41 @@ async function loadApplications() {
                         <strong>Role:</strong>
                         ${app.role}
                     </p>
+                    <p>
+    <strong>Status:</strong>
+    ${app.status || "Pending"}
+</p>
 
+<select
+    onchange="updateStatus(
+        '${app._id}',
+        this.value
+    )"
+>
+
+    <option value="">
+        Change Status
+    </option>
+
+    <option value="Pending">
+        Pending
+    </option>
+
+    <option value="Reviewed">
+        Reviewed
+    </option>
+
+    <option value="Selected">
+        Selected
+    </option>
+
+    <option value="Rejected">
+        Rejected
+    </option>
+
+</select>
                     <a
-                        href="http://localhost:5000/uploads/${app.resume}"
+                        href="https://davine-technologies-website.onrender.com/uploads/${app.resume}"
                         target="_blank"
                         class="btn resume-btn"
                     >
@@ -547,7 +579,7 @@ async function deleteApplication(id) {
     try {
 
         await fetch(
-            `http://localhost:5000/api/applications/${id}`,
+            `https://davine-technologies-website.onrender.com/api/applications/${id}`,
             {
                 method: "DELETE",
             }
@@ -572,7 +604,7 @@ async function loadContacts() {
     try {
 
         const response = await fetch(
-            "http://localhost:5000/api/contact"
+            "https://davine-technologies-website.onrender.com/api/contact"
         );
 
         const contacts =
@@ -643,7 +675,7 @@ async function deleteContact(id) {
     try {
 
         await fetch(
-            `http://localhost:5000/api/contact/${id}`,
+            `https://davine-technologies-website.onrender.com/api/contact/${id}`,
             {
                 method: "DELETE",
             }
@@ -660,7 +692,49 @@ async function deleteContact(id) {
     }
 
 }
+// ================= UPDATE STATUS =================
 
+async function updateStatus(
+    id,
+    status
+) {
+
+    try {
+
+        await fetch(
+
+            `https://davine-technologies-website.onrender.com/api/applications/${id}`,
+
+            {
+
+                method: "PUT",
+
+                headers: {
+
+                    "Content-Type":
+                    "application/json",
+
+                },
+
+                body: JSON.stringify({
+                    status,
+                }),
+
+            }
+
+        );
+
+        alert("Status Updated");
+
+        loadApplications();
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
 // ================= SEARCH =================
 
 function searchData() {
@@ -700,7 +774,7 @@ function exportExcel() {
 
     window.open(
 
-        "http://localhost:5000/api/applications/export/excel"
+        "https://davine-technologies-website.onrender.com/api/applications/export/excel"
 
     );
 

@@ -7,7 +7,21 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Davine Technologies</title>
+<title>Davine Technologies | Modern IT & Digital Solutions Company</title>
+
+<meta name="description" content="Davine Technologies delivers modern IT solutions including cloud infrastructure, DevOps, software development, AI solutions, automation, digital transformation and enterprise technology services." />
+
+<meta name="keywords" content="Davine Technologies, DevOps, Cloud, Web Development, AWS, Automation" />
+
+<meta name="author" content="Davine Technologies" />
+
+<link rel="icon" type="image/png" href="oglogo.png">
+
+<link rel="shortcut icon" href="oglogo.png">
+
+<link rel="apple-touch-icon" href="oglogo.png">
+
+<meta property="og:image" content="https://davinetechnologies.com/oglogo.png">
 
   <!-- GOOGLE FONTS -->
 
@@ -357,7 +371,7 @@
                 Fill the form and we'll contact you shortly.
             </p>
 
-            <div id="applicationForm">
+            <form id="applicationForm">
 
                 <div class="form-group">
 
@@ -382,9 +396,7 @@
                         placeholder="Enter your email"
                         required
                     >
-
                 </div>
-
                 <div class="form-group">
 
                     <label>Role</label>
@@ -394,6 +406,13 @@
                         <option value="">
                             Select Role
                         </option>
+
+                        <option>
+                            HR Executive 
+                        </option>
+
+                        <option>
+                            Talent Acquisition Executive Intern
 
                         <option>
                             Cloud Engineer Intern
@@ -411,6 +430,25 @@
                             Backend Developer Intern
                         </option>
 
+                        <option>
+                            Java Developer Intern
+                        </option>
+                        
+                        <option>
+                            Python Developer Intern
+                        </option>
+                        
+                        <option>
+                            Data Analyst Intern
+                        </option>
+                            
+                        <option>
+                            IT Technical Support Intern
+                        </option>
+
+                        <option>
+                            Digital Marketing Executive Intern
+                        </option>
                     </select>
 
                 </div>
@@ -433,6 +471,7 @@
 >
     Submit Application
 </button>
+</form>
             </div>
 
         </div>
@@ -497,7 +536,7 @@
 
                         <strong>Email</strong><br>
 
-                        davinetechnologies@gmail.com
+                        info@davinetechnologies.com
 
                     </div>
 
@@ -536,7 +575,7 @@
                 placeholder="Enter your email"
                 required
             >
-
+            
         </div>
 
     </div>
@@ -685,6 +724,9 @@ document.getElementById("applicationSubmitBtn");
 
 submitBtn.addEventListener("click", async () => {
 
+submitBtn.disabled = true;
+
+submitBtn.innerText = "Submitting...";
     const fullName =
     document.getElementById("fullName").value;
 
@@ -697,21 +739,26 @@ submitBtn.addEventListener("click", async () => {
     const resume =
     document.getElementById("resume").files[0];
 
-    if (
-        !fullName ||
-        !email ||
-        !role ||
-        !resume
-    ) {
+if (
+    !fullName ||
+    !email ||
+    !role ||
+    !resume
+) {
 
-        Swal.fire({
-            icon: "warning",
-            title: "Missing Fields",
-            text: "Please fill all fields.",
-        });
+    submitBtn.disabled = false;
 
-        return;
-    }
+    submitBtn.innerText =
+    "Submit Application";
+
+    Swal.fire({
+        icon: "warning",
+        title: "Missing Fields",
+        text: "Please fill all fields.",
+    });
+
+    return;
+}
 
     const formData = new FormData();
 
@@ -723,7 +770,7 @@ submitBtn.addEventListener("click", async () => {
     try {
 
         const response = await fetch(
-            "http://localhost:5000/api/applications",
+            "https://davine-technologies-website.onrender.com/api/applications",
             {
                 method: "POST",
                 body: formData,
@@ -733,8 +780,13 @@ submitBtn.addEventListener("click", async () => {
 const data = await response.json();
 
 if (data.success) {
+    submitBtn.disabled = false;
+
+    submitBtn.innerText = "Submit Application";
 
     alert("Application Submitted Successfully!");
+    document.getElementById("applicationForm").reset();
+
 
 } else {
 
@@ -742,6 +794,9 @@ if (data.success) {
 
 }
     } catch (error) {
+        submitBtn.disabled = false;
+
+        submitBtn.innerText = "Submit Application";
 
         console.log(error);
 
@@ -788,7 +843,7 @@ document
     try {
 
         const response = await fetch(
-            "http://localhost:5000/api/contact",
+            "https://davine-technologies-website.onrender.com/api/contact",
             {
                 method: "POST",
 

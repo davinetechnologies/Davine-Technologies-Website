@@ -127,14 +127,7 @@ ul{
 
 .navbar{
 
-  position:fixed;
-
-  top:0;
-  left:0;
-
   width:100%;
-
-  z-index:1000;
 
   background:rgba(2,6,23,.92);
 
@@ -168,32 +161,32 @@ ul{
 
   align-items:center;
 
-  gap:14px;
+  gap:15px;
 
   flex-shrink:0;
 }
 
 .logo img{
 
-  width:76px;
+  width:80px;
 
-  height:76px;
+  height:80px;
 
   object-fit:contain;
 }
 
 .logo span{
 
-  font-size:2rem;
+  font-size:3rem;
 
-  font-weight:800;
+  font-weight:900;
 
   line-height:1;
 
   background:linear-gradient(
     90deg,
-    #ffffff,
-    #60a5fa
+    #dfdfe9,
+    #0159c5
   );
 
   -webkit-background-clip:text;
@@ -322,7 +315,7 @@ ul{
 
   max-width:1050px;
 
-  padding:0 20px;
+  padding: 80px 20px 0;
 }
 
 .hero__title{
@@ -969,4 +962,51 @@ select:focus{
     width:100%;
   }
 
+}
+@media (max-width: 768px) {
+
+    body, html{
+        overflow-x: hidden;
+    }
+
+    .section-title{
+        font-size: 2.2rem !important;
+        line-height: 1 !important;
+        letter-spacing: -2px;
+        word-break: break-word;
+    }
+
+    .navbar{
+        padding: 15px 20px;
+    }
+
+    .nav_links{
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero_content,
+    .about_content{
+        padding: 20px;
+    }
+
+    .about_grid,
+    .services_grid,
+    .stats_grid{
+        grid-template-columns: 1fr !important;
+    }
+
+    .card,
+    .about_card{
+        width: 100%;
+    }
+}
+#particles-js{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    top: 0;
+    left: 0;
 }
