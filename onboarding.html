@@ -472,6 +472,27 @@
   // ---- Payment button loading state (UI only, no backend) ----
   const payBtn = document.getElementById('pay-btn');
   payBtn.addEventListener('click', async () => {
+    const fullName = document.getElementById("intern-name").value.trim();
+const email = document.getElementById("intern-email").value.trim();
+const phone = document.getElementById("intern-mobile").value.trim();
+const role = document.getElementById("intern-role").value;
+
+const selectedPlan = document.querySelector(".plan-card.selected");
+
+const packageName =
+  selectedPlan.dataset.plan === "professional"
+    ? "Professional"
+    : "Standard";
+
+const amount =
+  selectedPlan.dataset.plan === "professional"
+    ? 249
+    : 99;
+
+if (!fullName || !email || !phone || !role) {
+    alert("Please fill all required fields.");
+    return;
+}
     if(payBtn.classList.contains('loading')) return;
     payBtn.classList.add('loading');
     payBtn.disabled = true;
@@ -479,6 +500,32 @@
     const label = payBtn.querySelector('.btn-cta-label');
     const originalLabel = label.textContent;
     label.textContent = 'Processing...';
+    const onboardingResponse = await fetch(
+  "https://davine-technologies-website.onrender.com/api/onboarding",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      fullName,
+      email,
+      phone,
+      role,
+      package: packageName,
+      amount
+    })
+  }
+);
+
+const onboardingData = await onboardingResponse.json();
+
+console.log("Onboarding Saved:", onboardingData);
+
+if (!onboardingData.success) {
+    alert("Failed to save onboarding details.");
+    return;
+}
     const response = await fetch("https://davine-technologies-website.onrender.com/api/payment/create-order", {
     method: "POST",
     headers: {
