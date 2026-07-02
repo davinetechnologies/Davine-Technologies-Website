@@ -82,6 +82,9 @@ const contactRoutes =
 const adminRoutes =
   require("./routes/adminRoutes");
 
+  const onboardingRoutes =
+   require("./routes/onboardingRoutes");
+
   const paymentRoutes =
    require("./routes/paymentRoutes");
 
@@ -99,6 +102,7 @@ app.use(
   "/api/admin",
   adminRoutes
 );
+app.use("/api/onboarding", onboardingRoutes);
 
 app.use(
   "/api/payment",

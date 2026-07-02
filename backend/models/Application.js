@@ -22,6 +22,23 @@ const applicationSchema = new mongoose.Schema({
     required: true,
   },
 
+  paymentStatus: {
+  type: String,
+  default: "Pending",
+},
+
+paymentId: {
+  type: String,
+},
+
+orderId: {
+  type: String,
+},
+
+paymentDate: {
+  type: Date,
+},
+
   createdAt: {
     type: Date,
     default: Date.now,
