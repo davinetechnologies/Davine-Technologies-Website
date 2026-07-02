@@ -4,7 +4,35 @@ exports.createOnboarding = async (req, res) => {
 
   try {
 
-    const onboarding = await Onboarding.create(req.body);
+    const {
+      fullName,
+      email,
+      phone,
+      role,
+      package,
+      amount
+    } = req.body;
+
+    if (
+      !fullName ||
+      !email ||
+      !phone ||
+      !role
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all required fields."
+      });
+    }
+
+    const onboarding = await Onboarding.create({
+      fullName,
+      email,
+      phone,
+      role,
+      package,
+      amount
+    });
 
     res.status(201).json({
       success: true,
