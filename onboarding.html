@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Complete Your Internship Onboarding | Davine Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="onboarding.css">
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <!-- LOGO -->
+
+        <a href="#" class="logo">
+
+            <img src="oglogo.png" alt="Davine Logo">
+
+            <span>Davine Technologies</span>
+
+        </a>
+
+        <!-- NAV LINKS -->
+
+        <div class="nav-links">
+
+            <a href="#about">About</a>
+
+            <a href="#services">Services</a>
+
+            <a href="#internship">Internships</a>
+
+            <a href="#contact">Contact</a>
+
+        </div>
+
+        <!-- BUTTON -->
+
+        <a href="#contact" class="nav-btn">
+
+            Get Started
+
+        </a>
+
+    </div>
+
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow b"></div>
+  <div class="wrap hero-inner">
+    <h1><span class="h1-plain">Complete Your</span> <span>Internship Onboarding</span></h1>
+    <p class="sub">Congratulations on being selected. Complete your onboarding process by submitting your details and selecting your preferred internship package.</p>
+    <div class="hero-actions">
+      <a href="#intern-form" class="btn-primary">
+        Start Onboarding
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#compare" class="btn-ghost">Compare Packages</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="num">150+</div><div class="lbl">Clients Served</div></div>
+      <div class="stat"><div class="num">300+</div><div class="lbl">Projects Delivered</div></div>
+      <div class="stat"><div class="num">4.9/5</div><div class="lbl">Client Rating</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INTERN INFORMATION ================= -->
+<section class="section" id="intern-form">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Step 01</span>
+      <h2>Intern Information</h2>
+      <p>Share your details below so we can prepare your onboarding record and Digital Internship ID Card.</p>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-head">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <h3>Personal &amp; Role Details</h3>
+          <span>Fields marked <sup style="color:#e05252">*</sup> are required</span>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field" data-field="name">
+          <label for="intern-name">Full Name<sup>*</sup></label>
+          <input type="text" id="intern-name" name="fullName" placeholder="e.g. Aarav Sharma" autocomplete="name" aria-label="Full Name" required />
+          <svg class="valid-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <span class="error-message">Please enter your full name.</span>
+        </div>
+        <div class="field" data-field="email">
+          <label for="intern-email">Email Address<sup>*</sup></label>
+          <input type="email" id="intern-email" name="email" placeholder="you@example.com" autocomplete="email" aria-label="Email Address" required />
+          <svg class="valid-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <span class="error-message">Please enter a valid email address.</span>
+        </div>
+        <div class="field" data-field="mobile">
+          <label for="intern-mobile">Mobile Number<sup>*</sup></label>
+          <input type="tel" id="intern-mobile" name="mobile" placeholder="98765 43210" autocomplete="tel" aria-label="Mobile Number" inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" required />
+          <svg class="valid-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <span class="field-hint">Please enter your active mobile number.</span>
+          <span class="error-message">Please enter a valid 10-digit mobile number.</span>
+        </div>
+        <div class="field" data-field="role">
+          <label for="intern-role">Internship Role<sup>*</sup></label>
+          <select id="intern-role" name="role" autocomplete="off" aria-label="Internship Role" required>
+            <option value="" selected disabled>Select your role</option>
+            <option>DevOps</option>
+            <option>Cloud Computing</option>
+            <option>Data Analyst</option>
+            <option>Frontend Development</option>
+            <option>Backend Development</option>
+            <option>Full Stack Development</option>
+            <option>Python Development</option>
+            <option>Java Development</option>
+            <option>HR</option>
+            <option>Business Development</option>
+            <option>Digital Marketing</option>
+            <option>UI/UX</option>
+          </select>
+          <svg class="valid-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <span class="error-message">Please select your internship role.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section class="section section-alt" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Step 02</span>
+      <h2>Choose Your Internship Package</h2>
+      <p>Select the onboarding package that best fits your internship journey. You can review the full feature comparison below.</p>
+    </div>
+
+    <div class="pricing-grid">
+
+      <!-- Standard -->
+      <div class="plan-card" data-plan="standard">
+        <span class="plan-badge standard">Standard</span>
+        <div class="plan-radio"></div>
+        <div class="plan-name">Standard Internship Package</div>
+        <p class="plan-desc">Essential onboarding &amp; ID card issuance.</p>
+        <div class="plan-price"><span class="cur">₹</span><span class="amt">99</span><span class="per">/ one-time</span></div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Digital Internship ID Card</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Official Onboarding</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Internship Verification</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>HR Communication</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Portal Registration</li>
+        </ul>
+        <button class="plan-select">Select Standard</button>
+      </div>
+
+      <!-- Professional -->
+      <div class="plan-card pro" data-plan="professional">
+        <span class="plan-badge pro">Recommended Package</span>
+        <div class="plan-radio"></div>
+        <div class="plan-name">Professional Internship Package</div>
+        <p class="plan-desc">Complete mentorship &amp; career-ready experience.</p>
+        <div class="plan-price"><span class="cur">₹</span><span class="amt">249</span><span class="per">/ one-time</span></div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Premium Digital Internship ID Card</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Official Onboarding &amp; Portal Access</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Weekly Mentorship Sessions</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>One-to-One Doubt Solving Sessions</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Project Reports &amp; Templates</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Notes &amp; Learning Resources</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Digital Internship Resource Kit</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Priority HR Support</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Career Guidance Sessions</li>
+          <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Certificate Preparation Support</li>
+        </ul>
+        <button class="plan-select">Select Professional</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMPARISON ================= -->
+<section class="section" id="compare">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Compare</span>
+      <h2>Plan Comparison</h2>
+      <p>A quick side-by-side look at what's included in each package.</p>
+    </div>
+
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Standard</th>
+            <th class="pro-col">Professional</th>
+          </tr>
+        </thead>
+        <tbody id="compare-body">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INFO + TERMS ================= -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="info-grid">
+
+      <div class="info-card notice">
+        <div class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        </div>
+        <h4>Important Information</h4>
+        <p>The onboarding fee is collected solely for internship onboarding processing and generation of your Digital Internship ID Card. This fee does not constitute a placement fee, salary deduction, or recruitment charge. All onboarding activities are conducted transparently as part of Davine Technologies' standard internship procedure.</p>
+      </div>
+
+      <div class="info-card terms">
+        <div class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7l8-4z"/></svg>
+        </div>
+        <h4>Terms &amp; Conditions</h4>
+        <ul class="terms-list">
+          <li>This is a one-time onboarding payment.</li>
+          <li>The onboarding fee is strictly non-refundable once processed.</li>
+          <li>Please verify all submitted information carefully before proceeding to payment.</li>
+          <li>The onboarding fee is applicable only to selected internship candidates.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="section" id="payment">
+  <div class="wrap">
+    <div class="cta-block">
+      <div class="selected-summary">
+        <span class="label">Selected Package</span>
+        <span class="value" id="summary-value">Standard Internship Package — ₹99</span>
+      </div>
+      <button class="btn-cta" id="pay-btn" type="button" aria-label="Complete Onboarding and Pay Securely">
+        <span class="btn-spinner" aria-hidden="true"></span>
+        <span class="btn-cta-label">Complete Onboarding &amp; Pay Securely</span>
+        <svg class="btn-cta-arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+
+      <p class="privacy-note">By proceeding, you agree to our Terms &amp; Conditions and Privacy Policy.</p>
+
+      <div class="secure-row">
+        <div class="secure-badges">
+          <span class="secure-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            SSL Secure Checkout
+          </span>
+          <span class="secure-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 2l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+            Verified Company
+          </span>
+          <span class="secure-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            Powered by Razorpay
+          </span>
+        </div>
+        <div class="pay-methods">
+          <span class="pay-chip">UPI</span>
+          <span class="pay-chip">Credit / Debit Cards</span>
+          <span class="pay-chip">Net Banking</span>
+          <span class="pay-chip">Wallets</span>
+        </div>
+        <p class="powered">256-bit encrypted transaction · Your data is never shared with third parties</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="container">
+
+        <div class="footer__top">
+
+            <div>
+
+                <h2 style="margin-bottom:16px;">
+
+                    Davine<span class="gradient-text"> Technologies</span>
+
+                </h2>
+
+                <p style="color:var(--text-secondary); max-width:420px;">
+
+                    Innovate. Build. Elevate.
+
+                </p>
+
+            </div>
+
+            <div class="footer__links">
+
+                <div class="footer__col">
+
+                    <h5>Company</h5>
+
+                    <a href="#about">About</a>
+
+                    <a href="#services">Services</a>
+
+                    <a href="#contact">Contact</a>
+
+                </div>
+
+                <div class="footer__col">
+
+                    <h5>Services</h5>
+
+                    <a href="#">Cloud</a>
+
+                    <a href="#">DevOps</a>
+
+                    <a href="#">Web Development</a>
+
+                </div>
+
+                <div class="footer__col">
+
+                    <h5>Social</h5>
+
+                    <a href="https://www.linkedin.com/company/davine-technologies/"
+                    target="_blank"
+                    class="social-btn">
+
+                        LinkedIn
+
+                    </a>
+
+                    <a href="https://www.instagram.com/davine.technologies/"
+                    target="_blank"
+                    class="social-btn">
+
+                        Instagram
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="footer__bottom">
+
+            <p>
+                © 2025 Davine Technologies. All rights reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<script>
+  // ---- Comparison table data (kept in JS to keep markup lean) ----
+  const rows = [
+    ["Digital ID Card", true, true],
+    ["Official Onboarding", true, true],
+    ["Portal Access", true, true],
+    ["Mentorship", false, true],
+    ["One-to-One Doubt Solving", false, true],
+    ["Project Reports", false, true],
+    ["Templates", false, true],
+    ["Learning Notes", false, true],
+    ["Career Guidance", false, true],
+    ["Priority Support", false, true],
+  ];
+  const yes = `<span class="yes-dot"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>`;
+  const no = `<span class="no-dot"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></span>`;
+  const tbody = document.getElementById('compare-body');
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="feature-name">${r[0]}</td>
+      <td>${r[1] ? yes : no}</td>
+      <td>${r[2] ? yes : no}</td>
+    </tr>
+  `).join('');
+
+  // ---- Plan selection ----
+  const cards = document.querySelectorAll('.plan-card');
+  const summary = document.getElementById('summary-value');
+  const planData = {
+    standard: "Standard Internship Package — ₹99",
+    professional: "Professional Internship Package — ₹249"
+  };
+
+  function selectPlan(el){
+    cards.forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    summary.textContent = planData[el.dataset.plan];
+  }
+
+  cards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      if(e.target.tagName.toLowerCase() === 'select') return;
+      selectPlan(card);
+    });
+  });
+
+  // default selection = Professional (highlighted plan)
+  selectPlan(document.querySelector('.plan-card.pro'));
+
+  // ---- Field validation (UI only, no backend) ----
+  const nameInput = document.getElementById('intern-name');
+  const emailInput = document.getElementById('intern-email');
+  const mobileInput = document.getElementById('intern-mobile');
+  const roleSelect = document.getElementById('intern-role');
+
+  const MOBILE_PATTERN = /^[6-9][0-9]{9}$/;
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setFieldState(fieldEl, isValid){
+    fieldEl.classList.remove('valid', 'invalid');
+    fieldEl.classList.add(isValid ? 'valid' : 'invalid');
+  }
+
+  function validateField(el){
+    const field = el.closest('.field');
+    if(!field) return;
+    let isValid = true;
+
+    if(el === nameInput) isValid = el.value.trim().length >= 2;
+    else if(el === emailInput) isValid = EMAIL_PATTERN.test(el.value.trim());
+    else if(el === mobileInput) isValid = MOBILE_PATTERN.test(el.value.trim());
+    else if(el === roleSelect) isValid = el.value !== '';
+
+    setFieldState(field, isValid);
+  }
+
+  // Restrict mobile number to digits only, max 10
+  mobileInput.addEventListener('input', () => {
+    mobileInput.value = mobileInput.value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  [nameInput, emailInput, mobileInput].forEach(input => {
+    input.addEventListener('blur', () => validateField(input));
+  });
+  roleSelect.addEventListener('change', () => validateField(roleSelect));
+
+  // ---- Payment button loading state (UI only, no backend) ----
+  const payBtn = document.getElementById('pay-btn');
+  payBtn.addEventListener('click', async () => {
+    if(payBtn.classList.contains('loading')) return;
+    payBtn.classList.add('loading');
+    payBtn.disabled = true;
+    payBtn.setAttribute('aria-busy', 'true');
+    const label = payBtn.querySelector('.btn-cta-label');
+    const originalLabel = label.textContent;
+    label.textContent = 'Processing...';
+    const response = await fetch("https://davine-technologies-website.onrender.com/api/payment/create-order", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    }
+});
+
+const data = await response.json();
+
+console.log(data);
+const options = {
+    key: data.key,
+    amount: data.order.amount,
+    currency: data.order.currency,
+    name: "Davine Technologies",
+    description: "Internship Onboarding",
+    order_id: data.order.id,
+
+handler: async function (response) {
+
+    console.log("Payment Success:", response);
+
+    const verifyResponse = await fetch("https://davine-technologies-website.onrender.com/api/payment/verify-payment", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
+        })
+    });
+
+    const verifyData = await verifyResponse.json();
+
+    console.log(verifyData);
+
+    alert(verifyData.message);
+
+},
+
+    theme: {
+        color: "#2563eb"
+    }
+};
+
+const rzp = new Razorpay(options);
+rzp.open();
+
+    // Simulated processing state, ready for real backend integration
+    setTimeout(() => {
+      payBtn.classList.remove('loading');
+      payBtn.disabled = false;
+      payBtn.removeAttribute('aria-busy');
+      label.textContent = originalLabel;
+    }, 1800);
+  });
+</script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+</html>
