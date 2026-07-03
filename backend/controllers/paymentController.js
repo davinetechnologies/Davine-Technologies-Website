@@ -17,6 +17,17 @@ exports.createOrder = async (req, res) => {
     };
 
     const order = await razorpay.orders.create(options);
+    const order = await razorpay.orders.create(options);
+
+console.log("========== RAZORPAY ORDER ==========");
+console.log(order);
+console.log("====================================");
+
+res.json({
+  success: true,
+  order,
+  key: process.env.RAZORPAY_KEY_ID
+});
 
     res.json({
       success: true,
