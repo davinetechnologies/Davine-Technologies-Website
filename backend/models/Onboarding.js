@@ -43,6 +43,10 @@ amount: {
     type: String,
   },
 
+  signature: {
+  type: String,
+},
+
   paymentDate: {
     type: Date,
   },

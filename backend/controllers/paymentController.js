@@ -39,11 +39,13 @@ console.log("====================================");
 };
 exports.verifyPayment = async (req, res) => {
 
-    const {
-        razorpay_order_id,
-        razorpay_payment_id,
-        razorpay_signature
-    } = req.body;
+const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    email,
+    fullName
+} = req.body;
 
     console.log("Order ID:", razorpay_order_id);
     console.log("Payment ID:", razorpay_payment_id);
@@ -55,6 +57,25 @@ const expectedSignature = crypto
     .digest("hex");
 
 if (expectedSignature === razorpay_signature) {
+  const internId =
+  "DT" +
+  new Date().getFullYear() +
+  Math.floor(1000 + Math.random() * 9000);
+
+await Onboarding.findOneAndUpdate(
+  { email: email },
+  {
+    paymentStatus: "Paid",
+    onboardingStatus: "Completed",
+    paymentId: razorpay_payment_id,
+    orderId: razorpay_order_id,
+    signature: razorpay_signature,
+    paymentDate: new Date(),
+    internId: internId
+  }
+);
+
+console.log("✅ Payment status updated successfully.");
 
     return res.json({
         success: true,
