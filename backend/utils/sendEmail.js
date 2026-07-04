@@ -7,7 +7,7 @@ const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 
 const SENDER = {
   name: process.env.BREVO_SENDER_NAME || 'Davine Technologies',
-  email: process.env.BREVO_SENDER_EMAIL || 'no-reply@davinetechnologies.com',
+  email: process.env.BREVO_SENDER_EMAIL || 'davinetechnologies@gmail.com',
 };
 
 /**
