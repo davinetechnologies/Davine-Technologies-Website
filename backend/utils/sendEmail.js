@@ -21,6 +21,8 @@ const SENDER = {
  * @param {string} params.pdfPath - absolute path to the generated PDF file
  */
 async function sendIdCardEmail({ toEmail, toName, internId, pdfPath }) {
+  console.log("📧 Sending email to:", toEmail);
+  console.log("📧 Sender Email:", SENDER.email);
   if (!toEmail) {
     throw new Error('sendIdCardEmail: toEmail is required');
   }
@@ -54,6 +56,7 @@ async function sendIdCardEmail({ toEmail, toName, internId, pdfPath }) {
       Accept: 'application/json',
     },
   });
+  console.log("✅ Email Sent Successfully");
 }
 
 function buildEmailHtml({ toName, internId }) {

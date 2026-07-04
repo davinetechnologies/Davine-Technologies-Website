@@ -76,6 +76,8 @@ async function generateIdCard(data) {
   }
 
   const outputPath = path.join(OUTPUT_DIR, `${internId}.pdf`);
+  console.log("📄 Generating PDF for:", internId);
+  console.log("📂 Output Path:", outputPath);
   const verifyUrl = `${BRAND.verifyBaseUrl}/${internId}`;
 
   // Generate the QR code as a PNG buffer up front so it's ready to embed.
@@ -98,8 +100,10 @@ async function generateIdCard(data) {
     const stream = fs.createWriteStream(outputPath);
     doc.pipe(stream);
 
-    stream.on('finish', () => resolve(outputPath));
-    stream.on('error', reject);
+stream.on("finish", () => {
+  console.log("✅ PDF Generated Successfully");
+  resolve(outputPath);
+});    stream.on('error', reject);
     doc.on('error', reject);
 
     try {
