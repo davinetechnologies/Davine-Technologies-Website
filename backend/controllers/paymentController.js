@@ -1,10 +1,7 @@
 const { generateIdCard } = require("../utils/generateIdCard");
-const sendEmail = require("../utils/sendEmail");
-const fs = require("fs");
-const path = require("path");
+const { sendIdCardEmail } = require("../utils/sendEmail");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
-const Application = require("../models/Application");
 const Onboarding = require("../models/Onboarding");
 
 const razorpay = new Razorpay({
@@ -105,52 +102,34 @@ if (!updatedIntern) {
         message: "Onboarding record not found."
     });
 }
-await generateIdCard(updatedIntern);
+const joiningDate = new Date(updatedIntern.paymentDate)
+  .toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
-const imagePath = path.join(
-    __dirname,
-    "../generated/idcards",
-    `${updatedIntern.internId}.png`
-);
-
-const imageBase64 = fs
-  .readFileSync(imagePath)
-  .toString("base64");
-  try {
-await sendEmail({
-  to: updatedIntern.email,
-
-  subject: "Welcome to Davine Technologies | Internship Registration Confirmed",
-
-  htmlContent: `
-    <h2>Welcome to Davine Technologies 🎉</h2>
-
-    <p>Dear <strong>${updatedIntern.fullName}</strong>,</p>
-
-    <p>Your onboarding payment has been successfully verified.</p>
-
-    <p>Your Internship Registration has been confirmed.</p>
-
-    <p><strong>Intern ID:</strong> ${updatedIntern.internId}</p>
-
-    <p>Your Internship Identity Card is attached with this email.</p>
-
-    <br>
-
-    <p>Regards,<br>
-    HR Department<br>
-    Davine Technologies</p>
-  `,
-
-  attachment: {
-    name: `${updatedIntern.internId}.png`,
-    content: imageBase64,
-  },
+const pdfPath = await generateIdCard({
+  fullName: updatedIntern.fullName,
+  role: updatedIntern.role,
+  internId: updatedIntern.internId,
+  joiningDate,
 });
-} catch (error) {
-    console.error("Email sending failed:", error);
-}
 
+try {
+
+  await sendIdCardEmail({
+    toEmail: updatedIntern.email,
+    toName: updatedIntern.fullName,
+    internId: updatedIntern.internId,
+    pdfPath,
+  });
+
+} catch (error) {
+
+  console.error("Email sending failed:", error);
+
+}
 console.log("✅ Payment status updated successfully.");
 
 return res.json({
