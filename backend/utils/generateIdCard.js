@@ -43,12 +43,11 @@ html = html
 console.log(html);
 const browser = await puppeteer.launch({
   headless: true,
-  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+  channel: "chrome",
   args: [
     "--no-sandbox",
     "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-    "--disable-gpu"
+    "--disable-dev-shm-usage"
   ]
 });
 
