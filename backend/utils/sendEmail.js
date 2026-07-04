@@ -4,28 +4,34 @@ const sendEmail = async ({
   to,
   subject,
   htmlContent,
+  attachment = null,
 }) => {
   try {
     await axios.post(
       "https://api.brevo.com/v3/smtp/email",
 
-      {
-        sender: {
-          name: "Davine Technologies",
-          email: process.env.EMAIL_USER,
-        },
+{
+  sender: {
+    name: "Davine Technologies",
+    email: process.env.EMAIL_USER,
+  },
 
-        to: [
-          {
-            email: to,
-          },
-        ],
+  to: [
+    {
+      email: to,
+    },
+  ],
 
-        subject,
+  subject,
 
-        htmlContent,
-      },
+  htmlContent,
 
+  ...(attachment
+    ? {
+        attachment: [attachment],
+      }
+    : {}),
+},
       {
         headers: {
           "api-key": process.env.BREVO_API_KEY,

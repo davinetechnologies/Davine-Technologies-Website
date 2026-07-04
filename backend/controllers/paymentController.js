@@ -1,3 +1,7 @@
+const { generateIdCard } = require("../utils/generateIdCard");
+const sendEmail = require("../utils/sendEmail");
+const fs = require("fs");
+const path = require("path");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const Application = require("../models/Application");
@@ -43,8 +47,7 @@ const {
     razorpay_order_id,
     razorpay_payment_id,
     razorpay_signature,
-    email,
-    fullName
+    email
 } = req.body;
 
     console.log("Order ID:", razorpay_order_id);
@@ -57,13 +60,32 @@ const expectedSignature = crypto
     .digest("hex");
 
 if (expectedSignature === razorpay_signature) {
-  const internId =
-  "DT" +
-  new Date().getFullYear() +
-  Math.floor(1000 + Math.random() * 9000);
+const lastIntern = await Onboarding
+  .findOne({ internId: { $exists: true } })
+  .sort({ createdAt: -1 });
 
-await Onboarding.findOneAndUpdate(
-  { email: email },
+let nextNumber = 1;
+
+if (lastIntern && lastIntern.internId) {
+
+  const lastNumber = parseInt(
+    lastIntern.internId.replace("DT", "")
+  );
+
+  if (!isNaN(lastNumber)) {
+    nextNumber = lastNumber + 1;
+  }
+
+}
+
+const internId =
+  "DT" + String(nextNumber).padStart(2, "0");
+
+const updatedIntern = await Onboarding.findOneAndUpdate(
+  {
+     email,
+  paymentStatus: "Pending"
+  },
   {
     paymentStatus: "Paid",
     onboardingStatus: "Completed",
@@ -72,15 +94,70 @@ await Onboarding.findOneAndUpdate(
     signature: razorpay_signature,
     paymentDate: new Date(),
     internId: internId
+  },
+  {
+    new: true
   }
 );
+if (!updatedIntern) {
+    return res.status(404).json({
+        success: false,
+        message: "Onboarding record not found."
+    });
+}
+await generateIdCard(updatedIntern);
+
+const imagePath = path.join(
+    __dirname,
+    "../generated/idcards",
+    `${updatedIntern.internId}.png`
+);
+
+const imageBase64 = fs
+  .readFileSync(imagePath)
+  .toString("base64");
+  try {
+await sendEmail({
+  to: updatedIntern.email,
+
+  subject: "Welcome to Davine Technologies | Internship Registration Confirmed",
+
+  htmlContent: `
+    <h2>Welcome to Davine Technologies 🎉</h2>
+
+    <p>Dear <strong>${updatedIntern.fullName}</strong>,</p>
+
+    <p>Your onboarding payment has been successfully verified.</p>
+
+    <p>Your Internship Registration has been confirmed.</p>
+
+    <p><strong>Intern ID:</strong> ${updatedIntern.internId}</p>
+
+    <p>Your Internship Identity Card is attached with this email.</p>
+
+    <br>
+
+    <p>Regards,<br>
+    HR Department<br>
+    Davine Technologies</p>
+  `,
+
+  attachment: {
+    name: `${updatedIntern.internId}.png`,
+    content: imageBase64,
+  },
+});
+} catch (error) {
+    console.error("Email sending failed:", error);
+}
 
 console.log("✅ Payment status updated successfully.");
 
-    return res.json({
-        success: true,
-        message: "Payment Verified Successfully ✅"
-    });
+return res.json({
+    success: true,
+    message: "Payment Verified Successfully ✅",
+    internId: internId
+});
 
 } else {
 
@@ -92,3 +169,4 @@ console.log("✅ Payment status updated successfully.");
 }
 
 };
+

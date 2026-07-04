@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Davine Technologies — Internship ID Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#2563EB;
+    --navy:#0F172A;
+    --gray:#64748B;
+    --gray-dark:#475569;
+    --gray-light:#94A3B8;
+    --white:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;}
+  body{
+    font-family:'Inter', sans-serif;
+    background:#EEF1F6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .card{
+    width:1012px;
+    height:638px;
+    background:var(--white);
+    border-radius:22px;
+    box-shadow:0 30px 60px -24px rgba(15,23,42,0.20), 0 10px 24px -14px rgba(15,23,42,0.12);
+    display:flex;
+    overflow:hidden;
+    position:relative;
+  }
+
+  /* ---------------- LEFT (WHITE) SECTION ---------------- */
+  .card-left{
+    width:692px;
+    flex-shrink:0;
+    display:flex;
+    flex-direction:column;
+    padding:40px 40px 40px 48px;
+  }
+
+  /* Header: logo + wordmark as one brand block */
+  .header{
+    display:flex;
+    align-items:center;
+    height:65px;
+  }
+  .logo{
+    height:70px;
+    width:auto;
+    max-width:180px;
+    object-fit:contain;
+    display:block;
+  }
+  .brand-text{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    height:65px;
+    margin-left:18px;
+  }
+  .brand-name{
+    font-size:30px;
+    font-weight:800;
+    color:var(--navy);
+    letter-spacing:-0.01em;
+    line-height:1;
+  }
+  .brand-subtitle{
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--gray-dark);
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    line-height:1;
+    margin-top:10px;
+  }
+
+  /* Identity block: name + role, the dominant visual element */
+  .identity{
+    margin-top:38px;
+  }
+  .intern-name{
+    font-size:52px;
+    font-weight:800;
+    color:var(--navy);
+    letter-spacing:-0.02em;
+    line-height:1;
+  }
+  .intern-role{
+    font-size:20px;
+    font-weight:600;
+    color:var(--blue);
+    letter-spacing:0.02em;
+    text-transform:uppercase;
+    line-height:1;
+    margin-top:14px;
+  }
+
+  /* Information table */
+  .info-table{
+    display:flex;
+    flex-direction:column;
+    margin-top:36px;
+  }
+  .info-row{
+    display:flex;
+    align-items:center;
+    height:20px;
+  }
+  .info-row + .info-row{
+    margin-top:22px;
+  }
+  .info-label{
+    width:172px;
+    flex-shrink:0;
+    font-size:13px;
+    font-weight:600;
+    color:var(--gray);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    line-height:1;
+  }
+  .info-value{
+    font-size:20px;
+    font-weight:700;
+    color:var(--navy);
+    letter-spacing:0.01em;
+    line-height:1;
+  }
+
+  /* Footer: website bottom-left, HR seal bottom-right, pinned to the base of the card */
+  .footer{
+    margin-top:auto;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    height:140px;
+  }
+  .footer-website{
+    font-size:14px;
+    font-weight:600;
+    color:var(--gray-dark);
+    letter-spacing:0.02em;
+    line-height:1;
+  }
+  .footer-stamp{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    height:140px;
+    justify-content:flex-end;
+  }
+  .stamp-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--gray-light);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    line-height:1;
+    margin-bottom:14px;
+  }
+  .stamp-img{
+    height:120px;
+    width:auto;
+    max-width:180px;
+    object-fit:contain;
+    display:block;
+  }
+
+  /* ---------------- RIGHT (BLUE) PANEL ---------------- */
+  .card-right{
+    width:320px;
+    flex-shrink:0;
+    background:var(--blue);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:40px 32px;
+    text-align:center;
+  }
+
+  .qr-frame{
+    width:160px;
+    height:160px;
+    background:var(--white);
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .qr-img{
+    width:130px;
+    height:130px;
+    object-fit:contain;
+    display:block;
+  }
+
+  .qr-caption{
+    font-size:12px;
+    font-weight:600;
+    color:rgba(255,255,255,0.85);
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    line-height:1;
+    margin-top:24px;
+  }
+
+  .qr-id{
+    font-size:18px;
+    font-weight:700;
+    color:var(--white);
+    letter-spacing:0.03em;
+    line-height:1;
+    margin-top:12px;
+  }
+
+  .verified-badge{
+    margin-top:24px;
+    padding:10px 28px;
+    border-radius:999px;
+    background:var(--white);
+    color:var(--blue);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    line-height:1;
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+
+    <div class="card-left">
+
+      <header class="header">
+        <img src="{{LOGO}}" alt="Davine Technologies" class="logo">
+        <div class="brand-text">
+          <div class="brand-name">Davine Technologies</div>
+          <div class="brand-subtitle">Intern Identity Card
+        </div>
+      </header>
+
+      <div class="identity">
+        <div class="intern-name">{{FULL_NAME}}</div>
+        <div class="intern-role">{{ROLE}}</div>
+      </div>
+
+      <div class="info-table">
+        <div class="info-row">
+          <span class="info-label">Intern ID</span>
+          <span class="info-value">{{INTERN_ID}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Role</span>
+          <span class="info-value">{{ROLE}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Joining Date</span>
+          <span class="info-value">{{JOINING_DATE}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Status</span>
+          <span class="info-value">Active</span>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <span class="footer-website">www.davinetechnologies.com</span>
+        <div class="footer-stamp">
+          <span class="stamp-label">HR Department</span>
+          <img src="{{STAMP}}" alt="Official HR Department Stamp" class="stamp-img">
+        </div>
+      </footer>
+
+    </div>
+
+    <div class="card-right">
+      <div class="qr-frame">
+        <img src="{{QR_CODE}}" alt="Verification QR Code" class="qr-img">
+      </div>
+      <div class="qr-caption">Verification QR</div>
+      <div class="qr-id">{{INTERN_ID}}</div>
+      <div class="verified-badge">Verified</div>
+    </div>
+
+  </div>
+
+</body>
+</html>

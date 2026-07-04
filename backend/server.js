@@ -88,6 +88,9 @@ const adminRoutes =
   const paymentRoutes =
    require("./routes/paymentRoutes");
 
+  const testRoutes = 
+  require("./routes/testRoutes");
+
 app.use(
   "/api/applications",
   applicationRoutes
@@ -107,6 +110,11 @@ app.use("/api/onboarding", onboardingRoutes);
 app.use(
   "/api/payment",
    paymentRoutes);
+
+   app.use(
+    "/api/test",
+     testRoutes); 
+    
 // ================= HEALTH ROUTE =================
 
 app.get("/", (req, res) => {
