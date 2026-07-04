@@ -4,6 +4,7 @@ const QRCode = require("qrcode");
 const puppeteer = require("puppeteer");
 
 exports.generateIdCard = async (intern) => {
+    try {
 
     console.log("Generating ID Card...");
     const qrData = `https://davinetechnologies.com/verify/${intern.internId}`;
@@ -40,8 +41,15 @@ html = html
     .replace(/{{STAMP}}/g, stampBase64);
 
 console.log(html);
-    const browser = await puppeteer.launch({
-    headless: true
+const browser = await puppeteer.launch({
+  headless: true,
+  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu"
+  ]
 });
 
 const page = await browser.newPage();
@@ -79,4 +87,8 @@ fs.writeFileSync(outputPath, html);
 
 console.log("HTML File Created Successfully");
 
+  } catch (error) {
+    console.error("Generate ID Card Error:", error);
+    throw error;
+  }
 };
