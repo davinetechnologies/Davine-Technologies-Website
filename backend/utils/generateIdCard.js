@@ -132,11 +132,11 @@ function drawCard(doc, { fullName, role, internId, joiningDate, status, qrBuffer
   const contentWidth = LEFT_WIDTH - padLeft - 40;
 
   // Header: logo + wordmark
-  const logoHeight = 58;
+  const logoHeight = 85;
   const hasLogo = safeImage(doc, BRAND.logoPath, padLeft, padTop, { height: logoHeight });
-  const textX = hasLogo ? padLeft + logoHeight * 1.4 + 18 : padLeft;
+  const textX = hasLogo ? padLeft + logoHeight + 12 : padLeft;
 
-  doc.font('Helvetica-Bold').fontSize(25).fillColor(colors.navy)
+  doc.font('Helvetica-Bold').fontSize(35).fillColor(colors.navy)
     .text(BRAND.companyName, textX, padTop + 6, { lineBreak: false });
 
   doc.font('Helvetica-Bold').fontSize(11).fillColor(colors.grayDark)
@@ -146,12 +146,12 @@ function drawCard(doc, { fullName, role, internId, joiningDate, status, qrBuffer
     });
 
   // Identity block
-  const identityY = padTop + logoHeight + 38;
-  doc.font('Helvetica-Bold').fontSize(48).fillColor(colors.navy)
+  const identityY = padTop + logoHeight + 25;
+  doc.font('Helvetica-Bold').fontSize(55).fillColor(colors.navy)
     .text(fullName, padLeft, identityY, { width: contentWidth, lineBreak: false });
 
   const roleY = identityY + 60;
-  doc.font('Helvetica-Bold').fontSize(18).fillColor(colors.blue)
+  doc.font('Helvetica-Bold').fontSize(22).fillColor(colors.blue)
     .text(role.toUpperCase(), padLeft, roleY, { characterSpacing: 0.4, lineBreak: false });
 
   // Info table
@@ -163,27 +163,27 @@ function drawCard(doc, { fullName, role, internId, joiningDate, status, qrBuffer
   ];
 
   const labelColWidth = 172;
-  let rowY = roleY + 46;
-  const rowGap = 42;
+  let rowY = roleY + 34;
+  const rowGap = 34;
 
   rows.forEach(([label, value]) => {
-    doc.font('Helvetica-Bold').fontSize(12).fillColor(colors.gray)
+    doc.font('Helvetica-Bold').fontSize(13).fillColor(colors.gray)
       .text(label, padLeft, rowY, { characterSpacing: 0.5, lineBreak: false });
-    doc.font('Helvetica-Bold').fontSize(19).fillColor(colors.navy)
+    doc.font('Helvetica-Bold').fontSize(21).fillColor(colors.navy)
       .text(String(value), padLeft + labelColWidth, rowY - 4, { lineBreak: false });
     rowY += rowGap;
   });
 
   // Footer: website (bottom-left) + HR stamp (bottom-right)
   doc.font('Helvetica-Bold').fontSize(14).fillColor(colors.grayDark)
-    .text(BRAND.websiteLabel, padLeft, CARD_HEIGHT - 40 - 14, { lineBreak: false });
+    .text(BRAND.websiteLabel, padLeft, CARD_HEIGHT - 80, { lineBreak: false });
 
-  const stampHeight = 88;
-  const stampY = CARD_HEIGHT - 40 - stampHeight;
+  const stampHeight = 130;
+  const stampY = CARD_HEIGHT - 60 - stampHeight;
   const stampCenterX = LEFT_WIDTH - 40 - 90;
 
-  doc.font('Helvetica-Bold').fontSize(11).fillColor(colors.grayLight)
-    .text('HR DEPARTMENT', stampCenterX - 30, stampY - 20, {
+  doc.font('Helvetica-Bold').fontSize(13).fillColor(colors.grayLight)
+    .text('HR DEPARTMENT', stampCenterX - 18, stampY - 26, {
       width: 180,
       align: 'center',
       characterSpacing: 0.8,
@@ -194,12 +194,12 @@ function drawCard(doc, { fullName, role, internId, joiningDate, status, qrBuffer
   // ---------------- RIGHT PANEL ----------------
   const panelCenterX = LEFT_WIDTH + PANEL_WIDTH / 2;
 
-  const qrFrameSize = 160;
+  const qrFrameSize = 180;
   const qrFrameX = panelCenterX - qrFrameSize / 2;
   const qrFrameY = 100;
   doc.roundedRect(qrFrameX, qrFrameY, qrFrameSize, qrFrameSize, 16).fill(colors.white);
 
-  const qrImgSize = 130;
+  const qrImgSize = 140;
   doc.image(qrBuffer, panelCenterX - qrImgSize / 2, qrFrameY + (qrFrameSize - qrImgSize) / 2, {
     width: qrImgSize,
     height: qrImgSize,
@@ -223,10 +223,10 @@ function drawCard(doc, { fullName, role, internId, joiningDate, status, qrBuffer
 
   const badgeText = 'VERIFIED';
   const badgeY = captionY + 56;
-  const badgeWidth = 140;
-  const badgeHeight = 32;
+  const badgeWidth = 160;
+  const badgeHeight = 39;
   doc.roundedRect(panelCenterX - badgeWidth / 2, badgeY, badgeWidth, badgeHeight, 16).fill(colors.white);
-  doc.font('Helvetica-Bold').fontSize(12).fillColor(colors.blue)
+  doc.font('Helvetica-Bold').fontSize(14).fillColor(colors.blue)
     .text(badgeText, panelCenterX - badgeWidth / 2, badgeY + 10, {
       width: badgeWidth,
       align: 'center',
