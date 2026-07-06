@@ -478,7 +478,7 @@ const phone = document.getElementById("intern-mobile").value.trim();
 const role = document.getElementById("intern-role").value;
 
 const selectedPlan = document.querySelector(".plan-card.selected");
-
+console.log("Selected Plan:", selectedPlan);
 const packageName =
   selectedPlan.dataset.plan === "professional"
     ? "Professional"
@@ -500,7 +500,8 @@ if (!fullName || !email || !phone || !role) {
     const label = payBtn.querySelector('.btn-cta-label');
     const originalLabel = label.textContent;
     label.textContent = 'Processing...';
-    const onboardingResponse = await fetch(
+console.log("Calling Onboarding API...");
+const onboardingResponse = await fetch(
   "https://davine-technologies-website.onrender.com/api/onboarding",
   {
     method: "POST",
@@ -517,6 +518,9 @@ if (!fullName || !email || !phone || !role) {
     })
   }
 );
+console.log("🚀 Returned from fetch");
+
+console.log("Status:", onboardingResponse.status);
 
 const onboardingData = await onboardingResponse.json();
 
@@ -544,33 +548,86 @@ const options = {
     description: "Internship Onboarding",
     order_id: data.order.id,
 
+    prefill: {
+        name: fullName,
+        email: email,
+        contact: phone
+    },
+
+    notes: {
+        role: role,
+        package: packageName
+    },
+
+modal: {
+    ondismiss: function () {
+        console.log("Checkout Closed");
+    }
+},
+
 handler: async function (response) {
 
-    console.log("Payment Success:", response);
+    try {
 
-    const verifyResponse = await fetch("https://davine-technologies-website.onrender.com/api/payment/verify-payment", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature
-        })
-    });
+        console.log("Payment Success:", response);
 
-    const verifyData = await verifyResponse.json();
+        const verifyResponse = await fetch(
+            "https://davine-technologies-website.onrender.com/api/payment/verify-payment",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                    email: email,
+                    fullName: fullName
+                })
+            }
+        );
 
-    console.log(verifyData);
+        const text = await verifyResponse.text();
 
-    alert(verifyData.message);
+console.log("Raw Response:", text);
+
+let verifyData;
+
+try {
+    verifyData = JSON.parse(text);
+} catch (e) {
+    console.error("JSON Parse Error:", e);
+    alert("Backend did not return valid JSON");
+    return;
+}
+
+console.log("Verify Data:", verifyData);
+
+if (verifyData.success) {
+
+    window.location.href =
+        "https://davinetechnologies.com/success.html?internId=" +
+        encodeURIComponent(verifyData.internId);
+
+} else {
+
+    alert(verifyData.message || "Verification Failed");
+
+}
+
+} catch (err) {
+
+    console.error(err);
+    alert(err.message);
+
+}
 
 },
 
-    theme: {
-        color: "#2563eb"
-    }
+theme: {
+    color: "#2563eb"
+}
 };
 
 const rzp = new Razorpay(options);
