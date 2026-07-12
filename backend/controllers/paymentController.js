@@ -11,11 +11,18 @@ const razorpay = new Razorpay({
 
 exports.createOrder = async (req, res) => {
   try {
-    const options = {
-      amount: 9900, // ₹99 (amount is in paise)
-      currency: "INR",
-      receipt: `receipt_${Date.now()}`
-    };
+const { packageName } = req.body;
+
+let amount = 100;
+
+if (packageName === "Professional") {
+    amount = 249;
+}
+const options = {
+    amount: amount * 100,
+    currency: "INR",
+    receipt: `receipt_${Date.now()}`
+};
 
     const order = await razorpay.orders.create(options);
 
