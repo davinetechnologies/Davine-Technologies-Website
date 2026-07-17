@@ -30,7 +30,7 @@ console.log("========== RAZORPAY ORDER ==========");
 console.log(order);
 console.log("====================================");
 
-    res.json({
+    res.json({    
       success: true,
       order,
       key: process.env.RAZORPAY_KEY_ID
