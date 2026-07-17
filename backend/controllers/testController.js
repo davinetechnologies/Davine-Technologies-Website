@@ -1,45 +1,46 @@
-
 const Onboarding = require("../models/Onboarding");
 const { generateIdCard } = require("../utils/generateIdCard");
 
 exports.generateTestIdCard = async (req, res) => {
+  try {
 
-    try {
+    // Latest paid intern (ya latest onboarding)
+    const intern = await Onboarding.findOne().sort({ createdAt: -1 });
 
-        const { email } = req.body;
-
-        if (!email) {
-            return res.status(400).json({
-                success: false,
-                message: "Email is required."
-            });
-        }
-
-        const intern = await Onboarding.findOne({ email });
-
-        if (!intern) {
-            return res.status(404).json({
-                success: false,
-                message: "Intern not found."
-            });
-        }
-
-        await generateIdCard(intern);
-
-        res.json({
-            success: true,
-            message: "ID Card Generated Successfully."
-        });
-
-    } catch (err) {
-
-        console.log(err);
-
-        res.status(500).json({
-            success: false,
-            message: "Server Error"
-        });
-
+    if (!intern) {
+      return res.status(404).json({
+        success: false,
+        message: "No onboarding record found."
+      });
     }
 
+    const joiningDate = new Date(
+      intern.paymentDate || intern.createdAt
+    ).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+
+    const pdfPath = await generateIdCard({
+      fullName: intern.fullName,
+      role: intern.role,
+      internId: intern.internId || "DT00",
+      joiningDate,
+    });
+
+    res.json({
+      success: true,
+      message: "ID Card Generated Successfully ✅",
+      pdfPath,
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
 };

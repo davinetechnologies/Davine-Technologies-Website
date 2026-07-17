@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    generateTestIdCard
+  generateTestIdCard,
 } = require("../controllers/testController");
 
-router.post("/id-card", generateTestIdCard);
+router.get("/id-card", generateTestIdCard);
 
 module.exports = router;
