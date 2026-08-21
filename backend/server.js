@@ -44,6 +44,7 @@ app.use(helmet());
 
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "..")));
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
 
@@ -91,6 +92,9 @@ const adminRoutes =
   const testRoutes = 
   require("./routes/testRoutes");
 
+const internCollectionRoutes =
+  require("./routes/internCollection.routes");
+
 app.use(
   "/api/applications",
   applicationRoutes
@@ -114,7 +118,11 @@ app.use(
    app.use(
     "/api/test",
      testRoutes); 
-    
+     
+  app.use(
+  "/api/intern-collection",
+  internCollectionRoutes
+);
 // ================= HEALTH ROUTE =================
 
 app.get("/", (req, res) => {
