@@ -95,6 +95,15 @@ const adminRoutes =
 const internCollectionRoutes =
   require("./routes/internCollection.routes");
 
+const authRoutes =
+  require("./routes/authRoutes");
+
+const internRoutes =
+  require("./routes/internRoutes");
+
+const weeklyProgressRoutes =
+  require("./routes/weeklyProgressRoutes");
+
 app.use(
   "/api/applications",
   applicationRoutes
@@ -118,10 +127,25 @@ app.use(
    app.use(
     "/api/test",
      testRoutes); 
-     
+
   app.use(
   "/api/intern-collection",
   internCollectionRoutes
+);
+
+app.use(
+  "/api/auth",
+  authRoutes
+);
+
+app.use(
+  "/api/interns",
+  internRoutes
+);
+
+app.use(
+  "/api/weekly-progress",
+  weeklyProgressRoutes
 );
 // ================= HEALTH ROUTE =================
 
