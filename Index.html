@@ -1,901 +1,581 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-  <meta charset="UTF-8" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<title>Davine Technologies | Modern IT & Digital Solutions Company</title>
-
-<meta name="description" content="Davine Technologies delivers modern IT solutions including cloud infrastructure, DevOps, software development, AI solutions, automation, digital transformation and enterprise technology services." />
-
-<meta name="keywords" content="Davine Technologies, DevOps, Cloud, Web Development, AWS, Automation" />
-
-<meta name="author" content="Davine Technologies" />
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Davine Technologies | Cloud, DevOps &amp; Digital Engineering</title>
+<meta name="description" content="Davine Technologies builds cloud infrastructure, DevOps automation, AI solutions and custom software for teams ready to scale engineered for the business, built by the engineers who ship it.">
 <link rel="icon" type="image/png" href="oglogo.png">
-
-<link rel="shortcut icon" href="oglogo.png">
-
-<link rel="apple-touch-icon" href="oglogo.png">
-
-<meta property="og:image" content="https://davinetechnologies.com/oglogo.png">
-
-  <!-- GOOGLE FONTS -->
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-
-  <!-- FONT AWESOME -->
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
-  <!-- CSS -->
-
-  <link rel="stylesheet" href="style.css" />
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- ================= NAVBAR ================= -->
+<!-- ============ ICON SPRITE (hidden) ============ -->
+<svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+  <defs>
+    <symbol id="icon-check" viewBox="0 0 16 16"><path d="M3 8.5 L6.5 12 L13 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 
-<nav class="navbar">
+    <symbol id="icon-cloud" viewBox="0 0 64 64"><path d="M20 44a10 10 0 0 1-2-19.8A13 13 0 0 1 43 21a9 9 0 0 1 1 17.9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M18 44h28" stroke="currentColor" stroke-width="2"/></symbol>
 
-    <div class="nav-container">
+    <symbol id="icon-devops" viewBox="0 0 64 64"><circle cx="20" cy="32" r="7" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="44" cy="18" r="6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="44" cy="46" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M26 28 L38 20 M26 36 L38 44" stroke="currentColor" stroke-width="2"/></symbol>
 
-        <!-- LOGO -->
+    <symbol id="icon-code" viewBox="0 0 64 64"><path d="M22 20 L10 32 L22 44" fill="none" stroke="currentColor" stroke-width="2"/><path d="M42 20 L54 32 L42 44" fill="none" stroke="currentColor" stroke-width="2"/><path d="M35 16 L29 48" stroke="currentColor" stroke-width="2"/></symbol>
 
-        <a href="#" class="logo">
+    <symbol id="icon-brain" viewBox="0 0 64 64"><circle cx="20" cy="22" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="44" cy="18" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="34" r="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="46" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="46" cy="46" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 25 L29 31 M40 21 L35 30 M28 38 L21 43 M36 38 L43 43" stroke="currentColor" stroke-width="2"/></symbol>
 
-            <img src="oglogo.png" alt="Davine Logo">
+    <symbol id="icon-browser" viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="40" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 24h48" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="18" r="1.6" fill="currentColor"/><circle cx="22" cy="18" r="1.6" fill="currentColor"/><circle cx="28" cy="18" r="1.6" fill="currentColor"/></symbol>
 
-            <span>DavineTechnologies</span>
+    <symbol id="icon-mobile" viewBox="0 0 64 64"><rect x="20" y="8" width="24" height="48" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M28 50h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
 
-        </a>
+    <symbol id="icon-design" viewBox="0 0 64 64"><rect x="10" y="12" width="30" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 22h18M16 30h18M16 38h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M38 40 L54 24 L58 28 L42 44 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
 
-        <!-- NAV LINKS -->
+    <symbol id="icon-shield" viewBox="0 0 64 64"><path d="M32 8 L52 16 V32 C52 44 44 52 32 56 C20 52 12 44 12 32 V16 Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="30" r="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M32 35 V41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
 
-        <div class="nav-links">
+    <symbol id="icon-data" viewBox="0 0 64 64"><path d="M10 46 V30 M20 46 V20 M30 46 V34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><ellipse cx="46" cy="18" rx="10" ry="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M36 18 V40 C36 42.2 40.5 44 46 44 C51.5 44 56 42.2 56 40 V18" stroke="currentColor" stroke-width="2" fill="none"/><path d="M36 29 C36 31.2 40.5 33 46 33 C51.5 33 56 31.2 56 29" stroke="currentColor" stroke-width="2" fill="none"/></symbol>
 
-            <a href="#about">About</a>
+    <symbol id="icon-layers" viewBox="0 0 64 64"><path d="M32 10 L54 22 L32 34 L10 22 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 32 L32 44 L54 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 42 L32 54 L54 42" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
 
-            <a href="#services">Services</a>
+    <symbol id="icon-compass" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="2"/><path d="M40 24 L34 34 L24 40 L30 30 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
 
-            <a href="#internship">Internships</a>
+    <symbol id="icon-headset" viewBox="0 0 64 64"><path d="M14 34 V30 a18 18 0 0 1 36 0 v4" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10" y="34" width="10" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><rect x="44" y="34" width="10" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M54 44 v4 a6 6 0 0 1-6 6 h-6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
 
-            <a href="#contact">Contact</a>
+    <symbol id="icon-monitor" viewBox="0 0 64 64"><path d="M8 48 L20 32 L30 40 L44 18 L56 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44" cy="18" r="3" fill="currentColor"/></symbol>
 
-        </div>
+    <symbol id="icon-scale" viewBox="0 0 64 64"><path d="M14 44 V26 M24 44 V16 M34 44 V30 M44 44 V20 M54 44 V34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 44 H56" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
 
-        <!-- BUTTON -->
+    <symbol id="icon-clock" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="2"/><path d="M32 20 V32 L40 38" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 
-        <a href="#contact" class="nav-btn">
+    <symbol id="icon-target" viewBox="0 0 64 64"><circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="32" r="11" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="32" r="2.4" fill="currentColor"/></symbol>
 
-            Get Started
+    <symbol id="icon-link" viewBox="0 0 64 64"><circle cx="24" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="40" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
 
-        </a>
+    <symbol id="icon-clipboard" viewBox="0 0 64 64"><rect x="14" y="12" width="36" height="44" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="24" y="8" width="16" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22 33 L29 40 L43 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 
+    <symbol id="icon-terminal" viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="40" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M18 26 L26 32 L18 38" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 40h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+
+    <symbol id="icon-server" viewBox="0 0 64 64"><rect x="12" y="10" width="40" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><rect x="12" y="30" width="40" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="18" r="1.8" fill="currentColor"/><circle cx="20" cy="38" r="1.8" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a href="#top" class="brand">
+      <img class="brand-mark brand-mark--nav" src="oglogo.png" alt="Davine Technologies logo" width="44" height="44">
+      <span class="brand-text brand-text--nav">Davine <span class="brand-text-accent">Technologies</span></span>
+    </a>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#about">About</a>
+      <a href="#audience">Who We Serve</a>
+      <a href="#services">Services</a>
+      <a href="#features">Capabilities</a>
+      <a href="#internship">Careers</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="#contact" class="btn btn-primary btn-small">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </div>
+</header>
 
-</nav>
+<main>
 
-<!-- ================= HERO ================= -->
-
-<section class="hero">
-
-    <div class="hero__grid"></div>
-
-    <div class="orb orb--1"></div>
-
-    <div class="orb orb--2"></div>
-
-    <div class="hero__content">
-
-        <h1 class="hero__title">
-
-            We Build the <br>
-
-            <span class="gradient-text">
-                Technology
-            </span>
-
-            <br>
-
-            That Builds You
-
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="hero-grid-bg" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="hero-copy" data-reveal>
+        <p class="eyebrow"><span class="eyebrow-dot"></span>ESTABLISHED 2025 &middot; ENTERPRISE TECHNOLOGY PARTNER</p>
+        <h1 class="hero-title">
+          <span class="line"><span>We Build Technology</span></span>
+          <span class="line"><span class="hero-title-accent">That Builds You.</span></span>
         </h1>
-
-        <p class="hero__sub">
-
-            Cloud architecture, DevOps automation & bespoke digital solutions engineered for startups and enterprises ready to scale.
-
+        <p class="hero-sub">
+          Cloud infrastructure, DevOps, custom software and AI engineered
+          for real digital transformation.
         </p>
 
-        <div class="hero__actions">
-
-            <a href="#services" class="btn btn--primary">
-                Explore Services
-            </a>
-
-            <a href="#about" class="btn btn--ghost">
-                Our Story
-            </a>
-
+        <div class="hero-actions">
+          <a href="#services" class="btn btn-primary"><span>Explore Services</span></a>
+          <a href="#contact" class="btn btn-ghost"><span>Start a Project</span> <span class="arrow">&rarr;</span></a>
         </div>
 
+        <div class="trust-row">
+          <span class="trust-item"><svg width="18" height="18" viewBox="0 0 16 16"><use href="#icon-check"></use></svg>Innovation First</span>
+          <span class="trust-item"><svg width="18" height="18" viewBox="0 0 16 16"><use href="#icon-check"></use></svg>Trusted Delivery</span>
+          <span class="trust-item"><svg width="18" height="18" viewBox="0 0 16 16"><use href="#icon-check"></use></svg>Built for Growth</span>
+        </div>
+      </div>
+
+      <div class="hero-visual" data-reveal="right">
+        <div class="visual-panel">
+          <div class="panel-grid" aria-hidden="true"></div>
+          <div class="panel-particles" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <svg class="skyline" viewBox="0 0 440 300" aria-hidden="true">
+            <defs>
+              <linearGradient id="barGrad" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0" stop-color="#121A34"/>
+                <stop offset="1" stop-color="#4C74F5"/>
+              </linearGradient>
+            </defs>
+            <line x1="20" y1="260" x2="420" y2="260" stroke="rgba(11,15,25,0.08)" stroke-width="1.5"/>
+            <g class="skyline-bar-col"><rect class="skyline-bar" x="32" y="210" width="46" height="50" rx="10" fill="url(#barGrad)"/></g>
+            <g class="skyline-bar-col"><rect class="skyline-bar" x="98" y="180" width="46" height="80" rx="10" fill="url(#barGrad)"/></g>
+            <g class="skyline-bar-col"><rect class="skyline-bar" x="164" y="150" width="46" height="110" rx="10" fill="url(#barGrad)"/></g>
+            <g class="skyline-bar-col"><rect class="skyline-bar" x="230" y="115" width="46" height="145" rx="10" fill="url(#barGrad)"/></g>
+            <g class="skyline-bar-col"><rect class="skyline-bar" x="296" y="80" width="46" height="180" rx="10" fill="url(#barGrad)"/></g>
+            <g class="skyline-bar-col"><rect class="skyline-bar" x="362" y="40" width="46" height="220" rx="10" fill="url(#barGrad)"/></g>
+            <path d="M55,210 L121,180 L187,150 L253,115 L319,80 L385,40" fill="none" stroke="#17C3D9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+            <path d="M392,24 L400,24 L400,32" fill="none" stroke="#17C3D9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+            <circle class="trend-dot" cx="385" cy="40" r="5" fill="#17C3D9"/>
+          </svg>
+
+          <div class="logo-badge">
+            <img src="oglogo.png" alt="Davine Technologies mark" width="64" height="64" loading="eager">
+          </div>
+
+          <div class="cap-chip cap-chip--1"><svg class="service-icon" style="width:18px;height:18px"><use href="#icon-cloud"></use></svg>Cloud</div>
+          <div class="cap-chip cap-chip--2"><svg class="service-icon" style="width:18px;height:18px"><use href="#icon-devops"></use></svg>DevOps</div>
+          <div class="cap-chip cap-chip--3"><svg class="service-icon" style="width:18px;height:18px"><use href="#icon-brain"></use></svg>AI &amp; ML</div>
+          <div class="cap-chip cap-chip--4"><svg class="service-icon" style="width:18px;height:18px"><use href="#icon-shield"></use></svg>Security</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="about" id="about">
+    <div class="section-inner about-grid">
+      <div class="about-head" data-reveal="left">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>WHO WE ARE</p>
+        <h2 class="section-title">Turning complex tech<br>into competitive advantage.</h2>
+        <p class="section-lead">
+          Davine Technologies is a technology company built for cloud, DevOps and
+          modern software engineering delivering scalable, secure products
+          in language your board and your engineers both trust.
+        </p>
+        <div class="about-note">
+          <strong>Established 2025.</strong> Founded by engineers and operators who've
+          shipped for global enterprises now under one roof.
+        </div>
+      </div>
+
+      <div class="about-pillars" data-reveal="right">
+        <div class="pillar-card">
+          <span class="pillar-icon"><svg class="service-icon"><use href="#icon-target"></use></svg></span>
+          <h3>Precision</h3>
+          <p>Every solution is engineered for long&#8209;term scalability, not a quick patch.</p>
+        </div>
+        <div class="pillar-card">
+          <span class="pillar-icon"><svg class="service-icon"><use href="#icon-link"></use></svg></span>
+          <h3>Partnership</h3>
+          <p>We embed with your team and operate like your own in&#8209;house engineers.</p>
+        </div>
+        <div class="pillar-card">
+          <span class="pillar-icon"><svg class="service-icon"><use href="#icon-clipboard"></use></svg></span>
+          <h3>Accountability</h3>
+          <p>Clear reporting, honest timelines and outcomes you can take straight to the board.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHO WE SERVE ============ -->
+  <section class="audience on-dark" id="audience">
+    <div class="section-inner">
+      <div class="audience-head" data-reveal>
+        <p class="eyebrow"><span class="eyebrow-dot"></span>BUILT FOR TWO AUDIENCES</p>
+        <h2 class="section-title">One team. Two languages:<br>business and engineering.</h2>
+        <p class="section-lead">Framed for the people deciding. Delivered by the people building.</p>
+      </div>
+
+      <div class="audience-grid">
+        <article class="audience-card" data-reveal="left">
+          <img class="audience-photo" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?fm=jpg&amp;q=80&amp;w=240&amp;auto=format&amp;fit=crop" alt="Business leader in a professional setting" loading="lazy">
+          <h3>For Business Leaders</h3>
+          <p>Strategic clarity on cost, risk and speed to market delivered in plain business terms.</p>
+          <ul class="audience-list">
+            <li><svg width="16" height="16" viewBox="0 0 16 16"><use href="#icon-check"></use></svg>Transparent cost &amp; ROI reporting</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16"><use href="#icon-check"></use></svg>Fixed milestones, no scope surprises</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16"><use href="#icon-check"></use></svg>A single point of accountability</li>
+          </ul>
+        </article>
+
+        <article class="audience-card" data-reveal="right">
+          <img class="audience-photo" src="https://images.unsplash.com/photo-1580894912989-0bc892f4efd0?fm=jpg&amp;q=80&amp;w=240&amp;auto=format&amp;fit=crop" alt="Software engineer working on a laptop" loading="lazy">
+          <h3>For Engineering Teams</h3>
+          <p>Real architecture reviews, clean handovers and tooling your team will actually want to maintain.</p>
+          <ul class="audience-list">
+            <li><svg width="16" height="16" viewBox="0 0 16 16"><use href="#icon-check"></use></svg>Infrastructure as Code, documented</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16"><use href="#icon-check"></use></svg>Code reviews from senior engineers</li>
+            <li><svg width="16" height="16" viewBox="0 0 16 16"><use href="#icon-check"></use></svg>CI/CD pipelines built for your stack</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section class="stats" id="people">
+    <div class="section-inner">
+      <div class="stats-row" data-reveal>
+        <div class="stat" style="--i:0"><span class="stat-num" data-target="150" data-suffix="+">0</span><span class="stat-label">PROJECTS SHIPPED</span></div>
+        <div class="stat" style="--i:1"><span class="stat-num" data-target="40" data-suffix="+">0</span><span class="stat-label">ENGINEERS </span></div>
+        <div class="stat" style="--i:2"><span class="stat-num" data-target="98.9" data-suffix="%">0</span><span class="stat-label">AVG. UPTIME</span></div>
+        <div class="stat" style="--i:3"><span class="stat-num" data-target="24" data-suffix="/7">0</span><span class="stat-label">INCIDENT RESPONSE</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="services" id="services">
+    <div class="section-inner">
+      <div class="services-head" data-reveal>
+        <p class="eyebrow"><span class="eyebrow-dot"></span>WHAT WE DO</p>
+        <h2 class="section-title">Services built for<br>scale &amp; speed.</h2>
+        <p class="section-lead">End-to-end technology delivery, from architecture to production and everything in between.</p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card" data-reveal style="--i:0">
+          <div class="service-card-top"><span class="module-tag">CLOUD</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-cloud"></use></svg></span></div>
+          <h3>Cloud Computing &amp; Migration</h3>
+          <p>Multi&#8209;cloud infrastructure on AWS, Azure and Google Cloud built to scale.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:1">
+          <div class="service-card-top"><span class="module-tag">DEVOPS</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-devops"></use></svg></span></div>
+          <h3>DevOps &amp; Infrastructure Automation</h3>
+          <p>CI/CD, Kubernetes, Docker and Infrastructure as Code shipped safely, daily.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:2">
+          <div class="service-card-top"><span class="module-tag">AI / ML</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-brain"></use></svg></span></div>
+          <h3>AI &amp; Machine Learning</h3>
+          <p>Applied AI and ML models that turn data into decisions.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:3">
+          <div class="service-card-top"><span class="module-tag">SOFTWARE</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-code"></use></svg></span></div>
+          <h3>Software Development</h3>
+          <p>Custom software, QA and product development built to outlast release day.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:4">
+          <div class="service-card-top"><span class="module-tag">WEB</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-browser"></use></svg></span></div>
+          <h3>Web Development</h3>
+          <p>Fast, accessible web apps engineered for conversion and scale.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:5">
+          <div class="service-card-top"><span class="module-tag">MOBILE</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-mobile"></use></svg></span></div>
+          <h3>Mobile App Development</h3>
+          <p>Native and cross&#8209;platform apps that feel instant on iOS and Android.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:0">
+          <div class="service-card-top"><span class="module-tag">DESIGN</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-design"></use></svg></span></div>
+          <h3>UI/UX Design</h3>
+          <p>Interfaces designed around real workflows, validated before launch.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:1">
+          <div class="service-card-top"><span class="module-tag">SECURITY</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-shield"></use></svg></span></div>
+          <h3>Cybersecurity</h3>
+          <p>Zero&#8209;trust architecture, cloud security and continuous threat monitoring.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:2">
+          <div class="service-card-top"><span class="module-tag">DATA</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-data"></use></svg></span></div>
+          <h3>Data Engineering &amp; Analytics</h3>
+          <p>Pipelines and warehouses that turn data into one source of truth.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:3">
+          <div class="service-card-top"><span class="module-tag">API</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-layers"></use></svg></span></div>
+          <h3>API &amp; SaaS Development</h3>
+          <p>Documented APIs and multi&#8209;tenant SaaS platforms, built to integrate.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:4">
+          <div class="service-card-top"><span class="module-tag">STRATEGY</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-compass"></use></svg></span></div>
+          <h3>IT Consulting &amp; Digital Transformation</h3>
+          <p>Pragmatic roadmaps that modernize legacy systems without stalling the business.</p>
+        </article>
+
+        <article class="service-card" data-reveal style="--i:5">
+          <div class="service-card-top"><span class="module-tag">SUPPORT</span><span class="service-icon-wrap"><svg class="service-icon"><use href="#icon-headset"></use></svg></span></div>
+          <h3>Managed IT Services &amp; Support</h3>
+          <p>Proactive monitoring and support that keeps systems healthy, always.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAPABILITIES ============ -->
+  <section class="features" id="features">
+    <div class="section-inner">
+      <div class="features-head" data-reveal>
+        <p class="eyebrow"><span class="eyebrow-dot"></span>ADVANCED CAPABILITIES</p>
+        <h2 class="section-title">Built-in from day one,<br>not bolted on later.</h2>
+        <p class="section-lead">The engineering standards every Davine project ships with, by default.</p>
+      </div>
+
+      <div class="features-grid">
+        <article class="feature-card" data-reveal style="--i:0">
+          <span class="feature-icon-wrap"><svg class="feature-icon"><use href="#icon-monitor"></use></svg></span>
+          <h3>Real-time Monitoring</h3>
+          <p>Live dashboards and alerts before customers notice.</p>
+        </article>
+
+        <article class="feature-card" data-reveal style="--i:1">
+          <span class="feature-icon-wrap"><svg class="feature-icon"><use href="#icon-shield"></use></svg></span>
+          <h3>Enterprise Security</h3>
+          <p>Zero&#8209;trust access and encrypted secrets, by default.</p>
+        </article>
+
+        <article class="feature-card" data-reveal style="--i:2">
+          <span class="feature-icon-wrap"><svg class="feature-icon"><use href="#icon-scale"></use></svg></span>
+          <h3>Auto-Scaling</h3>
+          <p>Infrastructure that grows with demand, not headroom.</p>
+        </article>
+
+        <article class="feature-card" data-reveal style="--i:3">
+          <span class="feature-icon-wrap"><svg class="feature-icon"><use href="#icon-clock"></use></svg></span>
+          <h3>24/7 Support</h3>
+          <p>An on&#8209;call engineer who already knows your stack.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAREERS ============ -->
+  <section class="careers" id="internship">
+    <div class="section-inner">
+      <div class="careers-head" data-reveal>
+        <p class="eyebrow"><span class="eyebrow-dot"></span>JOIN THE TEAM</p>
+        <h2 class="section-title">Launch your career<br>with Davine.</h2>
+        <p class="section-lead" style="margin:0 auto;">Work on real client projects, with modern tooling and engineers who'll actually review your code.</p>
+      </div>
+
+      <div class="careers-grid">
+        <article class="career-card" data-reveal style="--i:0">
+          <span class="career-icon"><svg class="service-icon"><use href="#icon-cloud"></use></svg></span>
+          <span class="career-badge">Internship</span>
+          <h3>Cloud Engineer</h3>
+          <p>Provision and manage multi-cloud environments alongside senior engineers.</p>
+          <button type="button" class="career-apply" data-role="Cloud Engineer Intern">Apply now <span class="arrow">&rarr;</span></button>
+        </article>
+
+        <article class="career-card" data-reveal style="--i:1">
+          <span class="career-icon"><svg class="service-icon"><use href="#icon-devops"></use></svg></span>
+          <span class="career-badge">Internship</span>
+          <h3>DevOps</h3>
+          <p>Build CI/CD pipelines and automate infrastructure with Docker and Kubernetes.</p>
+          <button type="button" class="career-apply" data-role="DevOps Engineer Intern">Apply now <span class="arrow">&rarr;</span></button>
+        </article>
+
+        <article class="career-card" data-reveal style="--i:2">
+          <span class="career-icon"><svg class="service-icon"><use href="#icon-layers"></use></svg></span>
+          <span class="career-badge">Internship</span>
+          <h3>Full Stack</h3>
+          <p>Ship real features end-to-end, from database schema to production UI.</p>
+          <button type="button" class="career-apply" data-role="Full Stack Developer Intern">Apply now <span class="arrow">&rarr;</span></button>
+        </article>
+
+        <article class="career-card" data-reveal style="--i:3">
+          <span class="career-icon"><svg class="service-icon"><use href="#icon-browser"></use></svg></span>
+          <span class="career-badge">Internship</span>
+          <h3>Frontend</h3>
+          <p>Craft fast, accessible interfaces that clients' customers use every day.</p>
+          <button type="button" class="career-apply" data-role="Frontend Developer Intern">Apply now <span class="arrow">&rarr;</span></button>
+        </article>
+
+        <article class="career-card" data-reveal style="--i:4">
+          <span class="career-icon"><svg class="service-icon"><use href="#icon-server"></use></svg></span>
+          <span class="career-badge">Internship</span>
+          <h3>Backend</h3>
+          <p>Design APIs and services that hold up under real production load.</p>
+          <button type="button" class="career-apply" data-role="Backend Developer Intern">Apply now <span class="arrow">&rarr;</span></button>
+        </article>
+
+        <article class="career-card" data-reveal style="--i:5">
+          <span class="career-icon"><svg class="service-icon"><use href="#icon-terminal"></use></svg></span>
+          <span class="career-badge">Internship</span>
+          <h3>Python</h3>
+          <p>Write production Python for automation, APIs and data pipelines.</p>
+          <button type="button" class="career-apply" data-role="Python Developer Intern">Apply now <span class="arrow">&rarr;</span></button>
+        </article>
+
+        <article class="career-card" data-reveal style="--i:0">
+          <span class="career-icon"><svg class="service-icon"><use href="#icon-brain"></use></svg></span>
+          <span class="career-badge">Internship</span>
+          <h3>AI</h3>
+          <p>Prototype and evaluate applied ML models on real client datasets.</p>
+          <button type="button" class="career-apply" data-role="AI Intern">Apply now <span class="arrow">&rarr;</span></button>
+        </article>
+
+        <article class="career-card" data-reveal style="--i:1">
+          <span class="career-icon"><svg class="service-icon"><use href="#icon-data"></use></svg></span>
+          <span class="career-badge">Internship</span>
+          <h3>Data Analytics</h3>
+          <p>Turn raw data into dashboards and insights business teams actually use.</p>
+          <button type="button" class="career-apply" data-role="Data Analyst Intern">Apply now <span class="arrow">&rarr;</span></button>
+        </article>
+      </div>
+
+      <form class="form-panel apply-panel" id="applyForm" data-reveal novalidate>
+        <div class="form-panel-head">
+          <span class="module-tag">APPLICATION</span>
+          <h3>Apply now</h3>
+        </div>
+
+        <div class="field">
+          <label for="fullName">Full name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Your full name" required>
+        </div>
+
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" placeholder="you@email.com" required>
+        </div>
+
+        <div class="field">
+          <label for="role">Role</label>
+          <select id="role" name="role" required>
+            <option value="" disabled selected>Select role</option>
+            <option>Cloud Engineer Intern</option>
+            <option>DevOps Engineer Intern</option>
+            <option>Full Stack Developer Intern</option>
+            <option>Frontend Developer Intern</option>
+            <option>Backend Developer Intern</option>
+            <option>Python Developer Intern</option>
+            <option>AI Intern</option>
+            <option>Data Analyst Intern</option>
+            <option>IT Technical Support Intern</option>
+            <option>Digital Marketing Executive Intern</option>
+            <option>Talent Acquisition Executive Intern</option>
+            <option>HR Executive</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="resume">Resume (PDF)</label>
+          <div class="file-drop" id="fileDrop">
+            <input type="file" id="resume" name="resume" accept="application/pdf">
+            <span id="fileDropLabel">Drop file or click to browse</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block"><span>Submit application</span></button>
+        <p class="form-note" id="applyNote" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact" id="contact">
+    <div class="section-inner contact-grid">
+      <div class="contact-copy" data-reveal="left">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>CONTACT US</p>
+        <h2 class="section-title">Let's build something<br>remarkable.</h2>
+
+        <div class="contact-detail">
+          <span class="contact-label">General Inquiries</span>
+          <a href="mailto:info@davinetechnologies.com">info@davinetechnologies.com</a>
+        </div>
+        <div class="contact-detail">
+          <span class="contact-label">Careers</span>
+          <a href="mailto:careers@davinetechnologies.com">careers@davinetechnologies.com</a>
+        </div>
+
+        <div class="socials">
+          <a href="https://www.linkedin.com/company/davine-technologies/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://www.instagram.com/davine.technologies/" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+
+      <form class="form-panel" id="contactForm" data-reveal="right" novalidate>
+        <div class="form-panel-head">
+          <span class="module-tag">MESSAGE</span>
+          <h3>Send a message</h3>
+        </div>
+        <div class="field">
+          <label for="cName">Name</label>
+          <input type="text" id="cName" name="name" placeholder="Your name" required>
+        </div>
+        <div class="field">
+          <label for="cEmail">Email</label>
+          <input type="email" id="cEmail" name="email" placeholder="you@email.com" required>
+        </div>
+        <div class="field">
+          <label for="cSubject">Subject</label>
+          <input type="text" id="cSubject" name="subject" placeholder="What's this about?" required>
+        </div>
+        <div class="field">
+          <label for="cMessage">Message</label>
+          <textarea id="cMessage" name="message" rows="4" placeholder="Tell us about your project" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block"><span>Send message</span></button>
+        <p class="form-note" id="contactNote" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="section-inner footer-grid">
+    <div class="footer-brand">
+      <span class="brand" style="display:flex;align-items:center;gap:10px;">
+        <img class="brand-mark" src="oglogo.png" alt="Davine Technologies logo" width="48" height="48">
+        <span class="brand-text">Davine <span class="brand-text-accent">Technologies</span></span>
+      </span>
+      <p>Innovate. Build. Elevate.</p>
     </div>
 
-</section>
-
-<!-- ================= ABOUT ================= -->
-
-<section class="section about" id="about">
-
-    <div class="container about__inner">
-
-        <!-- LEFT -->
-
-        <div class="about__visual">
-
-            <div class="about__card">
-
-                <div class="card-accent"></div>
-
-                <div class="card-icon">
-                    <i class="fa-solid fa-layer-group"></i>
-                </div>
-
-                <h3 style="font-size:2rem; margin-bottom:10px;">
-                    Est. 2025
-                </h3>
-
-                <p style="color:var(--text-secondary);">
-
-                    Born in the cloud era, built for what's next.
-
-                </p>
-
-            </div>
-
-        </div>
-
-        <!-- RIGHT -->
-
-        <div class="about__text">
-
-            <div class="section-label">
-                WHO WE ARE
-            </div>
-
-            <h2 class="section-title">
-
-                Turning complex tech into
-
-                <span class="gradient-text">
-                    competitive advantage
-                </span>
-
-            </h2>
-
-            <p class="about__para">
-
-                Davine Technologies is a premium IT startup focused on cloud infrastructure, DevOps automation, modern web applications and digital transformation.
-
-            </p>
-
-            <p class="about__para">
-
-                We help startups and enterprises build scalable, secure and future-ready digital products.
-
-            </p>
-
-            <div class="about__pillars">
-
-                <div class="pillar">
-
-                    <i class="fa-regular fa-circle-dot"></i>
-
-                    <span>
-
-                        <strong>Precision</strong> Every solution engineered for long-term scalability.
-
-                    </span>
-
-                </div>
-
-                <div class="pillar">
-
-                    <i class="fa-regular fa-handshake"></i>
-
-                    <span>
-
-                        <strong>Partnership</strong> We work like your internal team.
-
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#internship">Careers</a>
+      <a href="#contact">Contact</a>
     </div>
 
-</section>
-
-<!-- ================= SERVICES ================= -->
-
-<section class="section services" id="services">
-
-    <div class="container">
-
-        <div class="section-header">
-
-            <div class="section-label">
-                WHAT WE DO
-            </div>
-
-            <h2 class="section-title">
-
-                Services built for
-
-                <span class="gradient-text">
-                    scale & speed
-                </span>
-
-            </h2>
-
-            <p class="section-sub">
-
-                End-to-end technology services from strategy to deployment.
-
-            </p>
-
-        </div>
-
-        <div class="services__grid">
-
-            <!-- CARD 1 -->
-
-            <div class="service-card">
-
-                <div class="service-card__icon">
-                    <i class="fa-solid fa-cloud"></i>
-                </div>
-
-                <h3 class="service-card__title">
-                    Cloud Solutions
-                </h3>
-
-                <p class="service-card__desc">
-
-                    Multi-cloud infrastructure solutions on AWS, Azure & GCP with high scalability.
-
-                </p>
-
-            </div>
-
-            <!-- CARD 2 -->
-
-            <div class="service-card">
-
-                <div class="service-card__icon">
-                    <i class="fa-solid fa-gears"></i>
-                </div>
-
-                <h3 class="service-card__title">
-                    DevOps & Automation
-                </h3>
-
-                <p class="service-card__desc">
-
-                    CI/CD pipelines, Kubernetes, Docker and Infrastructure as Code.
-
-                </p>
-
-            </div>
-
-            <!-- CARD 3 -->
-
-            <div class="service-card">
-
-                <div class="service-card__icon">
-                    <i class="fa-solid fa-code"></i>
-                </div>
-
-                <h3 class="service-card__title">
-                    Software Development
-                </h3>
-
-                <p class="service-card__desc">
-
-                    Custom software, scalable web platforms and enterprise grade digital products.
-
-                </p>
-
-            </div>
-
-        </div>
-
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="#services">Cloud &amp; DevOps</a>
+      <a href="#services">AI &amp; Data</a>
+      <a href="#services">Web &amp; Mobile</a>
+      <a href="#services">Security</a>
     </div>
 
-</section>
-
-<!-- ================= INTERNSHIP ================= -->
-
-<section class="section internship" id="internship">
-
-    <div class="container internship__inner">
-
-        <!-- LEFT -->
-
-        <div>
-
-            <div class="section-label">
-                JOIN THE TEAM
-            </div>
-
-            <h2 class="section-title">
-
-                Launch your career with
-
-                <span class="gradient-text">
-                    Davine
-                </span>
-
-            </h2>
-
-            <p class="about__para">
-
-                Work on real-world projects with modern technologies and industry experts.
-
-            </p>
-
-        </div>
-
-        <!-- RIGHT -->
-
-        <div class="form-card">
-
-            <h3>
-                Apply Now
-            </h3>
-
-            <p>
-                Fill the form and we'll contact you shortly.
-            </p>
-
-            <form id="applicationForm">
-
-                <div class="form-group">
-
-                    <label>Full Name</label>
-
-                    <input
-                        type="text"
-                        id="fullName"
-                        placeholder="Enter your name"
-                        required
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <label>Email Address</label>
-
-                    <input
-                        type="email"
-                        id="applicationEmail"
-                        placeholder="Enter your email"
-                        required
-                    >
-                </div>
-                <div class="form-group">
-
-                    <label>Role</label>
-
-                    <select id="role" required>
-
-                        <option value="">
-                            Select Role
-                        </option>
-
-                        <option>
-                            HR Executive 
-                        </option>
-
-                        <option>
-                            Talent Acquisition Executive Intern
-
-                        <option>
-                            Cloud Engineer Intern
-                        </option>
-
-                        <option>
-                            DevOps Engineer Intern
-                        </option>
-
-                        <option>
-                            Frontend Developer Intern
-                        </option>
-
-                        <option>
-                            Backend Developer Intern
-                        </option>
-
-                        <option>
-                            Java Developer Intern
-                        </option>
-                        
-                        <option>
-                            Python Developer Intern
-                        </option>
-                        
-                        <option>
-                            Data Analyst Intern
-                        </option>
-                            
-                        <option>
-                            IT Technical Support Intern
-                        </option>
-
-                        <option>
-                            Digital Marketing Executive Intern
-                        </option>
-                    </select>
-
-                </div>
-<div class="form-group">
-
-    <label>Upload Resume (PDF)</label>
-
-    <input
-        type="file"
-        id="resume"
-        accept=".pdf"
-        required
-    >
-
-</div>
-<button
-    type="button"
-    id="applicationSubmitBtn"
-    class="btn btn--primary btn--full"
->
-    Submit Application
-</button>
-</form>
-            </div>
-
-        </div>
-
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="mailto:info@davinetechnologies.com">info@davinetechnologies.com</a>
+      <a href="mailto:careers@davinetechnologies.com">careers@davinetechnologies.com</a>
+      <a href="https://www.linkedin.com/company/davine-technologies/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.instagram.com/davine.technologies/" target="_blank" rel="noopener">Instagram</a>
     </div>
-
-</section>
-
-<!-- ================= CONTACT ================= -->
-
-<section class="section contact" id="contact">
-
-    <div class="container">
-
-        <div class="section-header">
-
-            <div class="section-label">
-                CONTACT US
-            </div>
-
-            <h2 class="section-title">
-
-                Let's build something
-
-                <span class="gradient-text">
-                    remarkable
-                </span>
-
-            </h2>
-
-        </div>
-
-        <div class="contact__inner">
-
-            <!-- LEFT -->
-
-            <div>
-
-                <div class="contact-detail">
-
-                    <div class="contact-detail__icon">
-                        <i class="fa-solid fa-location-dot"></i>
-                    </div>
-
-                    <div>
-
-                        <strong>Location</strong><br>
-
-                        Mumbai, Maharashtra, India
-
-                    </div>
-
-                </div>
-
-                <div class="contact-detail">
-
-                    <div class="contact-detail__icon">
-                        <i class="fa-solid fa-envelope"></i>
-                    </div>
-
-                    <div>
-
-                        <strong>Email</strong><br>
-
-                        info@davinetechnologies.com
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- RIGHT -->
-
-            <div class="contact__form-wrap">
-
-                <form id="contactForm">
-
-    <div class="form-row">
-
-        <div class="form-group">
-
-            <label>Name</label>
-
-            <input
-                type="text"
-                id="contactName"
-                placeholder="Enter your name"
-                required
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label>Email</label>
-
-            <input
-                type="email"
-                id="contactEmail"
-                placeholder="Enter your email"
-                required
-            >
-            
-        </div>
-
-    </div>
-
-    <div class="form-group">
-
-        <label>Subject</label>
-
-        <input
-            type="text"
-            id="contactSubject"
-            placeholder="Enter subject"
-            required
-        >
-
-    </div>
-
-    <div class="form-group">
-
-        <label>Message</label>
-
-        <textarea
-            rows="6"
-            id="contactMessage"
-            placeholder="Write your message"
-            required
-        ></textarea>
-
-    </div>
-
-   <button
-    type="button"
-    id="contactSubmitBtn"
-    class="btn btn--primary btn--full"
->
-
-        Send Message
-
-    </button>
-
-</form>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ================= FOOTER ================= -->
-
-<footer class="footer">
-
-    <div class="container">
-
-        <div class="footer__top">
-
-            <div>
-
-                <h2 style="margin-bottom:16px;">
-
-                    Davine<span class="gradient-text">Technologies</span>
-
-                </h2>
-
-                <p style="color:var(--text-secondary); max-width:420px;">
-
-                    Innovate. Build. Elevate.
-
-                </p>
-
-            </div>
-
-            <div class="footer__links">
-
-                <div class="footer__col">
-
-                    <h5>Company</h5>
-
-                    <a href="#about">About</a>
-
-                    <a href="#services">Services</a>
-
-                    <a href="#contact">Contact</a>
-
-                </div>
-
-                <div class="footer__col">
-
-                    <h5>Services</h5>
-
-                    <a href="#">Cloud</a>
-
-                    <a href="#">DevOps</a>
-
-                    <a href="#">Web Development</a>
-
-                </div>
-
-                <div class="footer__col">
-
-                    <h5>Social</h5>
-
-                    <a href="https://www.linkedin.com/company/davine-technologies/"
-                    target="_blank"
-                    class="social-btn">
-
-                        LinkedIn
-
-                    </a>
-
-                    <a href="https://www.instagram.com/davine.technologies/"
-                    target="_blank"
-                    class="social-btn">
-
-                        Instagram
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="footer__bottom">
-
-            <p>
-                © 2025 Davine Technologies. All rights reserved.
-            </p>
-
-        </div>
-
-    </div>
-
+  </div>
+  <div class="section-inner footer-bottom">
+    <span>&copy; 2026 Davine Technologies. All rights reserved.</span>
+    <span></span>
+  </div>
 </footer>
 
-<!-- ================= BACKEND FORM CONNECTION ================= -->
-
-<script>
-
-// ================= APPLICATION FORM =================
-
-const submitBtn =
-document.getElementById("applicationSubmitBtn");
-
-submitBtn.addEventListener("click", async () => {
-
-submitBtn.disabled = true;
-
-submitBtn.innerText = "Submitting...";
-    const fullName =
-    document.getElementById("fullName").value;
-
-    const email =
-    document.getElementById("applicationEmail").value;
-
-    const role =
-    document.getElementById("role").value;
-
-    const resume =
-    document.getElementById("resume").files[0];
-
-if (
-    !fullName ||
-    !email ||
-    !role ||
-    !resume
-) {
-
-    submitBtn.disabled = false;
-
-    submitBtn.innerText =
-    "Submit Application";
-
-    Swal.fire({
-        icon: "warning",
-        title: "Missing Fields",
-        text: "Please fill all fields.",
-    });
-
-    return;
-}
-
-    const formData = new FormData();
-
-    formData.append("fullName", fullName);
-    formData.append("email", email);
-    formData.append("role", role);
-    formData.append("resume", resume);
-
-    try {
-
-        const response = await fetch(
-            "https://davine-technologies-website.onrender.com/api/applications",
-            {
-                method: "POST",
-                body: formData,
-            }
-        );
-
-const data = await response.json();
-
-if (data.success) {
-    submitBtn.disabled = false;
-
-    submitBtn.innerText = "Submit Application";
-
-    alert("Application Submitted Successfully!");
-    document.getElementById("applicationForm").reset();
-
-
-} else {
-
-    alert(data.message);
-
-}
-    } catch (error) {
-        submitBtn.disabled = false;
-
-        submitBtn.innerText = "Submit Application";
-
-        console.log(error);
-
-        Swal.fire({
-            icon: "error",
-            title: "Server Error",
-            text: "Please try again later.",
-        });
-
-    }
-
-});
-
-
-// ================= CONTACT FORM =================
-
-document
-.getElementById("contactSubmitBtn")
-.addEventListener("click", async () => {
-
-    const name =
-    document.getElementById("contactName").value;
-
-    const email =
-    document.getElementById("contactEmail").value;
-
-    const subject =
-    document.getElementById("contactSubject").value;
-
-    const message =
-    document.getElementById("contactMessage").value;
-
-    if (
-        !name ||
-        !email ||
-        !subject ||
-        !message
-    ) {
-
-        alert("Please fill all fields");
-        return;
-    }
-
-    try {
-
-        const response = await fetch(
-            "https://davine-technologies-website.onrender.com/api/contact",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-                },
-
-                body: JSON.stringify({
-                    name,
-                    email,
-                    subject,
-                    message,
-                }),
-            }
-        );
-
-        const data = await response.json();
-
-        if (data.success) {
-
-            alert("Message Sent Successfully!");
-
-            document
-            .getElementById("contactName").value = "";
-
-            document
-            .getElementById("contactEmail").value = "";
-
-            document
-            .getElementById("contactSubject").value = "";
-
-            document
-            .getElementById("contactMessage").value = "";
-
-        } else {
-
-            alert(data.message);
-
-        }
-
-    } catch (error) {
-
-        console.log(error);
-
-        alert("Server Error");
-
-    }
-
-});
-
-</script>
-
+<script src="app.js"></script>
 </body>
-
 </html>

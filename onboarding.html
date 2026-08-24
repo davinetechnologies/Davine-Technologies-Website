@@ -4,54 +4,39 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Complete Your Internship Onboarding | Davine Technologies</title>
+<link rel="icon" type="image/png" href="oglogo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="onboarding.css">
+<link rel="stylesheet" href="../onboarding.css">
 </head>
 <body>
 
 <!-- ================= NAVBAR ================= -->
-<nav class="navbar">
+<header class="site-header" id="top">
+  <div class="header-inner">
+    <a href="#top" class="brand">
+      <img class="brand-mark brand-mark--nav" src="../oglogo.png" alt="Davine Technologies logo" width="44" height="44">
+      <span class="brand-text brand-text--nav">Davine <span class="brand-text-accent">Technologies</span></span>
+    </a>
 
-    <div class="nav-container">
+    <nav class="main-nav" id="mainNav">
+      <a href="#about">About</a>
+      <a href="#audience">Who We Serve</a>
+      <a href="#services">Services</a>
+      <a href="#features">Capabilities</a>
+      <a href="#internship">Careers</a>
+      <a href="#contact">Contact</a>
+    </nav>
 
-        <!-- LOGO -->
-
-        <a href="#" class="logo">
-
-            <img src="oglogo.png" alt="Davine Logo">
-
-            <span>Davine Technologies</span>
-
-        </a>
-
-        <!-- NAV LINKS -->
-
-        <div class="nav-links">
-
-            <a href="#about">About</a>
-
-            <a href="#services">Services</a>
-
-            <a href="#internship">Internships</a>
-
-            <a href="#contact">Contact</a>
-
-        </div>
-
-        <!-- BUTTON -->
-
-        <a href="#contact" class="nav-btn">
-
-            Get Started
-
-        </a>
-
+    <div class="header-actions">
+      <a href="#contact" class="btn btn-primary btn-small">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-
-</nav>
+  </div>
+</header>
 
 <!-- ================= HERO ================= -->
 <section class="hero">
@@ -69,9 +54,9 @@
       <a href="#compare" class="btn-ghost">Compare Packages</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><div class="num">150+</div><div class="lbl">Clients Served</div></div>
-      <div class="stat"><div class="num">300+</div><div class="lbl">Projects Delivered</div></div>
-      <div class="stat"><div class="num">4.9/5</div><div class="lbl">Client Rating</div></div>
+      <div class="stat"><div class="num">100+</div><div class="lbl">Clients Served</div></div>
+      <div class="stat"><div class="num">150+</div><div class="lbl">Projects Delivered</div></div>
+      <div class="stat"><div class="num">4.5/5</div><div class="lbl">Client Rating</div></div>
     </div>
   </div>
 </section>
@@ -121,14 +106,15 @@
           <select id="intern-role" name="role" autocomplete="off" aria-label="Internship Role" required>
             <option value="" selected disabled>Select your role</option>
             <option>DevOps</option>
-            <option>Cloud Computing</option>
+            <option>AWS Cloud</option>
+            <option>Gen AI</option>
             <option>Data Analyst</option>
             <option>Frontend Development</option>
             <option>Backend Development</option>
             <option>Full Stack Development</option>
             <option>Python Development</option>
             <option>Java Development</option>
-            <option>HR</option>
+            <option>HR Executive</option>
             <option>Business Development</option>
             <option>Digital Marketing</option>
             <option>UI/UX</option>
@@ -158,7 +144,7 @@
         <div class="plan-radio"></div>
         <div class="plan-name">Standard Internship Package</div>
         <p class="plan-desc">Essential onboarding &amp; ID card issuance.</p>
-        <div class="plan-price"><span class="cur">₹</span><span class="amt">99</span><span class="per">/ one-time</span></div>
+        <div class="plan-price"><span class="cur">₹</span><span class="amt">100</span><span class="per">/ one-time</span></div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
           <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>Digital Internship ID Card</li>
@@ -258,7 +244,7 @@
     <div class="cta-block">
       <div class="selected-summary">
         <span class="label">Selected Package</span>
-        <span class="value" id="summary-value">Standard Internship Package — ₹99</span>
+        <span class="value" id="summary-value">Standard Internship Package — ₹100</span>
       </div>
       <button class="btn-cta" id="pay-btn" type="button" aria-label="Complete Onboarding and Pay Securely">
         <span class="btn-spinner" aria-hidden="true"></span>
@@ -296,92 +282,14 @@
 </section>
 
 <!-- ================= FOOTER ================= -->
+<section class="onboarding-end">
+    <h2>Ready to Begin Your Internship?</h2>
+    <p>Complete your onboarding process and join our growing community.</p>
 
-<footer class="footer">
-
-    <div class="container">
-
-        <div class="footer__top">
-
-            <div>
-
-                <h2 style="margin-bottom:16px;">
-
-                    Davine<span class="gradient-text"> Technologies</span>
-
-                </h2>
-
-                <p style="color:var(--text-secondary); max-width:420px;">
-
-                    Innovate. Build. Elevate.
-
-                </p>
-
-            </div>
-
-            <div class="footer__links">
-
-                <div class="footer__col">
-
-                    <h5>Company</h5>
-
-                    <a href="#about">About</a>
-
-                    <a href="#services">Services</a>
-
-                    <a href="#contact">Contact</a>
-
-                </div>
-
-                <div class="footer__col">
-
-                    <h5>Services</h5>
-
-                    <a href="#">Cloud</a>
-
-                    <a href="#">DevOps</a>
-
-                    <a href="#">Web Development</a>
-
-                </div>
-
-                <div class="footer__col">
-
-                    <h5>Social</h5>
-
-                    <a href="https://www.linkedin.com/company/davine-technologies/"
-                    target="_blank"
-                    class="social-btn">
-
-                        LinkedIn
-
-                    </a>
-
-                    <a href="https://www.instagram.com/davine.technologies/"
-                    target="_blank"
-                    class="social-btn">
-
-                        Instagram
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="footer__bottom">
-
-            <p>
-                © 2025 Davine Technologies. All rights reserved.
-            </p>
-
-        </div>
-
-    </div>
-
-</footer>
+    <a href="#onboardingForm" class="btn btn-primary">
+        Complete Onboarding
+    </a>
+</section>
 
 <script>
   // ---- Comparison table data (kept in JS to keep markup lean) ----
@@ -412,7 +320,7 @@
   const cards = document.querySelectorAll('.plan-card');
   const summary = document.getElementById('summary-value');
   const planData = {
-    standard: "Standard Internship Package — ₹99",
+    standard: "Standard Internship Package — ₹100",
     professional: "Professional Internship Package — ₹249"
   };
 
@@ -487,7 +395,7 @@ const packageName =
 const amount =
   selectedPlan.dataset.plan === "professional"
     ? 249
-    : 99;
+    : 100;
 
 if (!fullName || !email || !phone || !role) {
     alert("Please fill all required fields.");
@@ -530,12 +438,18 @@ if (!onboardingData.success) {
     alert("Failed to save onboarding details.");
     return;
 }
-    const response = await fetch("https://davine-technologies-website.onrender.com/api/payment/create-order", {
+const response = await fetch(
+  "https://davine-technologies-website.onrender.com/api/payment/create-order",
+  {
     method: "POST",
     headers: {
-        "Content-Type": "application/json"
-    }
-});
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      packageName,
+    })
+  }
+);
 
 const data = await response.json();
 
@@ -643,5 +557,28 @@ rzp.open();
   });
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+const navToggle = document.getElementById("navToggle");
+const mainNav = document.getElementById("mainNav");
+
+if (navToggle && mainNav) {
+
+  navToggle.addEventListener("click", () => {
+    mainNav.classList.toggle("active");
+    navToggle.setAttribute(
+      "aria-expanded",
+      mainNav.classList.contains("active")
+    );
+  });
+
+  document.querySelectorAll("#mainNav a").forEach(link => {
+    link.addEventListener("click", () => {
+      mainNav.classList.remove("active");
+      navToggle.setAttribute("aria-expanded", "false");
+    });
+  });
+
+}
+</script>
 </body>
 </html>
