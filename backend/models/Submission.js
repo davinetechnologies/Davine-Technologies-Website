@@ -2,10 +2,64 @@ const mongoose = require("mongoose");
 
 const submissionSchema = new mongoose.Schema(
   {
+    // ================= INTERN PORTAL =================
+
+    intern: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Intern",
+      default: null,
+    },
+
+    week: {
+      type: Number,
+      min: 1,
+      max: 12,
+      default: null,
+    },
+
+    submissionFile: {
+      type: String,
+      default: null,
+    },
+
+    submissionOriginalName: {
+      type: String,
+      default: null,
+    },
+
+    status: {
+      type: String,
+      enum: ["Pending", "Submitted", "Approved", "Rejected"],
+      default: "Pending",
+    },
+
+    mentorFeedback: {
+      type: String,
+      default: null,
+    },
+
+    submittedAt: {
+      type: Date,
+      default: null,
+    },
+
+    reviewedAt: {
+      type: Date,
+      default: null,
+    },
+
+    reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Mentor",
+      default: null,
+    },
+
+    // ================= DAVINE EXISTING =================
+
     accessType: {
       type: String,
       enum: ["ID_CARD", "NO_ID_CARD"],
-      required: true,
+      default: "NO_ID_CARD",
     },
 
     internId: {
@@ -16,13 +70,13 @@ const submissionSchema = new mongoose.Schema(
 
     fullName: {
       type: String,
-      required: true,
+      default: "",
       trim: true,
     },
 
     email: {
       type: String,
-      required: true,
+      default: "",
       lowercase: true,
       trim: true,
     },
@@ -35,20 +89,20 @@ const submissionSchema = new mongoose.Schema(
 
     domain: {
       type: String,
-      required: true,
+      default: "",
       trim: true,
     },
 
     currentWeek: {
       type: Number,
-      required: true,
       min: 1,
+      default: null,
     },
 
     upcomingWeek: {
       type: Number,
-      required: true,
       min: 1,
+      default: null,
     },
 
     taskStatus: {
@@ -71,4 +125,12 @@ const submissionSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Submission", submissionSchema);
+// One submission per intern per week
+submissionSchema.index(
+  { intern: 1, week: 1 },
+  { unique: true, sparse: true }
+);
+
+module.exports =
+  mongoose.models.Submission ||
+  mongoose.model("Submission", submissionSchema);

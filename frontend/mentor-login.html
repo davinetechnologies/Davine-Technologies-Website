@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mentor Portal — Internship Management &amp; Mentorship</title>
+<link rel="stylesheet" href="css/mentor.css" />
+</head>
+<body>
+
+<div class="login-shell">
+  <div class="login-brand">
+    <div class="eyebrow">Internship Management &amp; Mentorship</div>
+    <h1>Every intern, every week, exactly where they should be.</h1>
+    <p>Weekly content, submissions, and reviews — organized around the one thing that actually matters: which week each intern is on. This portal is for mentors; interns continue using the existing Intern Portal.</p>
+
+    <div class="rail-demo">
+      <div class="week-rail-labeled">
+        <div class="top"><span>Week 6 of 12</span><span>50%</span></div>
+        <div class="week-rail">
+          <span class="seg done"></span><span class="seg done"></span><span class="seg done"></span>
+          <span class="seg done"></span><span class="seg done"></span><span class="seg current"></span>
+          <span class="seg"></span><span class="seg"></span><span class="seg"></span>
+          <span class="seg"></span><span class="seg"></span><span class="seg"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-form-side">
+    <div class="login-card">
+      <h2>Mentor sign in</h2>
+      <p class="sub">Manage interns, weekly content, and submissions.</p>
+
+      <div class="login-error" id="loginError"></div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required autocomplete="username" placeholder="you@example.com" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%" id="loginBtn">Sign in</button>
+      </form>
+
+      <div class="demo-hint">
+        <b>Demo mentor account</b><br />
+        Run <span class="mono">npm run seed</span> in the backend, then sign in with the mentor email/password printed in your terminal.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/shared/mentor-login.js"></script>
+</body>
+</html>

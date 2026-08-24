@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mentor Portal</title>
+<link rel="stylesheet" href="css/mentor.css" />
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="name">Mentor Portal</div>
+      <div class="tagline">Internship Management &amp; Mentorship</div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <button class="nav-item active" data-section="dashboard"><span class="nav-icon">◆</span> Dashboard</button>
+      <button class="nav-item" data-section="interns"><span class="nav-icon">◆</span> Interns</button>
+      <button class="nav-item" data-section="weekly-content"><span class="nav-icon">◆</span> Weekly Content</button>
+      <button class="nav-item" data-section="submissions"><span class="nav-icon">◆</span> Submissions</button>
+      <button class="nav-item" data-section="weekly-progress"><span class="nav-icon">◆</span> Weekly Progress</button>
+      <button class="nav-item" data-section="batches"><span class="nav-icon">◆</span> Batches</button>
+      <button class="nav-item" data-section="announcements"><span class="nav-icon">◆</span> Announcements</button>
+      <button class="nav-item" data-section="documents"><span class="nav-icon">◆</span> Documents</button>
+      <button class="nav-item" data-section="attendance"><span class="nav-icon">◆</span> Attendance</button>
+      <button class="nav-item" data-section="settings"><span class="nav-icon">◆</span> Settings</button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="who" id="mentorName">—</div>
+      <button class="btn btn-secondary btn-sm" id="logoutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="flex gap-12">
+        <button class="btn btn-ghost menu-toggle" id="menuToggle">☰</button>
+        <div class="crumb" id="crumb">Dashboard</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <section class="section active" id="section-dashboard">
+        <div class="section-head">
+          <div><h1>Dashboard</h1><p class="sub">A live snapshot of the program.</p></div>
+        </div>
+        <div id="dashboardStats" class="stat-grid"></div>
+        <div class="card">
+          <h2 style="margin-bottom:14px;">Recent submissions</h2>
+          <div id="recentSubmissions"></div>
+        </div>
+      </section>
+
+      <!-- INTERNS -->
+      <section class="section" id="section-interns">
+        <div class="section-head">
+          <div><h1>Interns</h1><p class="sub">Manage every intern's profile, access, and week.</p></div>
+          <button class="btn btn-primary" id="addInternBtn">+ Add intern</button>
+        </div>
+        <div class="filters">
+          <input type="search" id="internSearch" placeholder="Search name, email, ID…" />
+          <select id="internDomainFilter"><option value="">All domains</option></select>
+          <select id="internBatchFilter"><option value="">All batches</option></select>
+          <select id="internStatusFilter">
+            <option value="">All statuses</option>
+            <option>Active</option><option>Completed</option><option>Inactive</option><option>Suspended</option>
+          </select>
+          <select id="internWeekFilter"><option value="">All weeks</option></select>
+        </div>
+        <div class="table-wrap"><div id="internsTable"></div></div>
+      </section>
+
+      <!-- WEEKLY CONTENT -->
+      <section class="section" id="section-weekly-content">
+        <div class="section-head">
+          <div><h1>Weekly Content</h1><p class="sub">One PDF per week. Interns automatically see the week that matches their <span class="mono">currentWeek</span>.</p></div>
+        </div><div class="section-toolbar">
+
+  <div>
+    <h2>Weekly Content</h2>
+    <p class="muted">
+      Manage weekly content separately for each internship domain.
+    </p>
+  </div>
+
+  <div class="field" style="min-width:220px;">
+    <label for="weeklyContentDomainFilter">
+      Select Domain
+    </label>
+
+    <select id="weeklyContentDomainFilter">
+      <option value="DevOps">DevOps</option>
+      <option value="AWS Cloud">AWS Cloud</option>
+      <option value="Data Analyst">Data Analyst</option>
+      <option value="Python Developer">Python Developer</option>
+      <option value="Full Stack">Full Stack</option>
+      <option value="Frontend">Frontend</option>
+      <option value="Backend">Backend</option>
+      <option value="Generative AI">Generative AI</option>
+    </select>
+  </div>
+
+</div>
+
+<div id="weeklyContentGrid"></div>
+        <div class="week-grid" id="weeklyContentGrid"></div>
+      </section>
+
+      <!-- SUBMISSIONS -->
+      <section class="section" id="section-submissions">
+        <div class="section-head">
+          <div><h1>Submissions</h1><p class="sub">Review completed weekly work and approve or reject it.</p></div>
+        </div>
+        <div class="filters">
+          <select id="subWeekFilter"></select>
+          <select id="subDomainFilter"><option value="">All domains</option></select>
+          <select id="subBatchFilter"><option value="">All batches</option></select>
+          <select id="subStatusFilter">
+            <option value="">All statuses</option>
+            <option>Pending</option><option>Submitted</option><option>Approved</option><option>Rejected</option>
+          </select>
+          <input type="search" id="subSearch" placeholder="Search intern…" />
+        </div>
+        <div class="table-wrap"><div id="submissionsTable"></div></div>
+      </section>
+
+      <!-- WEEKLY PROGRESS -->
+      <section class="section" id="section-weekly-progress">
+        <div class="section-head">
+          <div><h1>Weekly Progress</h1><p class="sub">Per-week status for every intern, kept in sync with submission reviews.</p></div>
+        </div>
+        <div class="filters">
+          <select id="progressInternFilter"><option value="">All interns</option></select>
+          <select id="progressWeekFilter"><option value="">All weeks</option></select>
+        </div>
+        <div class="table-wrap"><div id="progressTable"></div></div>
+      </section>
+
+      <!-- BATCHES -->
+      <section class="section" id="section-batches">
+        <div class="section-head">
+          <div><h1>Batches</h1><p class="sub">Group interns by cohort.</p></div>
+          <button class="btn btn-primary" id="addBatchBtn">+ New batch</button>
+        </div>
+        <div class="table-wrap"><div id="batchesTable"></div></div>
+      </section>
+
+      <!-- ANNOUNCEMENTS -->
+      <section class="section" id="section-announcements">
+        <div class="section-head">
+          <div><h1>Announcements</h1><p class="sub">Publish updates to everyone, a batch, or a domain.</p></div>
+          <button class="btn btn-primary" id="addAnnouncementBtn">+ New announcement</button>
+        </div>
+        <div id="announcementsList"></div>
+      </section>
+
+      <!-- DOCUMENTS -->
+      <section class="section" id="section-documents">
+        <div class="section-head">
+          <div><h1>Documents</h1><p class="sub">Guidelines, policies, and reference material for interns.</p></div>
+          <button class="btn btn-primary" id="addDocumentBtn">+ Upload document</button>
+        </div>
+        <div class="table-wrap"><div id="documentsTable"></div></div>
+      </section>
+
+      <!-- ATTENDANCE -->
+      <section class="section" id="section-attendance">
+        <div class="section-head">
+          <div><h1>Attendance</h1><p class="sub">Mark daily attendance per intern.</p></div>
+        </div>
+        <div class="card mb-16">
+          <h3 style="margin-bottom:12px;">Mark attendance</h3>
+          <div class="field-row">
+            <div class="field"><label>Intern</label><select id="attInternSelect"></select></div>
+            <div class="field"><label>Date</label><input type="date" id="attDate" /></div>
+            <div class="field"><label>Status</label>
+              <select id="attStatus"><option>Present</option><option>Absent</option><option>Leave</option></select>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="markAttendanceBtn">Save attendance</button>
+        </div>
+        <div class="filters">
+          <select id="attFilterIntern"><option value="">All interns</option></select>
+        </div>
+        <div class="table-wrap"><div id="attendanceTable"></div></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="section" id="section-settings">
+        <div class="section-head">
+          <div><h1>Settings</h1><p class="sub">Your mentor account.</p></div>
+        </div>
+        <div class="card" style="max-width:480px;" id="settingsCard"></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- Intern add/edit modal -->
+<div class="overlay" id="modal-intern">
+  <div class="modal">
+    <div class="modal-head"><h3 id="internModalTitle">Add intern</h3><button class="close-x" data-close="modal-intern">✕</button></div>
+    <div class="modal-body">
+      <form id="internForm">
+        <input type="hidden" id="internId_hidden" />
+        <div class="field-row">
+          <div class="field"><label>Full name</label><input id="internName" required /></div>
+          <div class="field"><label>Intern ID</label><input id="internCode" placeholder="Auto-generated if left blank" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Email</label><input type="email" id="internEmail" required /></div>
+          <div class="field" id="internPasswordField"><label>Password</label><input type="password" id="internPassword" placeholder="Set login password" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Domain</label>
+            <select id="internDomain">
+              <option>DevOps</option><option>Cloud</option><option>Data Analyst</option><option>Gen AI</option>
+            </select>
+          </div>
+          <div class="field"><label>Batch</label><select id="internBatch"><option value="">— No batch —</option></select></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Status</label>
+            <select id="internStatus"><option>Active</option><option>Completed</option><option>Inactive</option><option>Suspended</option></select>
+          </div>
+          <div class="field"><label>Current week</label>
+            <select id="internCurrentWeek"></select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Joining date</label><input type="date" id="internJoining" /></div>
+          <div class="field"><label>Ending date</label><input type="date" id="internEnding" /></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close="modal-intern">Cancel</button>
+      <button class="btn btn-primary" id="saveInternBtn">Save intern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Intern detail / access / submissions drawer -->
+<div class="overlay" id="modal-intern-detail">
+  <div class="modal modal-lg">
+    <div class="modal-head"><h3 id="internDetailName">Intern</h3><button class="close-x" data-close="modal-intern-detail">✕</button></div>
+    <div class="modal-body" id="internDetailBody"></div>
+  </div>
+</div>
+
+<!-- Weekly content upload/replace modal -->
+<div class="overlay" id="modal-weekly-content">
+  <div class="modal">
+    <div class="modal-head"><h3 id="weeklyContentModalTitle">Week content</h3><button class="close-x" data-close="modal-weekly-content">✕</button></div>
+    <div class="modal-body">
+      <form id="weeklyContentForm">
+        <input type="hidden" id="wcWeek" />
+        <div class="field"><label>Title</label><input id="wcTitle" required /></div>
+        <div class="field"><label>PDF file</label><input type="file" id="wcFile" accept="application/pdf" /></div>
+        <div class="toggle-row">
+          <span>Active (visible to interns)</span>
+          <label class="switch"><input type="checkbox" id="wcActive" checked /><span class="track"></span></label>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close="modal-weekly-content">Cancel</button>
+      <button class="btn btn-primary" id="saveWeeklyContentBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Submission review modal -->
+<div class="overlay" id="modal-review">
+  <div class="modal">
+    <div class="modal-head"><h3>Review submission</h3><button class="close-x" data-close="modal-review">✕</button></div>
+    <div class="modal-body" id="reviewBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-danger" id="rejectBtn">Reject</button>
+      <button class="btn btn-primary" id="approveBtn">Approve</button>
+    </div>
+  </div>
+</div>
+
+<!-- Batch modal -->
+<div class="overlay" id="modal-batch">
+  <div class="modal">
+    <div class="modal-head"><h3 id="batchModalTitle">New batch</h3><button class="close-x" data-close="modal-batch">✕</button></div>
+    <div class="modal-body">
+      <form id="batchForm">
+        <input type="hidden" id="batchId_hidden" />
+        <div class="field"><label>Batch name</label><input id="batchName" required /></div>
+        <div class="field"><label>Domain</label>
+          <select id="batchDomain"><option>DevOps</option><option>Cloud</option><option>Data Analyst</option><option>Gen AI</option></select>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Start date</label><input type="date" id="batchStart" required /></div>
+          <div class="field"><label>End date</label><input type="date" id="batchEnd" /></div>
+        </div>
+        <div class="field"><label>Status</label><select id="batchStatus"><option>Upcoming</option><option>Active</option><option>Completed</option></select></div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close="modal-batch">Cancel</button>
+      <button class="btn btn-primary" id="saveBatchBtn">Save batch</button>
+    </div>
+  </div>
+</div>
+
+<!-- Announcement modal -->
+<div class="overlay" id="modal-announcement">
+  <div class="modal">
+    <div class="modal-head"><h3>New announcement</h3><button class="close-x" data-close="modal-announcement">✕</button></div>
+    <div class="modal-body">
+      <form id="announcementForm">
+        <div class="field"><label>Title</label><input id="annTitle" required /></div>
+        <div class="field"><label>Message</label><textarea id="annMessage" required></textarea></div>
+        <div class="field-row">
+          <div class="field"><label>Target batch (optional)</label><select id="annBatch"><option value="">— All batches —</option></select></div>
+          <div class="field"><label>Target domain (optional)</label>
+            <select id="annDomain"><option value="">— All domains —</option><option>DevOps</option><option>Cloud</option><option>Data Analyst</option><option>Gen AI</option></select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close="modal-announcement">Cancel</button>
+      <button class="btn btn-primary" id="saveAnnouncementBtn">Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- Document upload modal -->
+<div class="overlay" id="modal-document">
+  <div class="modal">
+    <div class="modal-head"><h3>Upload document</h3><button class="close-x" data-close="modal-document">✕</button></div>
+    <div class="modal-body">
+      <form id="documentForm">
+        <div class="field"><label>Title</label><input id="docTitle" required /></div>
+        <div class="field"><label>Category</label>
+          <select id="docCategory"><option>Guidelines</option><option>Resource</option><option>Policy</option><option>Other</option></select>
+        </div>
+        <div class="field"><label>PDF file</label><input type="file" id="docFile" accept="application/pdf" required /></div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" data-close="modal-document">Cancel</button>
+      <button class="btn btn-primary" id="saveDocumentBtn">Upload</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/mentor/app.js"></script>
+</body>
+</html>
