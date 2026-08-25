@@ -50,8 +50,7 @@ export async function logout() {
 
     if (token) {
       try {
-        await fetch("http://localhost:5000/api/auth/logout", {
-          method: "POST",
+await fetch("https://davine-technologies-website.onrender.com/api/auth/logout", {          method: "POST",
           headers: {
             Authorization: `Bearer ${token}`
           }
