@@ -1,5 +1,4 @@
-const API_BASE = "http://localhost:5000/api";
-
+const API_BASE = "https://davine-technologies-website.onrender.com/api";
 async function request(
   method,
   path,
