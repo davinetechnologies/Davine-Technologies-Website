@@ -6,6 +6,72 @@ const WeeklyProgress = require("../models/WeeklyProgress");
 
 const InternCollection = mongoose.connection.collection("interncollections");
 
+
+
+// =====================================================
+// GET ALL WEEKLY PROGRESS
+// GET /api/weekly-progress
+// =====================================================
+
+router.get("/", async (req, res) => {
+  try {
+    const {
+      week,
+      domain,
+      status,
+      batch,
+      search
+    } = req.query;
+
+    const filter = {};
+
+    // Week filter
+    if (week) {
+      filter.week = Number(week);
+    }
+
+    // Domain filter
+    if (domain && domain !== "all") {
+      filter.domain = domain;
+    }
+
+    // Status filter
+    if (status && status !== "all") {
+      filter.overallStatus = status;
+    }
+
+    // Batch filtering will be handled through interncollections
+    let records = await WeeklyProgress.find(filter)
+      .sort({ week: 1, createdAt: -1 })
+      .lean();
+
+    // Search by intern name/email
+    if (search) {
+      const searchText = search.toLowerCase().trim();
+
+      records = records.filter((record) =>
+        (record.internName || "").toLowerCase().includes(searchText) ||
+        (record.internEmail || "").toLowerCase().includes(searchText)
+      );
+    }
+
+    res.json({
+      success: true,
+      count: records.length,
+      weeklyProgress: records
+    });
+
+  } catch (error) {
+    console.error("GET ALL WEEKLY PROGRESS ERROR:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to get weekly progress",
+      error: error.message
+    });
+  }
+});
+
 // =====================================================
 // GET WEEKLY PROGRESS BY INTERN ID
 // GET /api/weekly-progress/:internId
