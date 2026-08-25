@@ -19,8 +19,15 @@ router.get("/stats", verifyToken, requireMentor, async (_req, res, next) => {
           { $group: { _id: "$currentWeek", count: { $sum: 1 } } },
           { $sort: { _id: 1 } },
         ]),
-        Submission.find().sort({ submittedAt: -1 }).limit(5).populate("intern", "name internId"),
-      ]);
+Submission.find({
+  status: { $in: ["Submitted", "Approved", "Rejected"] },
+  intern: { $ne: null },
+  week: { $ne: null },
+  submittedAt: { $ne: null }
+})
+  .sort({ submittedAt: -1 })
+  .limit(5)
+  .populate("intern", "name internId"),      ]);
 
     const statusMap = { Pending: 0, Submitted: 0, Approved: 0, Rejected: 0 };
     submissionCounts.forEach((row) => {
