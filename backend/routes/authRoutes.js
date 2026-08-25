@@ -107,26 +107,43 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const user = {
-      id: intern._id,
-      internId: intern.internId || "",
-      name: intern.fullName || intern.name || "",
-      email: intern.email,
-      type: "intern",
-      role: intern.role || `${intern.domain || "Intern"} Intern`,
-      domain: intern.domain || "",
-      batch: intern.batch || "",
-      phone: intern.phone || "",
-      photo: intern.profilePhoto || null,
-      status: intern.status || "Active",
-      currentWeek: intern.currentWeek || 1,
-      upcomingWeek: intern.upcomingWeek || 2,
-      progress: intern.progress || 0,
-      joiningDate: intern.joiningDate || "",
-      endingDate: intern.endingDate || "",
-      idCardUrl: intern.idCardUrl || "",
-      certificateUrl: intern.certificateUrl || "",
-    };
+const user = {
+  id: intern._id,
+
+  internId: intern.internId || "",
+
+  name: intern.fullName || intern.name || "",
+  email: intern.email,
+
+  type: "intern",
+
+  role: intern.role || `${intern.domain || "Intern"} Intern`,
+  domain: intern.domain || "",
+  batch: intern.batch || "",
+  phone: intern.phone || "",
+
+  photo: intern.profilePhoto || null,
+
+  status: intern.status || "Active",
+
+  currentWeek: intern.currentWeek || 1,
+  upcomingWeek: intern.upcomingWeek || 2,
+  progress: intern.progress || 0,
+
+  joiningDate: intern.joiningDate || "",
+  endingDate: intern.endingDate || "",
+
+  // Frontend compatibility
+  appliedDate: intern.appliedDate || intern.createdAt || "",
+  programStart: intern.joiningDate || "",
+  programEnd: intern.endingDate || "",
+
+  idCardUrl: intern.idCardUrl || "",
+  certificateUrl: intern.certificateUrl || "",
+
+  tasks: [],
+  documents: []
+};
 
     const token = jwt.sign(
       {
