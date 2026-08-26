@@ -93,3 +93,7 @@ const internSchema = new mongoose.Schema(
 module.exports =
   mongoose.models.Intern ||
   mongoose.model("Intern", internSchema, "interncollections");
+
+
+
+

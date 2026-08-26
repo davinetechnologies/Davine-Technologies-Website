@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const Intern = require("../models/Intern");
 const Mentor = require("../models/Mentor");
+const PortalProfile = require("../models/PortalProfile");
 
 const router = express.Router();
 
@@ -82,103 +83,105 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // =================================================
-    // INTERN LOGIN
-    // =================================================
+// =================================================
+// INTERN LOGIN
+// =================================================
 
-    const intern = await Intern.findOne({
+const intern = await Intern.findOne({
+  email: cleanEmail,
+});
+
+if (!intern) {
+  return res.status(401).json({
+    success: false,
+    message: "No intern account found with this email",
+  });
+}
+
+// Existing login password
+const portalPassword =
+  process.env.INTERN_DEFAULT_PASSWORD || "Intern@2026";
+
+if (password !== portalPassword) {
+  return res.status(401).json({
+    success: false,
+    message: "Incorrect email or password",
+  });
+}
+
+// =================================================
+// CHECK PORTAL PROFILE
+// =================================================
+
+const profile = await PortalProfile.findOne({
+  email: cleanEmail,
+});
+
+const token = jwt.sign(
+  {
+    id: intern._id,
+    type: "intern",
+    role: "intern",
+    email: cleanEmail,
+  },
+  process.env.JWT_SECRET,
+  {
+    expiresIn: "7d",
+  }
+);
+
+// =================================================
+// FIRST LOGIN → PROFILE SETUP
+// =================================================
+
+if (!profile) {
+  return res.json({
+    success: true,
+    message: "Login successful. Profile setup required.",
+    token,
+    setupRequired: true,
+    user: {
+      id: intern._id,
       email: cleanEmail,
-    });
+      type: "intern",
+      role: "intern",
+    },
+  });
+}
 
-    console.log("========== INTERN FROM DB ==========");
-console.log(intern);
-console.log("FULL NAME:", intern.fullName);
-console.log("NAME:", intern.name);
-console.log("INTERN NAME:", intern.internName);
-console.log("CANDIDATE NAME:", intern.candidateName);
-console.log("====================================");
+// =================================================
+// EXISTING PROFILE → DIRECT DASHBOARD
+// =================================================
 
-    if (!intern) {
-      return res.status(401).json({
-        success: false,
-        message: "No intern account found with this email",
-      });
-    }
+return res.json({
+  success: true,
+  message: "Login successful",
+  token,
+  setupRequired: false,
+  user: {
+    id: profile._id,
+    internId: profile.internId || "",
+    name: profile.name || "",
+    email: profile.email,
+    type: "intern",
+    role: profile.role || "intern",
 
-    const portalPassword =
-      process.env.INTERN_DEFAULT_PASSWORD || "Intern@2026";
+    domain: profile.domain || "",
+    currentWeek: profile.currentWeek || 1,
 
-    if (password !== portalPassword) {
-      return res.status(401).json({
-        success: false,
-        message: "Incorrect email or password",
-      });
-    }
-const user = {
-  id: intern._id,
+    photo: profile.photo || null,
+    phone: profile.phone || "",
 
-  internId: intern.internId || "",
+    status: profile.status || "Active",
+    progress: profile.progress || 0,
 
-  name:
-    intern.fullName ||
-    intern.name ||
-    intern.internName ||
-    intern.candidateName ||
-    intern.full_name ||
-    "",
+    joiningDate: profile.joiningDate || "",
+    endingDate: profile.endingDate || "",
 
-  fullName:
-    intern.fullName ||
-    intern.name ||
-    intern.internName ||
-    intern.candidateName ||
-    intern.full_name ||
-    "",
-
-  email: intern.email,
-
-  type: "intern",
-
-  role: intern.role || `${intern.domain || "Intern"} Intern`,
-  domain: intern.domain || "",
-
-  batch: intern.batch || "",
-  phone: intern.phone || "",
-
-  photo: intern.profilePhoto || null,
-
-  status: intern.status || "Active",
-
-  currentWeek: intern.currentWeek || 1,
-  upcomingWeek: intern.upcomingWeek || 2,
-  progress: intern.progress || 0,
-
-  joiningDate: intern.joiningDate || "",
-  endingDate: intern.endingDate || "",
-
-  // Frontend compatibility
-  appliedDate: intern.appliedDate || intern.createdAt || "",
-  programStart: intern.joiningDate || "",
-  programEnd: intern.endingDate || "",
-
-  idCardUrl: intern.idCardUrl || "",
-  certificateUrl: intern.certificateUrl || "",
-
-  tasks: [],
-  documents: []
-};
-
-    const token = jwt.sign(
-      {
-        id: intern._id,
-        type: "intern",
-        role: intern.role || "intern",
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
+    idCardUrl: profile.idCardUrl || "",
+    certificateUrl: profile.certificateUrl || "",
+  },
+});
 
     return res.json({
       success: true,

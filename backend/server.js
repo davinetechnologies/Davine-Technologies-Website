@@ -234,6 +234,9 @@ const documentRoutes =
 const dashboardRoutes =
   require("./routes/dashboardRoutes");
 
+const portalProfileRoutes =
+  require("./routes/portalProfileRoutes");
+
 // =====================================================
 // EXISTING DIVINE API ROUTES
 // =====================================================
@@ -332,6 +335,10 @@ app.use(
   dashboardRoutes
 );
 
+app.use(
+  "/api/portal-profile",
+  portalProfileRoutes
+);
 // =====================================================
 // TEST INTERN MODEL
 // =====================================================
