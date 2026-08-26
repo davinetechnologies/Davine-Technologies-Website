@@ -46,25 +46,28 @@ router.get(
 
 const domain = intern.domain.trim().toLowerCase();
 
+const displayWeek =
+  Number(intern.upcomingWeek || intern.currentWeek || 1);
+
 const content = await WeeklyContent.findOne({
   domain,
-  week: intern.currentWeek,
+  week: displayWeek,
   active: true
 });
 
-      if (!content) {
-        return res.status(404).json({
-          message: `No weekly content has been published for ${intern.domain}, Week ${intern.currentWeek}`,
-          domain: intern.domain,
-          currentWeek: intern.currentWeek
-        });
-      }
+if (!content) {
+  return res.status(404).json({
+    message: `No weekly content has been published for ${intern.domain}, Week ${displayWeek}`,
+    domain: intern.domain,
+    currentWeek: displayWeek
+  });
+}
 
-      res.json({
-        ...content.toObject(),
-        currentWeek: intern.currentWeek,
-        domain: intern.domain
-      });
+res.json({
+  ...content.toObject(),
+  currentWeek: displayWeek,
+  domain: intern.domain
+});
     } catch (err) {
       next(err);
     }

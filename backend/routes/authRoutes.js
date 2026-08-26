@@ -90,6 +90,14 @@ router.post("/login", async (req, res) => {
       email: cleanEmail,
     });
 
+    console.log("========== INTERN FROM DB ==========");
+console.log(intern);
+console.log("FULL NAME:", intern.fullName);
+console.log("NAME:", intern.name);
+console.log("INTERN NAME:", intern.internName);
+console.log("CANDIDATE NAME:", intern.candidateName);
+console.log("====================================");
+
     if (!intern) {
       return res.status(401).json({
         success: false,
@@ -106,19 +114,34 @@ router.post("/login", async (req, res) => {
         message: "Incorrect email or password",
       });
     }
-
 const user = {
   id: intern._id,
 
   internId: intern.internId || "",
 
-  name: intern.fullName || intern.name || "",
+  name:
+    intern.fullName ||
+    intern.name ||
+    intern.internName ||
+    intern.candidateName ||
+    intern.full_name ||
+    "",
+
+  fullName:
+    intern.fullName ||
+    intern.name ||
+    intern.internName ||
+    intern.candidateName ||
+    intern.full_name ||
+    "",
+
   email: intern.email,
 
   type: "intern",
 
   role: intern.role || `${intern.domain || "Intern"} Intern`,
   domain: intern.domain || "",
+
   batch: intern.batch || "",
   phone: intern.phone || "",
 
