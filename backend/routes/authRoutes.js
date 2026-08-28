@@ -183,13 +183,6 @@ return res.json({
   },
 });
 
-    return res.json({
-      success: true,
-      message: "Intern login successful",
-      token,
-      user,
-      intern: user,
-    });
   } catch (error) {
     console.error("Login error:", error);
 
