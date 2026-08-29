@@ -20,13 +20,16 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 app.use(morgan("dev"));
 
-const limiter = rateLimit({
+const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: "Too many requests from this IP. Please try again later.",
+  max: 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
 });
-
-app.use(limiter);
 
 // =====================================================
 // CORS
@@ -84,6 +87,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Apply rate limiting to API requests
+app.use("/api", apiLimiter);
+
 // Serve Divine frontend
 app.use(express.static(path.join(__dirname, "..")));
 
@@ -103,9 +109,19 @@ app.use(
 // DATABASE
 // =====================================================
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(async () => {
+async function connectDatabase() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      maxPoolSize: 50,
+      minPoolSize: 5,
+
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 10000,
+
+      maxIdleTimeMS: 30000,
+    });
+
     console.log("MongoDB Connected");
 
     // =================================================
@@ -164,13 +180,15 @@ mongoose
       }
     }
 
-  })
-  .catch((error) => {
+  } catch (error) {
     console.error(
       "MongoDB connection failed:",
       error.message
     );
-  });
+
+    process.exit(1);
+  }
+}
 
 // =====================================================
 // EXISTING DIVINE ROUTES
@@ -414,8 +432,18 @@ app.use((err, req, res, next) => {
 // START SERVER
 // =====================================================
 
-app.listen(PORT, () => {
-  console.log(
-    `Server running on port ${PORT}`
-  );
-});
+connectDatabase()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(
+        `Server running on port ${PORT}`
+      );
+    });
+  })
+  .catch((error) => {
+    console.error(
+      "Server startup failed:",
+      error.message
+    );
+    process.exit(1);
+  });
