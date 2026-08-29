@@ -26,6 +26,10 @@ const weeklyContentSchema = new mongoose.Schema(
       default: null
     },
 
+    pdfKey: {
+  type: String,
+  default: null
+},
     pdfOriginalName: {
       type: String,
       default: null

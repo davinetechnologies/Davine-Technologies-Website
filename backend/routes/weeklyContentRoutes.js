@@ -1,3 +1,6 @@
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { GetObjectCommand } = require("@aws-sdk/client-s3");
+const s3 = require("../config/s3");
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -56,6 +59,19 @@ const content = await WeeklyContent.findOne({
   active: true
 });
 
+let pdfUrl = null;
+
+if (content.pdfKey) {
+  pdfUrl = await getSignedUrl(
+    s3,
+    new GetObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: content.pdfKey,
+    }),
+    { expiresIn: 3600 }
+  );
+}
+
 if (!content) {
   return res.status(404).json({
     message: `No weekly content has been published for ${intern.domain}, Week ${displayWeek}`,
@@ -70,7 +86,8 @@ if (content.pdfUrl) {
 }
 
 res.json({
-  ...responseData,
+  ...content.toObject(),
+  pdfUrl,
   currentWeek: displayWeek,
   domain: intern.domain
 });
@@ -235,7 +252,8 @@ const content = await WeeklyContent.create({
   domain,
   week,
   title,
-  pdfUrl: pdfData ? pdfData.key : null,
+pdfUrl: pdfData ? pdfData.url : null,
+pdfKey: pdfData ? pdfData.key : null,
   pdfOriginalName: pdfData
     ? pdfData.originalName
     : null,
