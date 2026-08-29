@@ -1,120 +1,93 @@
 const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
+const { PutObjectCommand } = require("@aws-sdk/client-s3");
+const s3 = require("../config/s3");
 
 // =====================================================
-// DEFAULT UPLOAD
-// Existing Davine functionality
+// S3 STORAGE
 // =====================================================
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
+const storage = multer.memoryStorage();
 
-  filename: function (req, file, cb) {
-    cb(
-      null,
-      Date.now() + "-" + file.originalname
-    );
-  },
-});
+// =====================================================
+// PDF FILTER
+// =====================================================
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === "application/pdf") {
     cb(null, true);
   } else {
-    cb(
-      new Error("Only PDF files are allowed"),
-      false
-    );
+    cb(new Error("Only PDF files are allowed"), false);
   }
 };
 
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   fileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
 });
 
-
 // =====================================================
-// INTERN PORTAL / WEEKLY CONTENT UPLOADER
+// UPLOADER
 // =====================================================
 
 const makeUploader = (folderName) => {
-
-  const uploadFolder = path.join(
-    __dirname,
-    "..",
-    "uploads",
-    folderName
-  );
-
-  // Create folder automatically
-  if (!fs.existsSync(uploadFolder)) {
-    fs.mkdirSync(uploadFolder, {
-      recursive: true
-    });
-  }
-
-  const storage = multer.diskStorage({
-
-    destination: function (req, file, cb) {
-      cb(null, uploadFolder);
-    },
-
-    filename: function (req, file, cb) {
-      cb(
-        null,
-        Date.now() + "-" + file.originalname
-      );
-    },
-
-  });
-
-  const fileFilter = (req, file, cb) => {
-
-    if (file.mimetype === "application/pdf") {
-      cb(null, true);
-    } else {
-      cb(
-        new Error("Only PDF files are allowed"),
-        false
-      );
-    }
-
-  };
-
   return multer({
     storage,
-    fileFilter
+    fileFilter,
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10 MB
+    },
   });
 };
 
+// =====================================================
+// UPLOAD FILE TO S3
+// =====================================================
+
+const uploadToS3 = async (file, folderName) => {
+  if (!file) {
+    return null;
+  }
+
+  const safeName = file.originalname.replace(
+    /[^a-zA-Z0-9._-]/g,
+    "_"
+  );
+
+  const key = `${folderName}/${Date.now()}-${safeName}`;
+
+  const command = new PutObjectCommand({
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: key,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+  });
+
+  await s3.send(command);
+
+  return {
+    key,
+    url: `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`,
+    originalName: file.originalname,
+  };
+};
 
 // =====================================================
-// CONVERT UPLOAD PATH TO PUBLIC URL
+// PUBLIC URL HELPER
 // =====================================================
 
 const toPublicUrl = (folderName, filename) => {
-
-  return `/uploads/${folderName}/${filename}`;
-
+  return `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${folderName}/${filename}`;
 };
-
 
 // =====================================================
 // EXPORT
 // =====================================================
 
-// Existing:
-// const upload = require("../middleware/uploadMiddleware");
-
-// New Intern Portal:
-// const { makeUploader, toPublicUrl } =
-// require("../middleware/uploadMiddleware");
-
 module.exports = upload;
 
 module.exports.makeUploader = makeUploader;
+module.exports.uploadToS3 = uploadToS3;
 module.exports.toPublicUrl = toPublicUrl;

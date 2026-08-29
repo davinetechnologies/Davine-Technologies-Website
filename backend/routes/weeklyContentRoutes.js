@@ -11,7 +11,7 @@ const {
 } = require("../middleware/auth");
 const {
   makeUploader,
-  toPublicUrl
+  uploadToS3
 } = require("../middleware/uploadMiddleware");
 
 const router = express.Router();
@@ -211,18 +211,25 @@ const domain = req.body.domain?.trim().toLowerCase();
         });
       }
 
-      const content = await WeeklyContent.create({
-        domain,
-        week,
-        title,
-        pdfUrl: req.file
-          ? toPublicUrl("weekly-content", req.file.filename)
-          : null,
-        pdfOriginalName: req.file
-          ? req.file.originalname
-          : null,
-        active: true
-      });
+let pdfData = null;
+
+if (req.file) {
+  pdfData = await uploadToS3(
+    req.file,
+    "weekly-content"
+  );
+}
+
+const content = await WeeklyContent.create({
+  domain,
+  week,
+  title,
+  pdfUrl: pdfData ? pdfData.url : null,
+  pdfOriginalName: pdfData
+    ? pdfData.originalName
+    : null,
+  active: true
+});
 
       res.status(201).json(content);
 
