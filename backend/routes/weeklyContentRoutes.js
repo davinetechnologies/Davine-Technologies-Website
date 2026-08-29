@@ -11,7 +11,8 @@ const {
 } = require("../middleware/auth");
 const {
   makeUploader,
-  uploadToS3
+  uploadToS3,
+  getPresignedUrl
 } = require("../middleware/uploadMiddleware");
 
 const router = express.Router();
@@ -62,12 +63,18 @@ if (!content) {
     currentWeek: displayWeek
   });
 }
+const responseData = content.toObject();
+
+if (content.pdfUrl) {
+  responseData.pdfUrl = await getPresignedUrl(content.pdfUrl);
+}
 
 res.json({
-  ...content.toObject(),
+  ...responseData,
   currentWeek: displayWeek,
   domain: intern.domain
 });
+
     } catch (err) {
       next(err);
     }
@@ -154,8 +161,13 @@ const domain = decodeURIComponent(req.params.domain)
         });
       }
 
-      res.json(content);
+const responseData = content.toObject();
 
+if (content.pdfUrl) {
+  responseData.pdfUrl = await getPresignedUrl(content.pdfUrl);
+}
+
+res.json(responseData);
     } catch (err) {
       next(err);
     }
@@ -219,17 +231,17 @@ if (req.file) {
     "weekly-content"
   );
 }
-
 const content = await WeeklyContent.create({
   domain,
   week,
   title,
-  pdfUrl: pdfData ? pdfData.url : null,
+  pdfUrl: pdfData ? pdfData.key : null,
   pdfOriginalName: pdfData
     ? pdfData.originalName
     : null,
   active: true
 });
+
 
       res.status(201).json(content);
 
@@ -286,24 +298,15 @@ const domain = decodeURIComponent(req.params.domain)
       }
 
       // Replace PDF
-      if (req.file) {
-        if (content.pdfUrl) {
-          const oldPath = content.pdfUrl.replace(
-            "/uploads",
-            path.join(__dirname, "..", "uploads")
-          );
+if (req.file) {
+  const pdfData = await uploadToS3(
+    req.file,
+    "weekly-content"
+  );
 
-          fs.unlink(oldPath, () => {});
-        }
-
-        content.pdfUrl = toPublicUrl(
-          "weekly-content",
-          req.file.filename
-        );
-
-        content.pdfOriginalName =
-          req.file.originalname;
-      }
+  content.pdfUrl = pdfData.key;
+  content.pdfOriginalName = pdfData.originalName;
+}
 
       await content.save();
 
