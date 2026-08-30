@@ -1,6 +1,7 @@
 const express = require("express");
 
 const PortalProfile = require("../models/PortalProfile");
+const Intern = require("../models/Intern");
 const { verifyToken, requireIntern } = require("../middleware/auth");
 
 const router = express.Router();
@@ -51,14 +52,13 @@ router.post(
   requireIntern,
   async (req, res, next) => {
     try {
-      const { name, domain, currentWeek } = req.body;
-
-      if (!name || !domain || !currentWeek) {
-        return res.status(400).json({
-          success: false,
-          message: "Name, domain and current week are required",
-        });
-      }
+const { name } = req.body;
+if (!name) {
+  return res.status(400).json({
+    success: false,
+    message: "Name is required",
+  });
+}
 
       const existing = await PortalProfile.findOne({
         userId: req.user.id,
@@ -72,14 +72,25 @@ router.post(
         });
       }
 
-      const profile = await PortalProfile.create({
-        userId: req.user.id,
-        email: req.user.email,
-        name: name.trim(),
-        domain: domain.trim(),
-        currentWeek: Number(currentWeek),
-        profileCompleted: true,
-      });
+      const intern = await Intern.findById(req.user.id);
+
+if (!intern) {
+  return res.status(404).json({
+    success: false,
+    message: "Intern not found",
+  });
+}
+
+const profile = await PortalProfile.create({
+  userId: intern._id,
+  email: intern.email,
+  name: name.trim(),
+  domain: intern.domain,
+  currentWeek: Number(
+    intern.upcomingWeek || intern.currentWeek || 1
+  ),
+  profileCompleted: true,
+});
 
       return res.status(201).json({
         success: true,

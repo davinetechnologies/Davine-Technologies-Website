@@ -114,8 +114,9 @@ if (password !== portalPassword) {
 // =================================================
 
 const profile = await PortalProfile.findOne({
-  email: cleanEmail,
+  userId: intern._id,
 });
+
 
 const token = jwt.sign(
   {
@@ -142,7 +143,11 @@ if (!profile) {
     setupRequired: true,
     user: {
       id: intern._id,
+      name: intern.name,
       email: cleanEmail,
+      domain: intern.domain,
+      currentWeek: intern.currentWeek,
+      upcomingWeek: intern.upcomingWeek,
       type: "intern",
       role: "intern",
     },
