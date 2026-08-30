@@ -7,15 +7,7 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 const s3 = require("../config/s3");
 
-// =====================================================
-// S3 STORAGE
-// =====================================================
-
 const storage = multer.memoryStorage();
-
-// =====================================================
-// PDF FILTER
-// =====================================================
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === "application/pdf") {
@@ -25,10 +17,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// =====================================================
-// DEFAULT UPLOAD
-// =====================================================
-
 const upload = multer({
   storage,
   fileFilter,
@@ -37,11 +25,7 @@ const upload = multer({
   },
 });
 
-// =====================================================
-// UPLOADER
-// =====================================================
-
-const makeUploader = (folderName) => {
+const makeUploader = () => {
   return multer({
     storage,
     fileFilter,
@@ -51,14 +35,8 @@ const makeUploader = (folderName) => {
   });
 };
 
-// =====================================================
-// UPLOAD FILE TO S3
-// =====================================================
-
 const uploadToS3 = async (file, folderName) => {
-  if (!file) {
-    return null;
-  }
+  if (!file) return null;
 
   const safeName = file.originalname.replace(
     /[^a-zA-Z0-9._-]/g,
@@ -82,14 +60,8 @@ const uploadToS3 = async (file, folderName) => {
   };
 };
 
-// =====================================================
-// GENERATE PRIVATE S3 PRESIGNED URL
-// =====================================================
-
 const getPresignedUrl = async (key) => {
-  if (!key) {
-    return null;
-  }
+  if (!key) return null;
 
   const command = new GetObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET,
@@ -98,19 +70,12 @@ const getPresignedUrl = async (key) => {
     ResponseContentDisposition: "inline",
   });
 
-  const signedUrl = await getSignedUrl(s3, command, {
-    expiresIn: 3600, // 1 hour
+  return await getSignedUrl(s3, command, {
+    expiresIn: 3600,
   });
-
-  return signedUrl;
 };
 
-// =====================================================
-// EXPORT
-// =====================================================
-
 module.exports = upload;
-
 module.exports.makeUploader = makeUploader;
 module.exports.uploadToS3 = uploadToS3;
 module.exports.getPresignedUrl = getPresignedUrl;

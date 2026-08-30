@@ -48,56 +48,46 @@ router.get(
         });
       }
 
-const domain = intern.domain.trim().toLowerCase();
+      const domain = intern.domain.trim().toLowerCase();
 
-const displayWeek =
-  Number(intern.upcomingWeek || intern.currentWeek || 1);
+      const displayWeek = Number(
+        intern.upcomingWeek ||
+        intern.currentWeek ||
+        1
+      );
 
-const content = await WeeklyContent.findOne({
-  domain,
-  week: displayWeek,
-  active: true
-});
+      const content = await WeeklyContent.findOne({
+        domain,
+        week: displayWeek,
+        active: true
+      });
 
-let pdfUrl = null;
+      if (!content) {
+        return res.status(404).json({
+          message: `No weekly content has been published for ${intern.domain}, Week ${displayWeek}`,
+          domain: intern.domain,
+          currentWeek: displayWeek
+        });
+      }
 
-if (content.pdfKey) {
-  pdfUrl = await getSignedUrl(
-    s3,
-    new GetObjectCommand({
-      Bucket: process.env.AWS_S3_BUCKET,
-      Key: content.pdfKey,
-    }),
-    { expiresIn: 3600 }
-  );
-}
+      let pdfUrl = null;
 
-if (!content) {
-  return res.status(404).json({
-    message: `No weekly content has been published for ${intern.domain}, Week ${displayWeek}`,
-    domain: intern.domain,
-    currentWeek: displayWeek
-  });
-}
-const responseData = content.toObject();
+      if (content.pdfKey) {
+        pdfUrl = await getPresignedUrl(content.pdfKey);
+      }
 
-if (content.pdfUrl) {
-  responseData.pdfUrl = await getPresignedUrl(content.pdfUrl);
-}
-
-res.json({
-  ...content.toObject(),
-  pdfUrl,
-  currentWeek: displayWeek,
-  domain: intern.domain
-});
+      res.json({
+        ...content.toObject(),
+        pdfUrl,
+        currentWeek: displayWeek,
+        domain: intern.domain
+      });
 
     } catch (err) {
       next(err);
     }
   }
 );
-
 
 // =====================================================
 // GET ALL WEEKLY CONTENT
@@ -111,32 +101,55 @@ res.json({
 // /api/weekly-content?domain=AWS%20Cloud
 // =====================================================
 
-router.get("/", verifyToken, async (req, res, next) => {
-  try {
-    const filter = {};
+router.get(
+  "/",
+  verifyToken,
+  async (req, res, next) => {
+    try {
+      const filter = {};
 
-if (req.query.domain) {
-  filter.domain = req.query.domain.trim().toLowerCase();
-}
+      if (req.query.domain) {
+        filter.domain =
+          req.query.domain.trim().toLowerCase();
+      }
 
-    const existing = await WeeklyContent
-      .find(filter)
-      .sort({ domain: 1, week: 1 });
+      const existing = await WeeklyContent
+        .find(filter)
+        .sort({
+          domain: 1,
+          week: 1
+        });
 
-    // Intern view
-    if (req.user.type === "intern") {
-      return res.json(
-        existing.filter((w) => w.active)
+      const contentWithUrls = await Promise.all(
+        existing.map(async (item) => {
+          const data = item.toObject();
+
+          if (data.pdfKey) {
+            data.pdfUrl =
+              await getPresignedUrl(data.pdfKey);
+          } else {
+            data.pdfUrl = null;
+          }
+
+          return data;
+        })
       );
+
+      if (req.user.type === "intern") {
+        return res.json(
+          contentWithUrls.filter(
+            (w) => w.active
+          )
+        );
+      }
+
+      return res.json(contentWithUrls);
+
+    } catch (err) {
+      next(err);
     }
-
-    // Mentor view
-    res.json(existing);
-
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 
 // =====================================================
@@ -252,8 +265,8 @@ const content = await WeeklyContent.create({
   domain,
   week,
   title,
-pdfUrl: pdfData ? pdfData.url : null,
-pdfKey: pdfData ? pdfData.key : null,
+  pdfUrl: null,
+  pdfKey: pdfData ? pdfData.key : null,
   pdfOriginalName: pdfData
     ? pdfData.originalName
     : null,
@@ -322,7 +335,8 @@ if (req.file) {
     "weekly-content"
   );
 
-  content.pdfUrl = pdfData.key;
+content.pdfUrl = pdfData.key;
+content.pdfKey = pdfData.key;
   content.pdfOriginalName = pdfData.originalName;
 }
 
