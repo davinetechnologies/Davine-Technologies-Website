@@ -89,13 +89,17 @@ router.get(
 // POST /api/portal-profile/setup
 // =====================================================
 
+// =====================================================
+// COMPLETE FIRST LOGIN PROFILE
+// POST /api/portal-profile/setup
+// =====================================================
+
 router.post(
   "/setup",
   verifyToken,
   requireIntern,
   async (req, res, next) => {
     try {
-
       const {
         name,
         email,
@@ -112,55 +116,74 @@ router.post(
         linkedin,
         github,
         domain,
+        currentWeek,
       } = req.body;
-
 
       // ============================================
       // REQUIRED FIELDS
       // ============================================
 
-      if (!name || !name.trim()) {
+      if (!name || !String(name).trim()) {
         return res.status(400).json({
           success: false,
           message: "Name is required",
         });
       }
 
-      if (!email || !email.trim()) {
+      if (!email || !String(email).trim()) {
         return res.status(400).json({
           success: false,
           message: "Email is required",
         });
       }
 
-      if (!phone || !phone.trim()) {
+      if (!phone || !String(phone).trim()) {
         return res.status(400).json({
           success: false,
           message: "Phone number is required",
         });
       }
 
-      if (!domain || !domain.trim()) {
+      if (!domain || !String(domain).trim()) {
         return res.status(400).json({
           success: false,
           message: "Domain is required",
         });
       }
 
-      if (!college || !college.trim()) {
+      if (!currentWeek) {
+        return res.status(400).json({
+          success: false,
+          message: "Current week is required",
+        });
+      }
+
+      if (!college || !String(college).trim()) {
         return res.status(400).json({
           success: false,
           message: "College / University is required",
         });
       }
 
-      if (!course || !course.trim()) {
+      if (!course || !String(course).trim()) {
         return res.status(400).json({
           success: false,
           message: "Course / Degree is required",
         });
       }
 
+      // ============================================
+      // VALIDATE CURRENT WEEK
+      // ============================================
+
+      const week = Number(currentWeek);
+
+      if (!Number.isInteger(week) || week < 1 || week > 12) {
+        return res.status(400).json({
+          success: false,
+          message: "Current week must be between 1 and 12",
+        });
+      }
 
       // ============================================
       // FIND LOGGED-IN PORTAL PROFILE
@@ -176,9 +199,8 @@ router.post(
         });
       }
 
-
       // ============================================
-      // PREVENT RE-SUBMISSION OF FIRST SETUP
+      // PREVENT SECOND FIRST-LOGIN SUBMISSION
       // ============================================
 
       if (profile.profileCompleted === true) {
@@ -189,38 +211,88 @@ router.post(
         });
       }
 
+      // ============================================
+      // CHECK EMAIL DUPLICATE
+      // ============================================
+
+      const cleanEmail =
+        String(email).trim().toLowerCase();
+
+      const existingProfile =
+        await PortalProfile.findOne({
+          email: cleanEmail,
+          _id: { $ne: profile._id },
+        });
+
+      if (existingProfile) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "This email is already associated with another portal profile.",
+        });
+      }
 
       // ============================================
       // SAVE FIRST LOGIN DATA
       // ============================================
 
-      profile.name = name.trim();
-      profile.email = email.trim().toLowerCase();
-      profile.domain = domain.trim();
+      profile.name =
+        String(name).trim();
 
-      profile.phone = phone.trim();
-      profile.dob = dob || "";
-      profile.gender = gender || "";
-      profile.address = address || "";
-      profile.city = city || "";
-      profile.state = state || "";
-      profile.pincode = pincode || "";
+      profile.email =
+        cleanEmail;
 
-      profile.college = college.trim();
-      profile.course = course.trim();
+      profile.domain =
+        String(domain).trim();
+
+      profile.currentWeek =
+        week;
+
+      profile.phone =
+        String(phone).trim();
+
+      profile.dob =
+        dob ? String(dob).trim() : "";
+
+      profile.gender =
+        gender ? String(gender).trim() : "";
+
+      profile.address =
+        address ? String(address).trim() : "";
+
+      profile.city =
+        city ? String(city).trim() : "";
+
+      profile.state =
+        state ? String(state).trim() : "";
+
+      profile.pincode =
+        pincode ? String(pincode).trim() : "";
+
+      profile.college =
+        String(college).trim();
+
+      profile.course =
+        String(course).trim();
 
       profile.graduationYear =
         graduationYear
           ? Number(graduationYear)
           : null;
 
-      profile.linkedin = linkedin || "";
-      profile.github = github || "";
+      profile.linkedin =
+        linkedin ? String(linkedin).trim() : "";
+
+      profile.github =
+        github ? String(github).trim() : "";
+
+      // ============================================
+      // MARK PROFILE COMPLETED
+      // ============================================
 
       profile.profileCompleted = true;
 
       await profile.save();
-
 
       // ============================================
       // SUCCESS
@@ -233,122 +305,23 @@ router.post(
       });
 
     } catch (error) {
-      next(error);
-    }
-  }
-);
+      console.error(
+        "Portal profile setup error:",
+        error
+      );
 
-
-// =====================================================
-// UPDATE MY PORTAL PROFILE
-// PUT /api/portal-profile/me
-// =====================================================
-
-router.put(
-  "/me",
-  verifyToken,
-  requireIntern,
-  async (req, res, next) => {
-    try {
-
-      const updates = {};
-
-
-      if (req.body.phone !== undefined) {
-        updates.phone =
-          String(req.body.phone).trim();
-      }
-
-      if (req.body.dob !== undefined) {
-        updates.dob =
-          String(req.body.dob).trim();
-      }
-
-      if (req.body.gender !== undefined) {
-        updates.gender =
-          String(req.body.gender).trim();
-      }
-
-      if (req.body.address !== undefined) {
-        updates.address =
-          String(req.body.address).trim();
-      }
-
-      if (req.body.city !== undefined) {
-        updates.city =
-          String(req.body.city).trim();
-      }
-
-      if (req.body.state !== undefined) {
-        updates.state =
-          String(req.body.state).trim();
-      }
-
-      if (req.body.pincode !== undefined) {
-        updates.pincode =
-          String(req.body.pincode).trim();
-      }
-
-      if (req.body.college !== undefined) {
-        updates.college =
-          String(req.body.college).trim();
-      }
-
-      if (req.body.course !== undefined) {
-        updates.course =
-          String(req.body.course).trim();
-      }
-
-      if (req.body.graduationYear !== undefined) {
-        updates.graduationYear =
-          req.body.graduationYear
-            ? Number(req.body.graduationYear)
-            : null;
-      }
-
-      if (req.body.linkedin !== undefined) {
-        updates.linkedin =
-          String(req.body.linkedin).trim();
-      }
-
-      if (req.body.github !== undefined) {
-        updates.github =
-          String(req.body.github).trim();
-      }
-
-
-      const profile =
-        await PortalProfile.findByIdAndUpdate(
-          req.user.id,
-          {
-            $set: updates,
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
-        );
-
-
-      if (!profile) {
-        return res.status(404).json({
+      // MongoDB duplicate key
+      if (error.code === 11000) {
+        return res.status(409).json({
           success: false,
-          message: "Portal profile not found",
+          message:
+            "This email is already associated with another portal profile.",
         });
       }
 
-
-      return res.json({
-        success: true,
-        message: "Portal profile updated successfully",
-        profile,
-      });
-
-    } catch (error) {
       next(error);
     }
   }
 );
-
 
 module.exports = router;
