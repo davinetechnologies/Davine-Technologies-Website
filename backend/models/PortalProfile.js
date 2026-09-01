@@ -45,49 +45,41 @@ const portalProfileSchema = new mongoose.Schema(
     dob: {
       type: String,
       default: "",
-      trim: true,
     },
 
     gender: {
       type: String,
       default: "",
-      trim: true,
     },
 
     address: {
       type: String,
       default: "",
-      trim: true,
     },
 
     city: {
       type: String,
       default: "",
-      trim: true,
     },
 
     state: {
       type: String,
       default: "",
-      trim: true,
     },
 
     pincode: {
       type: String,
       default: "",
-      trim: true,
     },
 
     college: {
       type: String,
       default: "",
-      trim: true,
     },
 
     course: {
       type: String,
       default: "",
-      trim: true,
     },
 
     graduationYear: {
@@ -98,13 +90,11 @@ const portalProfileSchema = new mongoose.Schema(
     linkedin: {
       type: String,
       default: "",
-      trim: true,
     },
 
     github: {
       type: String,
       default: "",
-      trim: true,
     },
 
     profilePhoto: {
