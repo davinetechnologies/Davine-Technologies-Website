@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -87,20 +88,13 @@ router.post("/login", async (req, res) => {
 // INTERN LOGIN
 // =================================================
 
-const intern = await Intern.findOne({
-  email: cleanEmail,
-});
-
-if (!intern) {
-  return res.status(401).json({
-    success: false,
-    message: "No intern account found with this email",
-  });
-}
-
-// Existing login password
 const portalPassword =
   process.env.INTERN_DEFAULT_PASSWORD || "Intern@2026";
+
+
+// =================================================
+// CHECK PASSWORD
+// =================================================
 
 if (password !== portalPassword) {
   return res.status(401).json({
@@ -109,18 +103,41 @@ if (password !== portalPassword) {
   });
 }
 
+
 // =================================================
-// CHECK PORTAL PROFILE
+// FIND PORTAL PROFILE BY EMAIL
 // =================================================
 
-const profile = await PortalProfile.findOne({
-  userId: intern._id,
+let profile = await PortalProfile.findOne({
+  email: cleanEmail,
 });
 
 
+// =================================================
+// FIRST LOGIN
+// =================================================
+
+if (!profile) {
+
+  profile = await PortalProfile.create({
+    userId: new mongoose.Types.ObjectId(),
+    email: cleanEmail,
+    name: "",
+    domain: "",
+    currentWeek: 1,
+    profileCompleted: false,
+  });
+
+}
+
+
+// =================================================
+// CREATE JWT
+// =================================================
+
 const token = jwt.sign(
   {
-    id: intern._id,
+    id: profile._id,
     type: "intern",
     role: "intern",
     email: cleanEmail,
@@ -131,28 +148,32 @@ const token = jwt.sign(
   }
 );
 
+
 // =================================================
 // FIRST LOGIN → PROFILE SETUP
 // =================================================
 
-if (!profile) {
+if (profile.profileCompleted !== true) {
+
   return res.json({
     success: true,
     message: "Login successful. Profile setup required.",
     token,
     setupRequired: true,
+
     user: {
-      id: intern._id,
-      name: intern.name,
-      email: cleanEmail,
-      domain: intern.domain,
-      currentWeek: intern.currentWeek,
-      upcomingWeek: intern.upcomingWeek,
+      id: profile._id,
+      name: profile.name || "",
+      email: profile.email,
+      domain: profile.domain || "",
+      currentWeek: profile.currentWeek || 1,
       type: "intern",
       role: "intern",
     },
   });
+
 }
+
 
 // =================================================
 // EXISTING PROFILE → DIRECT DASHBOARD

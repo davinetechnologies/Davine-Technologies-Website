@@ -17,19 +17,15 @@ const portalProfileSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // ================================
-    // BASIC / INTERNSHIP INFORMATION
-    // ================================
-
     name: {
       type: String,
-      required: true,
+      default: "",
       trim: true,
     },
 
     domain: {
       type: String,
-      required: true,
+      default: "",
       trim: true,
     },
 
@@ -39,10 +35,6 @@ const portalProfileSchema = new mongoose.Schema(
       min: 1,
       max: 12,
     },
-
-    // ================================
-    // PERSONAL INFORMATION
-    // ================================
 
     phone: {
       type: String,
@@ -86,10 +78,6 @@ const portalProfileSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // ================================
-    // EDUCATION
-    // ================================
-
     college: {
       type: String,
       default: "",
@@ -107,10 +95,6 @@ const portalProfileSchema = new mongoose.Schema(
       default: null,
     },
 
-    // ================================
-    // PROFESSIONAL
-    // ================================
-
     linkedin: {
       type: String,
       default: "",
@@ -123,10 +107,6 @@ const portalProfileSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // ================================
-    // PROFILE
-    // ================================
-
     profilePhoto: {
       type: String,
       default: "",
@@ -137,7 +117,6 @@ const portalProfileSchema = new mongoose.Schema(
       default: false,
     },
   },
-
   {
     timestamps: true,
   }

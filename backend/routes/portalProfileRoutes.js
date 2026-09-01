@@ -1,7 +1,6 @@
 const express = require("express");
 
 const PortalProfile = require("../models/PortalProfile");
-const Intern = require("../models/Intern");
 
 const {
   verifyToken,
@@ -22,109 +21,22 @@ router.get(
   requireIntern,
   async (req, res, next) => {
     try {
-      const intern = await Intern.findById(req.user.id).lean();
+      const profile = await PortalProfile.findById(
+        req.user.id
+      ).lean();
 
-      if (!intern) {
-        return res.status(404).json({
-          success: false,
-          message: "Intern not found",
-        });
-      }
-
-      const profile = await PortalProfile.findOne({
-        userId: req.user.id,
-      }).lean();
-
-      // No profile yet = first login
       if (!profile) {
         return res.json({
           success: true,
           setupRequired: true,
           profileCompleted: false,
-          intern: {
-            name:
-              intern.name ||
-              intern.fullName ||
-              intern.internName ||
-              "",
-
-            email:
-              intern.email ||
-              req.user.email ||
-              "",
-
-            domain:
-              intern.domain ||
-              "",
-
-            currentWeek:
-              intern.currentWeek ||
-              1,
-          },
         });
       }
 
-      // Profile exists but not completed
-      if (profile.profileCompleted !== true) {
-        return res.json({
-          success: true,
-          setupRequired: true,
-          profileCompleted: false,
-          intern: {
-            name:
-              profile.name ||
-              intern.name ||
-              intern.fullName ||
-              "",
-
-            email:
-              profile.email ||
-              intern.email ||
-              req.user.email ||
-              "",
-
-            domain:
-              profile.domain ||
-              intern.domain ||
-              "",
-
-            currentWeek:
-              profile.currentWeek ||
-              intern.currentWeek ||
-              1,
-          },
-        });
-      }
-
-      // Profile already completed
       return res.json({
         success: true,
-        setupRequired: false,
-        profileCompleted: true,
-        intern: {
-          name:
-            profile.name ||
-            intern.name ||
-            intern.fullName ||
-            "",
-
-          email:
-            profile.email ||
-            intern.email ||
-            req.user.email ||
-            "",
-
-          domain:
-            profile.domain ||
-            intern.domain ||
-            "",
-
-          currentWeek:
-            profile.currentWeek ||
-            intern.currentWeek ||
-            1,
-        },
-
+        setupRequired: profile.profileCompleted !== true,
+        profileCompleted: profile.profileCompleted === true,
         profile,
       });
 
@@ -146,9 +58,9 @@ router.get(
   requireIntern,
   async (req, res, next) => {
     try {
-      const profile = await PortalProfile.findOne({
-        userId: req.user.id,
-      });
+      const profile = await PortalProfile.findById(
+        req.user.id
+      );
 
       if (!profile) {
         return res.status(404).json({
@@ -160,7 +72,8 @@ router.get(
 
       return res.json({
         success: true,
-        profileCompleted: profile.profileCompleted === true,
+        profileCompleted:
+          profile.profileCompleted === true,
         profile,
       });
 
@@ -172,7 +85,7 @@ router.get(
 
 
 // =====================================================
-// CREATE PORTAL PROFILE
+// COMPLETE FIRST LOGIN PROFILE
 // POST /api/portal-profile/setup
 // =====================================================
 
@@ -184,6 +97,8 @@ router.post(
     try {
 
       const {
+        name,
+        email,
         phone,
         dob,
         gender,
@@ -196,6 +111,7 @@ router.post(
         graduationYear,
         linkedin,
         github,
+        domain,
       } = req.body;
 
 
@@ -203,21 +119,42 @@ router.post(
       // REQUIRED FIELDS
       // ============================================
 
-      if (!phone) {
+      if (!name || !name.trim()) {
+        return res.status(400).json({
+          success: false,
+          message: "Name is required",
+        });
+      }
+
+      if (!email || !email.trim()) {
+        return res.status(400).json({
+          success: false,
+          message: "Email is required",
+        });
+      }
+
+      if (!phone || !phone.trim()) {
         return res.status(400).json({
           success: false,
           message: "Phone number is required",
         });
       }
 
-      if (!college) {
+      if (!domain || !domain.trim()) {
+        return res.status(400).json({
+          success: false,
+          message: "Domain is required",
+        });
+      }
+
+      if (!college || !college.trim()) {
         return res.status(400).json({
           success: false,
           message: "College / University is required",
         });
       }
 
-      if (!course) {
+      if (!course || !course.trim()) {
         return res.status(400).json({
           success: false,
           message: "Course / Degree is required",
@@ -226,130 +163,77 @@ router.post(
 
 
       // ============================================
-      // GET INTERN
+      // FIND LOGGED-IN PORTAL PROFILE
       // ============================================
 
-      const intern = await Intern.findById(
-        req.user.id
-      ).lean();
+      const profile =
+        await PortalProfile.findById(req.user.id);
 
-      if (!intern) {
+      if (!profile) {
         return res.status(404).json({
           success: false,
-          message: "Intern not found",
+          message: "Portal account not found",
         });
       }
 
 
       // ============================================
-      // CHECK EXISTING PROFILE
+      // PREVENT RE-SUBMISSION OF FIRST SETUP
       // ============================================
 
-      const existing = await PortalProfile.findOne({
-        userId: req.user.id,
-      });
-
-      if (existing) {
-
+      if (profile.profileCompleted === true) {
         return res.status(409).json({
           success: false,
-          alreadyCompleted: existing.profileCompleted === true,
-          message: "Portal profile already exists",
-          profile: existing,
+          alreadyCompleted: true,
+          message: "Profile setup is already completed",
         });
-
       }
 
 
       // ============================================
-      // CREATE PROFILE
+      // SAVE FIRST LOGIN DATA
       // ============================================
 
-      const profile = await PortalProfile.create({
+      profile.name = name.trim();
+      profile.email = email.trim().toLowerCase();
+      profile.domain = domain.trim();
 
-        userId: req.user.id,
+      profile.phone = phone.trim();
+      profile.dob = dob || "";
+      profile.gender = gender || "";
+      profile.address = address || "";
+      profile.city = city || "";
+      profile.state = state || "";
+      profile.pincode = pincode || "";
 
-        email:
-          intern.email ||
-          req.user.email ||
-          "",
+      profile.college = college.trim();
+      profile.course = course.trim();
 
-        name:
-          intern.name ||
-          intern.fullName ||
-          intern.internName ||
-          "Intern",
+      profile.graduationYear =
+        graduationYear
+          ? Number(graduationYear)
+          : null;
 
-        domain:
-          intern.domain ||
-          "",
+      profile.linkedin = linkedin || "";
+      profile.github = github || "";
 
-        currentWeek:
-          intern.currentWeek ||
-          1,
+      profile.profileCompleted = true;
 
-        phone:
-          phone.trim(),
-
-        dob:
-          dob || "",
-
-        gender:
-          gender || "",
-
-        address:
-          address || "",
-
-        city:
-          city || "",
-
-        state:
-          state || "",
-
-        pincode:
-          pincode || "",
-
-        college:
-          college.trim(),
-
-        course:
-          course.trim(),
-
-        graduationYear:
-          graduationYear
-            ? Number(graduationYear)
-            : null,
-
-        linkedin:
-          linkedin || "",
-
-        github:
-          github || "",
-
-        profileCompleted:
-          true,
-      });
+      await profile.save();
 
 
       // ============================================
       // SUCCESS
       // ============================================
 
-      return res.status(201).json({
-
+      return res.status(200).json({
         success: true,
-
-        message:
-          "Portal profile created successfully",
-
+        message: "Profile setup completed successfully",
         profile,
-
       });
 
     } catch (error) {
-
       next(error);
-
     }
   }
 );
@@ -432,71 +316,36 @@ router.put(
           String(req.body.github).trim();
       }
 
-      if (req.body.name !== undefined) {
-        updates.name =
-          String(req.body.name).trim();
-      }
-
-      if (req.body.domain !== undefined) {
-        updates.domain =
-          String(req.body.domain).trim();
-      }
-
-      if (req.body.currentWeek !== undefined) {
-        updates.currentWeek =
-          Number(req.body.currentWeek);
-      }
-
-      if (req.body.profilePhoto !== undefined) {
-        updates.profilePhoto =
-          req.body.profilePhoto;
-      }
-
 
       const profile =
-        await PortalProfile.findOneAndUpdate(
-
-          {
-            userId: req.user.id,
-          },
-
+        await PortalProfile.findByIdAndUpdate(
+          req.user.id,
           {
             $set: updates,
           },
-
           {
             new: true,
             runValidators: true,
           }
-
         );
 
 
       if (!profile) {
-
         return res.status(404).json({
           success: false,
           message: "Portal profile not found",
         });
-
       }
 
 
       return res.json({
-
         success: true,
-
-        message:
-          "Portal profile updated successfully",
-
+        message: "Portal profile updated successfully",
         profile,
-
       });
 
     } catch (error) {
-
       next(error);
-
     }
   }
 );
