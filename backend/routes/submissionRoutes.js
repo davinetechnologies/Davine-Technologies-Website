@@ -12,17 +12,46 @@ const router = express.Router();
 const upload = makeUploader();
 
 // GET /api/submissions/me - the logged-in intern's own submission history.
-router.get("/me", verifyToken, requireIntern, async (req, res, next) => {
-  try {
-    const submissions = await Submission.find({ intern: req.user.id }).sort({ week: 1 });
-    res.json(submissions);
-  } catch (err) {
-    next(err);
-  }
-});
+router.get(
+  "/me",
+  verifyToken,
+  requireIntern,
+  async (req, res, next) => {
+    try {
+      const submissions = await Submission
+        .find({ intern: req.user.id })
+        .sort({ week: 1 });
 
-// POST /api/submissions
-// Intern uploads completed PDF for current week
+      const submissionsWithUrls = await Promise.all(
+        submissions.map(async (submission) => {
+          const data = submission.toObject();
+
+          if (data.submissionFile) {
+            data.submissionUrl =
+              await getPresignedUrl(data.submissionFile);
+          } else {
+            data.submissionUrl = null;
+          }
+
+          return data;
+        })
+      );
+
+      res.json(submissionsWithUrls);
+
+    } catch (err) {
+      console.error(
+        "Get submissions error:",
+        err
+      );
+
+      next(err);
+    }
+  }
+);
+
+// POST /api/submissions - intern uploads their completed PDF for the current week.
+// Upserts on (intern, week) so a rejected week can be resubmitted in place.
 router.post(
   "/",
   verifyToken,
@@ -32,7 +61,6 @@ router.post(
     try {
       if (!req.file) {
         return res.status(400).json({
-          success: false,
           message: "A PDF file is required",
         });
       }
@@ -41,33 +69,26 @@ router.post(
 
       if (!intern) {
         return res.status(404).json({
-          success: false,
           message: "Intern not found",
         });
       }
 
       const week =
-        Number(req.body.week) || intern.currentWeek;
+        Number(req.body.week) ||
+        intern.currentWeek ||
+        1;
 
-      if (week !== intern.currentWeek) {
-        return res.status(400).json({
-          success: false,
-          message: `You can only submit for your current week (Week ${intern.currentWeek})`,
-        });
-      }
-
-      // ==========================================
-      // UPLOAD PDF TO S3
-      // ==========================================
-
-      const s3File = await uploadToS3(
+      // Upload directly to S3
+      const pdfData = await uploadToS3(
         req.file,
         "submissions"
       );
 
-      // ==========================================
-      // SAVE SUBMISSION IN MONGODB
-      // ==========================================
+      if (!pdfData) {
+        return res.status(500).json({
+          message: "PDF upload to S3 failed",
+        });
+      }
 
       const submission =
         await Submission.findOneAndUpdate(
@@ -76,15 +97,21 @@ router.post(
             week,
           },
           {
-            submissionFile: s3File.key,
+            intern: intern._id,
+            week,
+
+            // S3 key
+            submissionFile: pdfData.key,
+
             submissionOriginalName:
-              s3File.originalName,
+              pdfData.originalName,
 
             status: "Submitted",
             submittedAt: new Date(),
 
             reviewedAt: null,
             reviewedBy: null,
+            mentorFeedback: null,
           },
           {
             new: true,
@@ -92,10 +119,6 @@ router.post(
             setDefaultsOnInsert: true,
           }
         );
-
-      // ==========================================
-      // UPDATE WEEKLY PROGRESS
-      // ==========================================
 
       await WeeklyProgress.findOneAndUpdate(
         {
@@ -110,7 +133,7 @@ router.post(
         }
       );
 
-      return res.status(201).json({
+      res.status(201).json({
         success: true,
         message: "Submission uploaded successfully",
         submission,
@@ -126,6 +149,7 @@ router.post(
     }
   }
 );
+
 // Everything below is mentor-only.
 router.use(verifyToken, requireMentor);
 

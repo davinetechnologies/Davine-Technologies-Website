@@ -7,6 +7,10 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 const s3 = require("../config/s3");
 
+// =====================================================
+// MULTER - MEMORY STORAGE
+// =====================================================
+
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
@@ -25,6 +29,10 @@ const upload = multer({
   },
 });
 
+// =====================================================
+// UPLOADER
+// =====================================================
+
 const makeUploader = () => {
   return multer({
     storage,
@@ -34,6 +42,10 @@ const makeUploader = () => {
     },
   });
 };
+
+// =====================================================
+// UPLOAD FILE TO S3
+// =====================================================
 
 const uploadToS3 = async (file, folderName) => {
   if (!file) return null;
@@ -60,6 +72,10 @@ const uploadToS3 = async (file, folderName) => {
   };
 };
 
+// =====================================================
+// GET PRESIGNED S3 URL
+// =====================================================
+
 const getPresignedUrl = async (key) => {
   if (!key) return null;
 
@@ -74,6 +90,10 @@ const getPresignedUrl = async (key) => {
     expiresIn: 3600,
   });
 };
+
+// =====================================================
+// EXPORTS
+// =====================================================
 
 module.exports = upload;
 module.exports.makeUploader = makeUploader;

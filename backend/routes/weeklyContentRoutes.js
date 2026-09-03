@@ -67,32 +67,33 @@ router.get(
         intern.currentWeek || 1
       );
 
-      const content = await WeeklyContent.findOne({
-        domain,
-        week: displayWeek,
-        active: true
-      });
+const content = await WeeklyContent.findOne({
+  domain,
+  week: displayWeek,
+  active: true
+});
 
-      if (!content) {
-        return res.status(404).json({
-          message: `No weekly content has been published for ${intern.domain}, Week ${displayWeek}`,
-          domain: intern.domain,
-          currentWeek: displayWeek
-        });
-      }
+if (!content) {
+  return res.status(404).json({
+    message: `No weekly content found for ${intern.domain}, Week ${displayWeek}`
+  });
+}
 
-      let pdfUrl = null;
+let pdfUrl = null;
 
-      if (content.pdfKey) {
-        pdfUrl = await getPresignedUrl(content.pdfKey);
-      }
+if (content.pdfKey) {
+  pdfUrl = await getPresignedUrl(content.pdfKey);
+}
 
-      res.json({
-        ...content.toObject(),
-        pdfUrl,
-        currentWeek: displayWeek,
-        domain: intern.domain
-      });
+return res.json({
+  title: content.title,
+  domain: content.domain,
+  week: content.week,
+  active: content.active,
+  pdfKey: content.pdfKey || null,
+  pdfUrl,
+  currentWeek: displayWeek
+});
 
     } catch (err) {
       next(err);
@@ -281,11 +282,8 @@ const content = await WeeklyContent.create({
   domain,
   week,
   title,
-  pdfUrl: null,
   pdfKey: pdfData ? pdfData.key : null,
-  pdfOriginalName: pdfData
-    ? pdfData.originalName
-    : null,
+  pdfOriginalName: pdfData ? pdfData.originalName : null,
   active: true
 });
 
@@ -351,8 +349,8 @@ if (req.file) {
     "weekly-content"
   );
 
-content.pdfKey = pdfData.key;
-content.pdfOriginalName = pdfData.originalName;
+  content.pdfKey = pdfData.key;
+  content.pdfOriginalName = pdfData.originalName;
 }
 
       await content.save();
