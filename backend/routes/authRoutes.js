@@ -140,17 +140,16 @@ if (!profile) {
 
 const token = jwt.sign(
   {
-    id: profile._id,
+    id: intern._id.toString(),
+    email: intern.email,
     type: "intern",
-    role: "intern",
-    email: cleanEmail,
+    role: intern.role || "intern",
   },
   process.env.JWT_SECRET,
   {
     expiresIn: "7d",
   }
 );
-
 
 // =================================================
 // FIRST LOGIN → PROFILE SETUP

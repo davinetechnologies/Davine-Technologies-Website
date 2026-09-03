@@ -33,26 +33,39 @@ const upload = makeUploader("weekly-content");
 // Example:
 // AWS Cloud + Week 5
 // =====================================================
-
 router.get(
   "/current",
   verifyToken,
   requireIntern,
   async (req, res, next) => {
     try {
-      const intern = await Intern.findById(req.user.id);
+      let intern = null;
 
-      if (!intern) {
-        return res.status(404).json({
-          message: "Intern not found"
+      // Find by MongoDB ID
+      if (req.user.id) {
+        intern = await Intern.findById(req.user.id);
+      }
+
+      // Fallback by email
+      if (!intern && req.user.email) {
+        intern = await Intern.findOne({
+          email: req.user.email.trim().toLowerCase()
         });
       }
 
-      const domain = intern.domain.trim().toLowerCase();
+      if (!intern) {
+        return res.status(404).json({
+          message: "Intern not found",
+          userId: req.user.id || null,
+          userEmail: req.user.email || null
+        });
+      }
 
-const displayWeek = Number(
-  intern.currentWeek || 1
-);
+      const domain = (intern.domain || "").trim().toLowerCase();
+
+      const displayWeek = Number(
+        intern.currentWeek || 1
+      );
 
       const content = await WeeklyContent.findOne({
         domain,
