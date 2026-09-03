@@ -50,11 +50,9 @@ router.get(
 
       const domain = intern.domain.trim().toLowerCase();
 
-      const displayWeek = Number(
-        intern.upcomingWeek ||
-        intern.currentWeek ||
-        1
-      );
+const displayWeek = Number(
+  intern.currentWeek || 1
+);
 
       const content = await WeeklyContent.findOne({
         domain,
@@ -193,9 +191,14 @@ const domain = decodeURIComponent(req.params.domain)
 
 const responseData = content.toObject();
 
-if (content.pdfUrl) {
-  responseData.pdfUrl = await getPresignedUrl(content.pdfUrl);
+if (content.pdfKey) {
+  responseData.pdfUrl = await getPresignedUrl(
+    content.pdfKey
+  );
+} else {
+  responseData.pdfUrl = null;
 }
+
 
 res.json(responseData);
     } catch (err) {
@@ -335,9 +338,8 @@ if (req.file) {
     "weekly-content"
   );
 
-content.pdfUrl = pdfData.key;
 content.pdfKey = pdfData.key;
-  content.pdfOriginalName = pdfData.originalName;
+content.pdfOriginalName = pdfData.originalName;
 }
 
       await content.save();

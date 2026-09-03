@@ -4,10 +4,12 @@ const Submission = require("../models/Submission");
 const Intern = require("../models/Intern");
 const WeeklyProgress = require("../models/WeeklyProgress");
 const { verifyToken, requireMentor, requireIntern } = require("../middleware/auth");
-const { makeUploader, toPublicUrl } =
-  require("../middleware/uploadMiddleware");
+const {
+  makeUploader,
+  uploadToS3,
+} = require("../middleware/uploadMiddleware");
 const router = express.Router();
-const upload = makeUploader("submissions");
+const upload = makeUploader();
 
 // GET /api/submissions/me - the logged-in intern's own submission history.
 router.get("/me", verifyToken, requireIntern, async (req, res, next) => {
@@ -19,48 +21,111 @@ router.get("/me", verifyToken, requireIntern, async (req, res, next) => {
   }
 });
 
-// POST /api/submissions - intern uploads their completed PDF for the current week.
-// Upserts on (intern, week) so a rejected week can be resubmitted in place.
-router.post("/", verifyToken, requireIntern, upload.single("pdf"), async (req, res, next) => {
-  try {
-    if (!req.file) return res.status(400).json({ message: "A PDF file is required" });
+// POST /api/submissions
+// Intern uploads completed PDF for current week
+router.post(
+  "/",
+  verifyToken,
+  requireIntern,
+  upload.single("pdf"),
+  async (req, res, next) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "A PDF file is required",
+        });
+      }
 
-    const intern = await Intern.findById(req.user.id);
-    if (!intern) return res.status(404).json({ message: "Intern not found" });
+      const intern = await Intern.findById(req.user.id);
 
-    const week = Number(req.body.week) || intern.currentWeek;
-    if (week !== intern.currentWeek) {
-      return res.status(400).json({
-        message: `You can only submit for your current week (Week ${intern.currentWeek})`,
+      if (!intern) {
+        return res.status(404).json({
+          success: false,
+          message: "Intern not found",
+        });
+      }
+
+      const week =
+        Number(req.body.week) || intern.currentWeek;
+
+      if (week !== intern.currentWeek) {
+        return res.status(400).json({
+          success: false,
+          message: `You can only submit for your current week (Week ${intern.currentWeek})`,
+        });
+      }
+
+      // ==========================================
+      // UPLOAD PDF TO S3
+      // ==========================================
+
+      const s3File = await uploadToS3(
+        req.file,
+        "submissions"
+      );
+
+      // ==========================================
+      // SAVE SUBMISSION IN MONGODB
+      // ==========================================
+
+      const submission =
+        await Submission.findOneAndUpdate(
+          {
+            intern: intern._id,
+            week,
+          },
+          {
+            submissionFile: s3File.key,
+            submissionOriginalName:
+              s3File.originalName,
+
+            status: "Submitted",
+            submittedAt: new Date(),
+
+            reviewedAt: null,
+            reviewedBy: null,
+          },
+          {
+            new: true,
+            upsert: true,
+            setDefaultsOnInsert: true,
+          }
+        );
+
+      // ==========================================
+      // UPDATE WEEKLY PROGRESS
+      // ==========================================
+
+      await WeeklyProgress.findOneAndUpdate(
+        {
+          intern: intern._id,
+          week,
+        },
+        {
+          status: "In Progress",
+        },
+        {
+          upsert: true,
+        }
+      );
+
+      return res.status(201).json({
+        success: true,
+        message: "Submission uploaded successfully",
+        submission,
       });
+
+    } catch (err) {
+      console.error(
+        "Submission upload error:",
+        err
+      );
+
+      next(err);
     }
-
-    const submission = await Submission.findOneAndUpdate(
-      { intern: intern._id, week },
-      {
-        submissionFile: toPublicUrl("submissions", req.file.filename),
-        submissionOriginalName: req.file.originalname,
-        status: "Submitted",
-        submittedAt: new Date(),
-        // Resetting the review state means it goes back into the mentor's queue.
-        reviewedAt: null,
-        reviewedBy: null,
-      },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
-    );
-
-    await WeeklyProgress.findOneAndUpdate(
-      { intern: intern._id, week },
-      { status: "In Progress" },
-      { upsert: true }
-    );
-
-    res.status(201).json(submission);
-  } catch (err) {
-    next(err);
   }
-});
-
+);
 // Everything below is mentor-only.
 router.use(verifyToken, requireMentor);
 
