@@ -112,22 +112,25 @@ let profile = await PortalProfile.findOne({
   email: cleanEmail,
 });
 
+const intern = await Intern.findOne({
+  email: cleanEmail,
+});
 
 // =================================================
 // FIRST LOGIN
 // =================================================
 
 if (!profile) {
-
   profile = await PortalProfile.create({
     userId: new mongoose.Types.ObjectId(),
     email: cleanEmail,
-    name: "",
-    domain: "",
-    currentWeek: 1,
+
+    name: intern?.name || "",
+    domain: intern?.domain || "",
+    currentWeek: intern?.currentWeek || 1,
+
     profileCompleted: false,
   });
-
 }
 
 
@@ -195,7 +198,7 @@ return res.json({
     domain: profile.domain || "",
     currentWeek: profile.currentWeek || 1,
 
-    photo: profile.photo || null,
+photo: profile.profilePhoto || null,
     phone: profile.phone || "",
 
     status: profile.status || "Active",
