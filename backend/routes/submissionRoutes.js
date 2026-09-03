@@ -7,6 +7,7 @@ const { verifyToken, requireMentor, requireIntern } = require("../middleware/aut
 const {
   makeUploader,
   uploadToS3,
+  getPresignedUrl
 } = require("../middleware/uploadMiddleware");
 const router = express.Router();
 const upload = makeUploader();
@@ -61,7 +62,7 @@ router.post(
     try {
       if (!req.file) {
         return res.status(400).json({
-          message: "A PDF file is required",
+          message: "A PDF file is required"
         });
       }
 
@@ -69,16 +70,25 @@ router.post(
 
       if (!intern) {
         return res.status(404).json({
-          message: "Intern not found",
+          message: "Intern not found"
         });
       }
 
       const week =
         Number(req.body.week) ||
-        intern.currentWeek ||
+        Number(intern.currentWeek) ||
         1;
 
-      // Upload directly to S3
+      if (week < 1 || week > 12) {
+        return res.status(400).json({
+          message: "Invalid week"
+        });
+      }
+
+      // ==========================================
+      // UPLOAD PDF TO S3
+      // ==========================================
+
       const pdfData = await uploadToS3(
         req.file,
         "submissions"
@@ -86,57 +96,79 @@ router.post(
 
       if (!pdfData) {
         return res.status(500).json({
-          message: "PDF upload to S3 failed",
+          message: "PDF upload to S3 failed"
         });
       }
+
+      // ==========================================
+      // SAVE SUBMISSION IN MONGODB
+      // ==========================================
 
       const submission =
         await Submission.findOneAndUpdate(
           {
             intern: intern._id,
-            week,
+            week
           },
           {
             intern: intern._id,
             week,
 
-            // S3 key
             submissionFile: pdfData.key,
 
             submissionOriginalName:
               pdfData.originalName,
 
             status: "Submitted",
+
             submittedAt: new Date(),
 
             reviewedAt: null,
             reviewedBy: null,
-            mentorFeedback: null,
+
+            mentorFeedback: null
           },
           {
             new: true,
             upsert: true,
-            setDefaultsOnInsert: true,
+            setDefaultsOnInsert: true
           }
         );
+
+      // ==========================================
+      // UPDATE WEEKLY PROGRESS
+      // ==========================================
 
       await WeeklyProgress.findOneAndUpdate(
         {
           intern: intern._id,
-          week,
+          week
         },
         {
-          status: "In Progress",
+          status: "In Progress"
         },
         {
           upsert: true,
+          new: true
         }
       );
+
+      // ==========================================
+      // CREATE TEMPORARY S3 VIEW URL
+      // ==========================================
+
+      const pdfUrl =
+        await getPresignedUrl(
+          submission.submissionFile
+        );
 
       res.status(201).json({
         success: true,
         message: "Submission uploaded successfully",
-        submission,
+        submission: {
+          ...submission.toObject(),
+          pdfUrl
+        }
       });
 
     } catch (err) {
