@@ -40,14 +40,20 @@ router.get(
 
       res.json(submissionsWithUrls);
 
-    } catch (err) {
-      console.error(
-        "Get submissions error:",
-        err
-      );
+} catch (err) {
+  console.error("====================================");
+  console.error("SUBMISSION UPLOAD ERROR");
+  console.error("Message:", err.message);
+  console.error("Name:", err.name);
+  console.error("Code:", err.code);
+  console.error("Stack:", err.stack);
+  console.error("====================================");
 
-      next(err);
-    }
+  return res.status(500).json({
+    success: false,
+    message: err.message || "Internal server error"
+  });
+}
   }
 );
 
