@@ -5,7 +5,7 @@ const weeklyProgressSchema = new mongoose.Schema(
     // Existing interncollections record
     internCollectionId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "InternCollection",
+      ref: "Intern",
       required: true,
       index: true
     },

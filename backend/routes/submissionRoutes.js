@@ -144,20 +144,26 @@ router.post(
       // ==========================================
       // UPDATE WEEKLY PROGRESS
       // ==========================================
-
-      await WeeklyProgress.findOneAndUpdate(
-        {
-          intern: intern._id,
-          week
-        },
-        {
-          status: "In Progress"
-        },
-        {
-          upsert: true,
-          new: true
-        }
-      );
+await WeeklyProgress.findOneAndUpdate(
+  {
+internCollectionId: intern.internCollectionId,
+    week
+  },
+  {
+internCollectionId: intern.internCollectionId,
+    internEmail: intern.email,
+    internName: intern.name,
+    domain: intern.domain,
+    week,
+    overallStatus: "In Progress",
+    "task.status": "Submitted"
+  },
+  {
+    upsert: true,
+    new: true,
+    setDefaultsOnInsert: true
+  }
+);
 
       // ==========================================
       // CREATE TEMPORARY S3 VIEW URL
