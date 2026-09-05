@@ -350,14 +350,20 @@ await WeeklyProgress.findOneAndUpdate(
     week: submission.week
   },
   {
-    overallStatus:
-      status === "Approved"
-        ? "Completed"
-        : "In Progress"
+    intern: submission.intern,
+    internEmail: intern.email,
+    internName: intern.name,
+    domain: intern.domain,
+    week: submission.week,
+
+    overallStatus: "In Progress",
+
+    "task.status": "Submitted"
   },
   {
     upsert: true,
-    new: true
+    new: true,
+    setDefaultsOnInsert: true
   }
 );
 
