@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 
 const weeklyProgressSchema = new mongoose.Schema(
   {
-    // Existing interncollections record
-    internCollectionId: {
+    // Logged-in intern
+    intern: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Intern",
       required: true,
       index: true
     },
 
-    // Keep email as a stable identifier
+    // Stable intern information
     internEmail: {
       type: String,
       required: true,
@@ -142,7 +142,7 @@ const weeklyProgressSchema = new mongoose.Schema(
 // One intern = one record for one week
 weeklyProgressSchema.index(
   {
-    internCollectionId: 1,
+    intern: 1,
     week: 1
   },
   {

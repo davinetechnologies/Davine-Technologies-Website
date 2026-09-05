@@ -110,51 +110,56 @@ router.post(
       // SAVE SUBMISSION IN MONGODB
       // ==========================================
 
-      const submission =
-        await Submission.findOneAndUpdate(
-          {
-            intern: intern._id,
-            week
-          },
-          {
-            intern: intern._id,
-            week,
+const submission =
+  await Submission.findOneAndUpdate(
+    {
+      intern: intern._id,
+      week
+    },
+    {
+      intern: intern._id,
+      week,
 
-            submissionFile: pdfData.key,
+      // Save intern details also
+      internId: intern.internId,
+      fullName: intern.name,
+      email: intern.email,
+      domain: intern.domain,
 
-            submissionOriginalName:
-              pdfData.originalName,
+      submissionFile: pdfData.key,
 
-            status: "Submitted",
+      submissionOriginalName:
+        pdfData.originalName,
 
-            submittedAt: new Date(),
+      status: "Submitted",
 
-            reviewedAt: null,
-            reviewedBy: null,
+      submittedAt: new Date(),
 
-            mentorFeedback: null
-          },
-          {
-            new: true,
-            upsert: true,
-            setDefaultsOnInsert: true
-          }
-        );
+      reviewedAt: null,
+      reviewedBy: null,
 
+      mentorFeedback: null
+    },
+    {
+      new: true,
+      upsert: true,
+      setDefaultsOnInsert: true
+    }
+  );
       // ==========================================
       // UPDATE WEEKLY PROGRESS
       // ==========================================
 await WeeklyProgress.findOneAndUpdate(
   {
-internCollectionId: intern.internCollectionId,
-    week
+    internCollectionId: intern._id,
+    week: week
   },
   {
-internCollectionId: intern.internCollectionId,
+    internCollectionId: intern._id,
     internEmail: intern.email,
     internName: intern.name,
     domain: intern.domain,
-    week,
+    week: week,
     overallStatus: "In Progress",
     "task.status": "Submitted"
   },
@@ -331,11 +336,22 @@ router.put("/:id/review", async (req, res, next) => {
     );
     if (!submission) return res.status(404).json({ message: "Submission not found" });
 
-    await WeeklyProgress.findOneAndUpdate(
-      { intern: submission.intern, week: submission.week },
-      { status: status === "Approved" ? "Completed" : "In Progress" },
-      { upsert: true }
-    );
+await WeeklyProgress.findOneAndUpdate(
+  {
+    intern: submission.intern,
+    week: submission.week
+  },
+  {
+    overallStatus:
+      status === "Approved"
+        ? "Completed"
+        : "In Progress"
+  },
+  {
+    upsert: true,
+    new: true
+  }
+);
 
     res.json(submission);
   } catch (err) {
