@@ -146,21 +146,29 @@ const submission =
       setDefaultsOnInsert: true
     }
   );
-      // ==========================================
-      // UPDATE WEEKLY PROGRESS
-      // ==========================================
+// ==========================================
+// UPDATE WEEKLY PROGRESS
+// ==========================================
+if (!submission) {
+  return res.status(404).json({
+    message: "Submission not found"
+  });
+}
+
 await WeeklyProgress.findOneAndUpdate(
   {
-    internCollectionId: intern._id,
-    week: week
+    intern: submission.intern,
+    week: submission.week
   },
   {
-    internCollectionId: intern._id,
+    intern: submission.intern,
     internEmail: intern.email,
     internName: intern.name,
     domain: intern.domain,
-    week: week,
+    week: submission.week,
+
     overallStatus: "In Progress",
+
     "task.status": "Submitted"
   },
   {
