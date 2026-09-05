@@ -218,8 +218,33 @@ router.get("/board", async (req, res, next) => {
     }
 
     const interns = await Intern.find(internFilter).populate("batch", "batchName");
-    const submissions = await Submission.find({ week: weekNum, intern: { $in: interns.map((i) => i._id) } });
-    const byIntern = new Map(submissions.map((s) => [s.intern.toString(), s]));
+const submissions = await Submission.find({
+  week: weekNum,
+  intern: { $in: interns.map((i) => i._id) }
+});
+
+const submissionsWithUrls = await Promise.all(
+  submissions.map(async (submission) => {
+    const data = submission.toObject();
+
+    if (data.submissionFile) {
+      data.submissionUrl = await getPresignedUrl(
+        data.submissionFile
+      );
+    } else {
+      data.submissionUrl = null;
+    }
+
+    return data;
+  })
+);
+
+const byIntern = new Map(
+  submissionsWithUrls.map((s) => [
+    s.intern.toString(),
+    s
+  ])
+);
 
     let board = interns.map((intern) => {
       const sub = byIntern.get(intern._id.toString());
