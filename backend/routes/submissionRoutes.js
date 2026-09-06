@@ -333,18 +333,30 @@ router.put("/:id/review", async (req, res, next) => {
       return res.status(400).json({ message: "status must be 'Approved' or 'Rejected'" });
     }
 
-    const submission = await Submission.findByIdAndUpdate(
-      req.params.id,
-      {
-        status,
-        mentorFeedback: mentorFeedback || null,
-        reviewedAt: new Date(),
-        reviewedBy: req.user.id,
-      },
-      { new: true }
-    );
-    if (!submission) return res.status(404).json({ message: "Submission not found" });
+const submission = await Submission.findByIdAndUpdate(
+  req.params.id,
+  {
+    status,
+    mentorFeedback: mentorFeedback || null,
+    reviewedAt: new Date(),
+    reviewedBy: req.user.id,
+  },
+  { new: true }
+);
 
+if (!submission) {
+  return res.status(404).json({
+    message: "Submission not found"
+  });
+}
+
+const intern = await Intern.findById(submission.intern);
+
+if (!intern) {
+  return res.status(404).json({
+    message: "Intern not found"
+  });
+}
 await WeeklyProgress.findOneAndUpdate(
   {
     intern: submission.intern,
