@@ -189,15 +189,29 @@ router.post(
       // FIND LOGGED-IN PORTAL PROFILE
       // ============================================
 
-      const profile =
-        await PortalProfile.findById(req.user.id);
+let profile = await PortalProfile.findOne({
+  userId: req.user.id
+});
 
-      if (!profile) {
-        return res.status(404).json({
-          success: false,
-          message: "Portal account not found",
-        });
-      }
+if (!profile) {
+  const intern = await Intern.findById(req.user.id);
+
+  if (!intern) {
+    return res.status(404).json({
+      success: false,
+      message: "Intern not found"
+    });
+  }
+
+  profile = await PortalProfile.create({
+    userId: intern._id,
+    email: intern.email,
+    name: intern.name || "",
+    domain: intern.domain || "",
+    currentWeek: intern.currentWeek || 1,
+    profileCompleted: false
+  });
+}
 
       // ============================================
       // PREVENT SECOND FIRST-LOGIN SUBMISSION

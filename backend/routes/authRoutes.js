@@ -138,13 +138,14 @@ if (!profile) {
   profile = await PortalProfile.create({
     userId: intern._id,
     email: cleanEmail,
-    name: intern.name || "",
-    domain: intern.domain || "",
-    currentWeek: intern.currentWeek || 1,
+
+    name: intern?.name || "",
+    domain: intern?.domain || "",
+    currentWeek: intern?.currentWeek || 1,
+
     profileCompleted: false,
   });
 }
-
 // =================================================
 // CREATE JWT
 // =================================================
