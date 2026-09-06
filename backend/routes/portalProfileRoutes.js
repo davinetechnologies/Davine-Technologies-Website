@@ -21,9 +21,9 @@ router.get(
   requireIntern,
   async (req, res, next) => {
     try {
-      const profile = await PortalProfile.findById(
-        req.user.id
-      ).lean();
+const profile = await PortalProfile.findOne({
+  userId: req.user.id
+}).lean();
 
       if (!profile) {
         return res.json({
@@ -58,9 +58,9 @@ router.get(
   requireIntern,
   async (req, res, next) => {
     try {
-      const profile = await PortalProfile.findById(
-        req.user.id
-      );
+const profile = await PortalProfile.findOne({
+  userId: req.user.id
+});
 
       if (!profile) {
         return res.status(404).json({
