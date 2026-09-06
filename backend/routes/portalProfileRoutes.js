@@ -1,5 +1,5 @@
 const express = require("express");
-
+const Intern = require("../models/Intern");
 const PortalProfile = require("../models/PortalProfile");
 
 const {
@@ -305,6 +305,21 @@ if (!profile) {
       // ============================================
 
       profile.profileCompleted = true;
+
+      // =====================================================
+// SYNC INTERN DATA
+// =====================================================
+
+const intern = await Intern.findById(req.user.id);
+
+if (intern) {
+  intern.name = profile.name;
+  intern.email = profile.email;
+  intern.domain = profile.domain;
+  intern.currentWeek = profile.currentWeek;
+
+  await intern.save();
+}
 
       await profile.save();
 

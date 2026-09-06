@@ -92,6 +92,11 @@ const user = {
 const portalPassword =
   process.env.INTERN_DEFAULT_PASSWORD || "Intern@2026";
 
+
+// =================================================
+// CHECK PASSWORD
+// =================================================
+
 if (password !== portalPassword) {
   return res.status(401).json({
     success: false,
@@ -99,28 +104,35 @@ if (password !== portalPassword) {
   });
 }
 
-// Find intern by email
+
+// =================================================
+// FIND INTERN BY EMAIL
+// =================================================
+
 let intern = await Intern.findOne({
   email: cleanEmail,
 });
 
+
 // =================================================
-// AUTO CREATE INTERN ACCOUNT
+// AUTO-CREATE NEW INTERN ACCOUNT
 // =================================================
 
 if (!intern) {
+  const internId = `INT-${Date.now()}`;
+
   intern = await Intern.create({
-    internId: `INT-${Date.now()}`,
-    name: "",
+    internId,
+    name: "New Intern",
     email: cleanEmail,
-    domain: "",
-    batch: "",
-    status: "Active",
+    domain: "Pending",
     currentWeek: 1,
     upcomingWeek: 2,
+    status: "Active",
     progress: 0,
   });
 }
+
 
 // =================================================
 // FIND PORTAL PROFILE
@@ -130,29 +142,30 @@ let profile = await PortalProfile.findOne({
   userId: intern._id,
 });
 
+
 // =================================================
-// FIRST LOGIN → CREATE PROFILE
+// AUTO-CREATE PORTAL PROFILE
 // =================================================
 
 if (!profile) {
   profile = await PortalProfile.create({
     userId: intern._id,
     email: cleanEmail,
-
-    name: intern?.name || "",
-    domain: intern?.domain || "",
-    currentWeek: intern?.currentWeek || 1,
-
+    name: intern.name || "",
+    domain: intern.domain || "",
+    currentWeek: intern.currentWeek || 1,
     profileCompleted: false,
   });
 }
+
+
 // =================================================
 // CREATE JWT
 // =================================================
 
 const token = jwt.sign(
   {
-    id: intern._id,
+    id: intern._id.toString(),
     email: intern.email,
     type: "intern",
     role: "intern",
@@ -162,6 +175,7 @@ const token = jwt.sign(
     expiresIn: "7d",
   }
 );
+
 
 // =================================================
 // FIRST LOGIN
@@ -173,11 +187,12 @@ if (profile.profileCompleted !== true) {
     message: "Login successful. Profile setup required.",
     token,
     setupRequired: true,
+
     user: {
       id: intern._id,
       profileId: profile._id,
-      email: cleanEmail,
       name: profile.name || "",
+      email: profile.email,
       domain: profile.domain || "",
       currentWeek: profile.currentWeek || 1,
       type: "intern",
@@ -186,6 +201,7 @@ if (profile.profileCompleted !== true) {
   });
 }
 
+
 // =================================================
 // EXISTING INTERN → DIRECT DASHBOARD
 // =================================================
@@ -193,26 +209,34 @@ if (profile.profileCompleted !== true) {
 return res.json({
   success: true,
   message: "Login successful",
-  token,
   setupRequired: false,
+  token,
+
   user: {
     id: intern._id,
     profileId: profile._id,
-    internId: intern.internId,
+    internId: intern.internId || "",
     name: profile.name || intern.name || "",
-    email: intern.email,
+    email: profile.email,
     type: "intern",
     role: "intern",
+
     domain: profile.domain || intern.domain || "",
-    currentWeek: profile.currentWeek || intern.currentWeek || 1,
+    currentWeek:
+      profile.currentWeek || intern.currentWeek || 1,
+
     photo: profile.profilePhoto || null,
     phone: profile.phone || "",
-    status: intern.status || "Active",
-    progress: intern.progress || 0,
-    joiningDate: intern.joiningDate || null,
-    endingDate: intern.endingDate || null,
-    idCardUrl: intern.idCardUrl || "",
-    certificateUrl: intern.certificateUrl || "",
+
+    status: profile.status || intern.status || "Active",
+    progress: profile.progress || intern.progress || 0,
+
+    joiningDate: profile.joiningDate || intern.joiningDate || "",
+    endingDate: profile.endingDate || intern.endingDate || "",
+
+    idCardUrl: profile.idCardUrl || intern.idCardUrl || "",
+    certificateUrl:
+      profile.certificateUrl || intern.certificateUrl || "",
   },
 });
 
