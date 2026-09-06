@@ -1,13 +1,97 @@
 // =====================================================
-// MENTOR PORTAL AUTH
+// SHARED PORTAL AUTH
+// =====================================================
+
+const API_BASE =
+  "https://davine-technologies-website.onrender.com/api";
+
+// =====================================================
+// LOGIN
+// =====================================================
+
+export async function login(email, password, portal) {
+  const cleanEmail = email.trim().toLowerCase();
+
+  if (!cleanEmail || !password || !portal) {
+    throw new Error("Email, password and portal are required");
+  }
+
+  const response = await fetch(`${API_BASE}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email: cleanEmail,
+      password,
+      portal
+    })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(
+      data.message || "Login failed"
+    );
+  }
+
+  if (!data.token || !data.user) {
+    throw new Error(
+      "Invalid login response from server"
+    );
+  }
+
+  // Make sure frontend knows which portal this session belongs to
+  const user = {
+    ...data.user,
+    portal
+  };
+
+  // Clear any old session first
+  localStorage.removeItem("mp_token");
+  localStorage.removeItem("mp_user");
+  localStorage.removeItem("mp_intern");
+
+  // Save new session
+  localStorage.setItem(
+    "mp_token",
+    data.token
+  );
+
+  localStorage.setItem(
+    "mp_user",
+    JSON.stringify(user)
+  );
+
+  // Intern profile/session data
+  if (portal === "intern") {
+    localStorage.setItem(
+      "mp_intern",
+      JSON.stringify(user)
+    );
+  }
+
+  return {
+    ...data,
+    user
+  };
+}
+
+
+// =====================================================
+// REQUIRE PORTAL
 // =====================================================
 
 export function requirePortal(portal) {
-  const token = localStorage.getItem("mp_token");
-  const userRaw = localStorage.getItem("mp_user");
+  const token =
+    localStorage.getItem("mp_token");
+
+  const userRaw =
+    localStorage.getItem("mp_user");
 
   if (!token || !userRaw) {
-    window.location.href = "mentor-login.html";
+    redirectToLogin(portal);
     return null;
   }
 
@@ -16,27 +100,59 @@ export function requirePortal(portal) {
   try {
     user = JSON.parse(userRaw);
   } catch (error) {
-    console.error("Invalid stored user data:", error);
+    console.error(
+      "Invalid stored user:",
+      error
+    );
 
-    localStorage.removeItem("mp_token");
-    localStorage.removeItem("mp_user");
+    clearSession();
+    redirectToLogin(portal);
 
-    window.location.href = "mentor-login.html";
     return null;
   }
 
-  // Make sure this is a mentor account
-  if (portal === "mentor") {
-    if (user.portal && user.portal !== "mentor") {
-      localStorage.removeItem("mp_token");
-      localStorage.removeItem("mp_user");
+  // ==========================================
+  // STRICT PORTAL CHECK
+  // ==========================================
 
-      window.location.href = "mentor-login.html";
-      return null;
-    }
+  if (user.portal !== portal) {
+    console.warn(
+      `Wrong portal session. Expected: ${portal}, Found: ${user.portal}`
+    );
+
+    clearSession();
+    redirectToLogin(portal);
+
+    return null;
   }
 
   return user;
+}
+
+
+// =====================================================
+// REDIRECT
+// =====================================================
+
+function redirectToLogin(portal) {
+  if (portal === "intern") {
+    window.location.href =
+      "intern-login.html";
+  } else {
+    window.location.href =
+      "mentor-login.html";
+  }
+}
+
+
+// =====================================================
+// CLEAR SESSION
+// =====================================================
+
+function clearSession() {
+  localStorage.removeItem("mp_token");
+  localStorage.removeItem("mp_user");
+  localStorage.removeItem("mp_intern");
 }
 
 
@@ -45,25 +161,31 @@ export function requirePortal(portal) {
 // =====================================================
 
 export async function logout() {
+  const token =
+    localStorage.getItem("mp_token");
+
   try {
-    const token = localStorage.getItem("mp_token");
-
     if (token) {
-      try {
-await fetch("https://davine-technologies-website.onrender.com/api/auth/logout", {          method: "POST",
+      await fetch(
+        `${API_BASE}/auth/logout`,
+        {
+          method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization:
+              `Bearer ${token}`
           }
-        });
-      } catch (error) {
-        console.warn("Logout API request failed:", error);
-      }
+        }
+      );
     }
+  } catch (error) {
+    console.warn(
+      "Logout API request failed:",
+      error
+    );
   } finally {
-    localStorage.removeItem("mp_token");
-    localStorage.removeItem("mp_user");
-    localStorage.removeItem("mp_intern");
+    clearSession();
 
-    window.location.href = "mentor-login.html";
+    window.location.href =
+      "mentor-login.html";
   }
 }
