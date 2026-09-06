@@ -162,9 +162,10 @@ await WeeklyProgress.findOneAndUpdate(
   },
   {
     intern: submission.intern,
-    internEmail: intern.email,
-    internName: intern.name,
-    domain: intern.domain,
+    internId: intern?.internId || submission.internId,
+    internEmail: intern?.email || submission.email,
+    internName: intern?.name || submission.fullName,
+    domain: intern?.domain || submission.domain,
     week: submission.week,
 
     overallStatus: "In Progress",
