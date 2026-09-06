@@ -313,6 +313,13 @@ if (!profile) {
 const intern = await Intern.findById(req.user.id);
 
 if (intern) {
+
+  // Create internId for old records
+  // where internId is missing
+  if (!intern.internId) {
+    intern.internId = `INT-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  }
+
   intern.name = profile.name;
   intern.email = profile.email;
   intern.domain = profile.domain;
