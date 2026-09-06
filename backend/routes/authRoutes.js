@@ -56,13 +56,14 @@ router.post("/login", async (req, res) => {
         });
       }
 
-      const user = {
-        id: mentor._id,
-        name: mentor.name || "Mentor",
-        email: mentor.email,
-        type: mentor.role || "mentor",
-        role: mentor.role || "mentor",
-      };
+const user = {
+  id: mentor._id,
+  name: mentor.name || "Mentor",
+  email: mentor.email,
+  type: "mentor",
+  role: mentor.role || "mentor",
+  portal: "mentor",
+};
 
       const token = jwt.sign(
         {
@@ -116,6 +117,12 @@ const intern = await Intern.findOne({
   email: cleanEmail,
 });
 
+if (!intern) {
+  return res.status(404).json({
+    success: false,
+    message: "Intern account not found with this email",
+  });
+}
 // =================================================
 // FIRST LOGIN
 // =================================================
