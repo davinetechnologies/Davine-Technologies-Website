@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
+const startWeeklyAutoUpdate = require("./weeklyAutoUpdate");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -427,13 +428,18 @@ app.use((err, req, res, next) => {
     message: "Internal server error",
   });
 });
-
 // =====================================================
 // START SERVER
 // =====================================================
 
 connectDatabase()
   .then(() => {
+
+    // =================================================
+    // START WEEKLY AUTO UPDATE SCHEDULER
+    // =================================================
+    startWeeklyAutoUpdate();
+
     app.listen(PORT, () => {
       console.log(
         `Server running on port ${PORT}`
