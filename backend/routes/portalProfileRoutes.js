@@ -58,9 +58,19 @@ router.get(
   requireIntern,
   async (req, res, next) => {
     try {
-const profile = await PortalProfile.findOne({
-  userId: req.user.id
-});
+      const intern = await Intern.findById(req.user.id);
+
+      if (!intern) {
+        return res.status(404).json({
+          success: false,
+          profileCompleted: false,
+          message: "Intern not found",
+        });
+      }
+
+      const profile = await PortalProfile.findOne({
+        userId: req.user.id,
+      });
 
       if (!profile) {
         return res.status(404).json({
@@ -70,10 +80,19 @@ const profile = await PortalProfile.findOne({
         });
       }
 
+      // =====================================================
+      // ALWAYS SYNC CURRENT WEEK FROM INTERN RECORD
+      // Intern.currentWeek is the source of truth
+      // =====================================================
+
+      if (Number(profile.currentWeek) !== Number(intern.currentWeek)) {
+        profile.currentWeek = Number(intern.currentWeek);
+        await profile.save();
+      }
+
       return res.json({
         success: true,
-        profileCompleted:
-          profile.profileCompleted === true,
+        profileCompleted: profile.profileCompleted === true,
         profile,
       });
 
@@ -82,8 +101,6 @@ const profile = await PortalProfile.findOne({
     }
   }
 );
-
-
 // =====================================================
 // COMPLETE FIRST LOGIN PROFILE
 // POST /api/portal-profile/setup
