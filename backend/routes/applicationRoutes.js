@@ -10,7 +10,10 @@ const upload = require("../middleware/uploadMiddleware");
 
 const Application = require("../models/Application");
 
-// ================= APPLICATION SUBMIT =================
+
+// =====================================================
+// APPLICATION SUBMIT
+// =====================================================
 
 router.post(
   "/",
@@ -28,11 +31,10 @@ router.post(
         role
       } = req.body;
 
-      if (
-        !fullName ||
-        !email ||
-        !role
-      ) {
+
+      // ================= VALIDATION =================
+
+      if (!fullName || !email || !role) {
 
         return res.status(400).json({
           success: false,
@@ -41,147 +43,281 @@ router.post(
 
       }
 
-      const savedData =
-      await Application.create({
+
+      // ================= RESUME CHECK =================
+
+      if (!req.file) {
+
+        return res.status(400).json({
+          success: false,
+          message: "Resume is required",
+        });
+
+      }
+
+
+      console.log("FILE RECEIVED:", {
+        filename: req.file.filename,
+        originalname: req.file.originalname,
+        path: req.file.path,
+        size: req.file.size,
+      });
+
+
+      // =================================================
+      // SAVE APPLICATION TO MONGODB
+      // =================================================
+
+      const savedData = await Application.create({
 
         fullName,
         email,
         role,
 
-        resume: req.file
-          ? req.file.filename
-          : "",
+        resume: req.file.filename,
+
       });
+
 
       console.log("SAVED:", savedData);
 
-      // ================= ADMIN EMAIL =================
 
-      await axios.post(
-        "https://api.brevo.com/v3/smtp/email",
+      // =================================================
+      // PREPARE RESUME ATTACHMENT
+      // =================================================
 
-        {
-          sender: {
-            name: "Davine Technologies",
-            email: process.env.EMAIL_USER,
-          },
+      let resumeAttachment = [];
 
-          to: [
+      try {
+
+        const filePath = path.resolve(req.file.path);
+
+        console.log("READING RESUME FROM:", filePath);
+
+        if (fs.existsSync(filePath)) {
+
+          const fileBuffer = fs.readFileSync(filePath);
+
+          resumeAttachment = [
             {
+              content: fileBuffer.toString("base64"),
+              name: req.file.originalname,
+            },
+          ];
+
+          console.log("RESUME ATTACHMENT READY");
+
+        } else {
+
+          console.log(
+            "WARNING: Resume file not found:",
+            filePath
+          );
+
+        }
+
+      } catch (fileError) {
+
+        console.log(
+          "RESUME READ ERROR:",
+          fileError
+        );
+
+      }
+
+
+      // =================================================
+      // ADMIN EMAIL
+      // =================================================
+
+      try {
+
+        await axios.post(
+          "https://api.brevo.com/v3/smtp/email",
+
+          {
+
+            sender: {
+              name: "Davine Technologies",
               email: process.env.EMAIL_USER,
             },
-          ],
 
-          subject: "New Internship Application",
+            to: [
+              {
+                email: process.env.EMAIL_USER,
+              },
+            ],
 
-          htmlContent: `
+            subject:
+              "New Internship Application - " + fullName,
 
-            <h2>New Internship Application</h2>
+            htmlContent: `
 
-            <p><strong>Name:</strong> ${fullName}</p>
+              <h2>New Internship Application</h2>
 
-            <p><strong>Email:</strong> ${email}</p>
+              <p>
+                <strong>Name:</strong>
+                ${fullName}
+              </p>
 
-            <p><strong>Role:</strong> ${role}</p>
+              <p>
+                <strong>Email:</strong>
+                ${email}
+              </p>
 
-          `,
-          attachment: req.file
-  ? [
-      {
-        content: fs.readFileSync(
-          path.join(
-            __dirname,
-            "../uploads",
-            req.file.filename
-          ),
-          { encoding: "base64" }
-        ),
+              <p>
+                <strong>Role:</strong>
+                ${role}
+              </p>
 
-        name: req.file.originalname,
-      },
-    ]
-  : [],
-        },
+              <p>
+                A new internship application has been
+                submitted through the Davine Technologies website.
+              </p>
 
-        {
-          headers: {
-            "api-key": process.env.BREVO_API_KEY,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+            `,
 
-      console.log("Admin Email Sent");
+            attachment: resumeAttachment,
 
-      // ================= USER EMAIL =================
-
-      await axios.post(
-        "https://api.brevo.com/v3/smtp/email",
-
-        {
-          sender: {
-            name: "Davine Technologies",
-            email: process.env.EMAIL_USER,
           },
 
-          to: [
-            {
-              email: email,
+          {
+
+            headers: {
+              "api-key": process.env.BREVO_API_KEY,
+              "Content-Type": "application/json",
             },
-          ],
 
-          subject:
-          "Application Received - Davine Technologies",
+          }
+        );
 
-          htmlContent: `
+        console.log("Admin Email Sent");
 
-            <h2>Thank You For Applying</h2>
+      } catch (emailError) {
 
-            <p>Hello ${fullName},</p>
+        console.log(
+          "ADMIN EMAIL ERROR:",
+          emailError.response?.data ||
+          emailError.message ||
+          emailError
+        );
 
-            <p>
+      }
 
-              Applying for the
-              <strong>${role}</strong>
-              position at Davine Technologies.
 
-            </p>
+      // =================================================
+      // USER EMAIL
+      // =================================================
 
-            <p>
+      try {
 
-              We have successfully received your
-              application and resume.
+        await axios.post(
+          "https://api.brevo.com/v3/smtp/email",
 
-            </p>
+          {
 
-          `,
-        },
+            sender: {
+              name: "Davine Technologies",
+              email: process.env.EMAIL_USER,
+            },
 
-        {
-          headers: {
-            "api-key": process.env.BREVO_API_KEY,
-            "Content-Type": "application/json",
+            to: [
+              {
+                email: email,
+              },
+            ],
+
+            subject:
+              "Application Received - Davine Technologies",
+
+            htmlContent: `
+
+              <h2>Thank You For Applying</h2>
+
+              <p>
+                Hello ${fullName},
+              </p>
+
+              <p>
+                Thank you for applying for the
+                <strong>${role}</strong>
+                position at Davine Technologies.
+              </p>
+
+              <p>
+                We have successfully received your
+                application and resume.
+              </p>
+
+              <p>
+                Our team will review your application
+                and contact you if your profile is shortlisted.
+              </p>
+
+              <br>
+
+              <p>
+                Regards,<br>
+                <strong>Davine Technologies</strong>
+              </p>
+
+            `,
+
           },
-        }
-      );
 
-      console.log("User Email Sent");
+          {
 
-      // ================= RESPONSE =================
+            headers: {
+              "api-key": process.env.BREVO_API_KEY,
+              "Content-Type": "application/json",
+            },
 
-      res.status(201).json({
+          }
+        );
+
+        console.log("User Email Sent");
+
+      } catch (emailError) {
+
+        console.log(
+          "USER EMAIL ERROR:",
+          emailError.response?.data ||
+          emailError.message ||
+          emailError
+        );
+
+      }
+
+
+      // =================================================
+      // FINAL RESPONSE
+      // =================================================
+
+      return res.status(201).json({
+
         success: true,
+
         message:
-        "Application Submitted Successfully",
+          "Application Submitted Successfully",
+
       });
+
 
     } catch (error) {
 
-      console.log("ERROR:", error);
+      console.log(
+        "APPLICATION ERROR:",
+        error.response?.data ||
+        error.message ||
+        error
+      );
 
-      res.status(500).json({
+      return res.status(500).json({
+
         success: false,
+
         message: "Server Error",
+
       });
 
     }
@@ -189,16 +325,21 @@ router.post(
   }
 );
 
-// ================= GET ALL APPLICATIONS =================
+
+// =====================================================
+// GET ALL APPLICATIONS
+// =====================================================
 
 router.get("/", async (req, res) => {
 
   try {
 
     const applications =
-    await Application.find().sort({
-      createdAt: -1,
-    });
+      await Application
+        .find()
+        .sort({
+          createdAt: -1,
+        });
 
     res.json(applications);
 
@@ -214,7 +355,10 @@ router.get("/", async (req, res) => {
 
 });
 
-// ================= UPDATE STATUS =================
+
+// =====================================================
+// UPDATE STATUS
+// =====================================================
 
 router.put("/:id", async (req, res) => {
 
@@ -223,9 +367,10 @@ router.put("/:id", async (req, res) => {
     const { status } = req.body;
 
     const application =
-    await Application.findById(
-      req.params.id
-    );
+      await Application.findById(
+        req.params.id
+      );
+
 
     if (!application) {
 
@@ -235,20 +380,22 @@ router.put("/:id", async (req, res) => {
 
     }
 
+
     application.status = status;
 
     await application.save();
 
-    let subject = "";
 
+    let subject = "";
     let html = "";
 
-    // SELECTED
+
+    // ================= SELECTED =================
 
     if (status === "Selected") {
 
       subject =
-      "Congratulations - Davine Technologies";
+        "Congratulations - Davine Technologies";
 
       html = `
 
@@ -258,23 +405,22 @@ router.put("/:id", async (req, res) => {
         </h2>
 
         <p>
-
           You have been selected for the
           <strong>${application.role}</strong>
           position at Davine Technologies.
-
         </p>
 
       `;
 
     }
 
-    // REJECTED
+
+    // ================= REJECTED =================
 
     else if (status === "Rejected") {
 
       subject =
-      "Application Update - Davine Technologies";
+        "Application Update - Davine Technologies";
 
       html = `
 
@@ -283,69 +429,84 @@ router.put("/:id", async (req, res) => {
         </h2>
 
         <p>
-
           Dear ${application.fullName},
-
         </p>
 
         <p>
-
           We appreciate your interest in
           Davine Technologies.
-
         </p>
 
         <p>
-
           Unfortunately, you were not selected
           for the
           <strong>${application.role}</strong>
           position.
-
         </p>
 
       `;
 
     }
 
-    // ================= STATUS EMAIL =================
+
+    // =================================================
+    // STATUS EMAIL
+    // =================================================
 
     if (
       status === "Selected" ||
       status === "Rejected"
     ) {
 
-      await axios.post(
-        "https://api.brevo.com/v3/smtp/email",
+      try {
 
-        {
-          sender: {
-            name: "Davine Technologies",
-            email: process.env.EMAIL_USER,
-          },
+        await axios.post(
+          "https://api.brevo.com/v3/smtp/email",
 
-          to: [
-            {
-              email: application.email,
+          {
+
+            sender: {
+              name: "Davine Technologies",
+              email: process.env.EMAIL_USER,
             },
-          ],
 
-          subject,
+            to: [
+              {
+                email: application.email,
+              },
+            ],
 
-          htmlContent: html,
-        },
+            subject,
 
-        {
-          headers: {
-            "api-key": process.env.BREVO_API_KEY,
-            "Content-Type": "application/json",
+            htmlContent: html,
+
           },
-        }
-      );
 
-      console.log("Status Email Sent");
+          {
+
+            headers: {
+              "api-key": process.env.BREVO_API_KEY,
+              "Content-Type": "application/json",
+            },
+
+          }
+        );
+
+        console.log("Status Email Sent");
+
+      } catch (emailError) {
+
+        console.log(
+          "STATUS EMAIL ERROR:",
+          emailError.response?.data ||
+          emailError.message ||
+          emailError
+        );
+
+      }
 
     }
+
 
     res.json({
 
@@ -353,6 +514,7 @@ router.put("/:id", async (req, res) => {
       message: "Status Updated",
 
     });
+
 
   } catch (error) {
 
@@ -368,7 +530,10 @@ router.put("/:id", async (req, res) => {
 
 });
 
-// ================= DELETE APPLICATION =================
+
+// =====================================================
+// DELETE APPLICATION
+// =====================================================
 
 router.delete("/:id", async (req, res) => {
 
@@ -379,8 +544,10 @@ router.delete("/:id", async (req, res) => {
     );
 
     res.json({
+
       success: true,
       message: "Application Deleted",
+
     });
 
   } catch (error) {
@@ -388,47 +555,56 @@ router.delete("/:id", async (req, res) => {
     console.log(error);
 
     res.status(500).json({
+
       message: "Server Error",
+
     });
 
   }
 
 });
 
-// ================= EXPORT EXCEL =================
+
+// =====================================================
+// EXPORT EXCEL
+// =====================================================
 
 router.get("/export/excel", async (req, res) => {
 
   try {
 
     const applications =
-    await Application.find();
+      await Application.find();
+
 
     const data =
-    applications.map((app) => ({
+      applications.map((app) => ({
 
-      Name:
-      app.fullName,
+        Name:
+          app.fullName,
 
-      Email:
-      app.email,
+        Email:
+          app.email,
 
-      Role:
-      app.role,
+        Role:
+          app.role,
 
-      Status:
-      app.status,
+        Status:
+          app.status,
 
-      Resume:
-      app.resume,
+        Resume:
+          app.resume,
 
-    }));
+      }));
+
 
     const worksheet =
-    XLSX.utils.json_to_sheet(data);
+      XLSX.utils.json_to_sheet(data);
+
 
     const workbook =
-    XLSX.utils.book_new();
+      XLSX.utils.book_new();
+
 
     XLSX.utils.book_append_sheet(
       workbook,
@@ -436,25 +612,38 @@ router.get("/export/excel", async (req, res) => {
       "Applications"
     );
 
+
+    const filePath =
+      path.join(
+        __dirname,
+        "../applications.xlsx"
+      );
+
+
     XLSX.writeFile(
       workbook,
-      "applications.xlsx"
+      filePath
     );
 
+
     res.download(
-      "applications.xlsx"
+      filePath
     );
+
 
   } catch (error) {
 
     console.log(error);
 
     res.status(500).json({
+
       message: "Server Error",
+
     });
 
   }
 
 });
+
 
 module.exports = router;
