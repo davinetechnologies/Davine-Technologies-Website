@@ -888,12 +888,18 @@ document.querySelectorAll('.nav-item[data-view]').forEach(btn=>{
 document.getElementById('logoutBtn').innerHTML = icon('power')+'<span>Logout</span>';
 document.getElementById('menuToggle').innerHTML = icon('menu');
 document.getElementById('themeToggle').innerHTML = icon('moon');
-function applyLockState(){
-  const hired = state.user.status==='Hired';
-  document.querySelectorAll('.nav-item[data-locked="1"]').forEach(btn=>{
-    btn.classList.toggle('locked', !hired);
-    const v=btn.dataset.view;
-    btn.innerHTML = icon(NAV_ICONS[v]) + `<span>${NAV_LABELS[v]}</span>` + (!hired?`<span class="nav-lock">${icon('lock',13)}</span>`:'');
+function applyLockState() {
+  // All intern portal sections are available after login.
+  // No Hired / Unhired restriction.
+
+  document.querySelectorAll('.nav-item[data-locked="1"]').forEach(btn => {
+    btn.classList.remove('locked');
+
+    const v = btn.dataset.view;
+
+    btn.innerHTML =
+      icon(NAV_ICONS[v]) +
+      `<span>${NAV_LABELS[v]}</span>`;
   });
 }
 function switchView(v){

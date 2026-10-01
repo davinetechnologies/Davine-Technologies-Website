@@ -67,15 +67,23 @@ async function request(
 
 export const api = {
 
-  get(path, options = {}) {
-    return request(
-      "GET",
-      path,
-      null,
-      options
-    );
-  },
+get(path, options = {}) {
+  const params = new URLSearchParams();
 
+  Object.entries(options).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      params.append(key, value);
+    }
+  });
+
+  const query = params.toString();
+
+  return request(
+    "GET",
+    query ? `${path}?${query}` : path,
+    null
+  );
+},
   post(path, body = null, isFormData = false) {
     return request(
       "POST",
