@@ -80,8 +80,7 @@ const resumeFile = await uploadToS3(
         email,
         role,
 
-        resume: req.file.filename,
-
+resume: resumeFile ? resumeFile.key : "",
       });
 
 
