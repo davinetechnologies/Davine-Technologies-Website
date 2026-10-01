@@ -6,7 +6,10 @@ const XLSX = require("xlsx");
 const express = require("express");
 const router = express.Router();
 
-const upload = require("../middleware/uploadMiddleware");
+const uploadMiddleware = require("../middleware/uploadMiddleware");
+
+const upload = uploadMiddleware;
+const uploadToS3 = uploadMiddleware.uploadToS3;
 
 const Application = require("../models/Application");
 
@@ -67,7 +70,10 @@ router.post(
       // =================================================
       // SAVE APPLICATION TO MONGODB
       // =================================================
-
+const resumeFile = await uploadToS3(
+  req.file,
+  "applications"
+);
       const savedData = await Application.create({
 
         fullName,
@@ -82,48 +88,18 @@ router.post(
       console.log("SAVED:", savedData);
 
 
-      // =================================================
-      // PREPARE RESUME ATTACHMENT
-      // =================================================
+  // =====================================================
+// PREPARE RESUME ATTACHMENT
+// =====================================================
 
-      let resumeAttachment = [];
-
-      try {
-
-        const filePath = path.resolve(req.file.path);
-
-        console.log("READING RESUME FROM:", filePath);
-
-        if (fs.existsSync(filePath)) {
-
-          const fileBuffer = fs.readFileSync(filePath);
-
-          resumeAttachment = [
-            {
-              content: fileBuffer.toString("base64"),
-              name: req.file.originalname,
-            },
-          ];
-
-          console.log("RESUME ATTACHMENT READY");
-
-        } else {
-
-          console.log(
-            "WARNING: Resume file not found:",
-            filePath
-          );
-
-        }
-
-      } catch (fileError) {
-
-        console.log(
-          "RESUME READ ERROR:",
-          fileError
-        );
-
-      }
+const resumeAttachment = req.file
+  ? [
+      {
+        content: req.file.buffer.toString("base64"),
+        name: req.file.originalname,
+      },
+    ]
+  : [];
 
 
       // =================================================
