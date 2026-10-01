@@ -101,11 +101,67 @@ router.get(
     }
   }
 );
+
 // =====================================================
-// COMPLETE FIRST LOGIN PROFILE
-// POST /api/portal-profile/setup
+// UPDATE MY PORTAL PROFILE
+// PUT /api/portal-profile/me
 // =====================================================
 
+router.put(
+  "/me",
+  verifyToken,
+  requireIntern,
+  async (req, res, next) => {
+    try {
+      const profile = await PortalProfile.findOne({
+        userId: req.user.id,
+      });
+
+      if (!profile) {
+        return res.status(404).json({
+          success: false,
+          message: "Portal profile not found",
+        });
+      }
+
+      const updates = {};
+
+      // Profile photo
+      if (req.body.profilePhoto !== undefined) {
+        updates.profilePhoto = req.body.profilePhoto;
+      }
+
+      // Phone
+      if (req.body.phone !== undefined) {
+        updates.phone = String(req.body.phone).trim();
+      }
+
+      const updatedProfile =
+        await PortalProfile.findOneAndUpdate(
+          { userId: req.user.id },
+          { $set: updates },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+
+      return res.json({
+        success: true,
+        message: "Portal profile updated successfully",
+        profile: updatedProfile,
+      });
+
+    } catch (error) {
+      console.error(
+        "Portal profile update error:",
+        error
+      );
+
+      next(error);
+    }
+  }
+);
 // =====================================================
 // COMPLETE FIRST LOGIN PROFILE
 // POST /api/portal-profile/setup
