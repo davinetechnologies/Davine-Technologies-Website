@@ -2,6 +2,7 @@ const express = require("express");
 
 const Announcement = require("../models/Announcement");
 const Intern = require("../models/Intern");
+const Batch = require("../models/Batch");
 const { verifyToken, requireMentor } = require("../middleware/auth");
 
 const router = express.Router();
@@ -18,17 +19,25 @@ router.get("/", verifyToken, async (req, res, next) => {
 
     const intern = await Intern.findById(req.user.id);
     if (!intern) return res.status(404).json({ message: "Intern not found" });
-    if (!intern.access.announcements) return res.json([]);
+if (intern.access?.announcements === false) return res.json([]);
+const batch = intern.batch
+  ? await Batch.findOne({ batchName: intern.batch }).select("_id")
+  : null;
 
-    const announcements = await Announcement.find({
-      $or: [
-        { targetBatch: null, targetDomain: null },
-        { targetBatch: intern.batch },
-        { targetDomain: intern.domain },
-      ],
-    })
-      .populate("targetBatch", "batchName")
-      .sort({ publishedAt: -1 });
+const audienceFilters = [
+  { targetBatch: null, targetDomain: null },
+  { targetDomain: intern.domain },
+];
+
+if (batch) {
+  audienceFilters.push({ targetBatch: batch._id });
+}
+
+const announcements = await Announcement.find({
+  $or: audienceFilters,
+})
+  .populate("targetBatch", "batchName")
+  .sort({ publishedAt: -1 });
     res.json(announcements);
   } catch (err) {
     next(err);
