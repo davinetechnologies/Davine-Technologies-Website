@@ -63,5 +63,24 @@ router.post("/", verifyToken, requireMentor, async (req, res, next) => {
     next(err);
   }
 });
+// DELETE /api/announcements/:id - mentors can delete announcements
+router.delete("/:id", verifyToken, requireMentor, async (req, res, next) => {
+  try {
+    const announcement = await Announcement.findById(req.params.id);
 
+    if (!announcement) {
+      return res.status(404).json({
+        message: "Announcement not found"
+      });
+    }
+
+    await Announcement.findByIdAndDelete(req.params.id);
+
+    res.json({
+      message: "Announcement deleted successfully"
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = router;

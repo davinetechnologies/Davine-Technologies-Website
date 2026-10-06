@@ -9,6 +9,29 @@ export function initAnnouncements() {
   });
   document.getElementById("saveAnnouncementBtn").addEventListener("click", saveAnnouncement);
 }
+document.getElementById("announcementsList").addEventListener("click", async (e) => {
+  const btn = e.target.closest(".delete-announcement-btn");
+  if (!btn) return;
+
+  const announcementId = btn.dataset.id;
+
+  const confirmed = confirm("Are you sure you want to delete this announcement?");
+  if (!confirmed) return;
+
+  try {
+    btn.disabled = true;
+    btn.textContent = "Deleting...";
+
+    await api.delete(`/announcements/${announcementId}`);
+
+    toast("Announcement deleted successfully", "success");
+    loadAnnouncements();
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = "Delete";
+    toastError(err);
+  }
+});
 
 async function refreshBatchOptions() {
   try {
@@ -44,7 +67,16 @@ export async function loadAnnouncements() {
           ${a.targetDomain ? `Domain: ${escapeHtml(a.targetDomain)}` : ""}
           ${!a.targetBatch && !a.targetDomain ? "Visible to all interns" : ""}
         </p>
-      </div>`
+      </div>
+      <div class="mt-16">
+  <button
+    class="btn btn-danger delete-announcement-btn"
+    data-id="${a._id}"
+  >
+    Delete
+  </button>
+</div>`
+      
       )
       .join("");
   } catch (err) {
