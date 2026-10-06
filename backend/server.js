@@ -242,6 +242,9 @@ const submissionRoutes =
 const announcementRoutes =
   require("./routes/announcementRoutes");
 
+const resourceRoutes =
+  require("./routes/resourceRoutes");
+
 const attendanceRoutes =
   require("./routes/attendanceRoutes");
 
@@ -333,6 +336,11 @@ app.use(
 app.use(
   "/api/announcements",
   announcementRoutes
+);
+
+app.use(
+  "/api/resources",
+  resourceRoutes
 );
 
 app.use(
