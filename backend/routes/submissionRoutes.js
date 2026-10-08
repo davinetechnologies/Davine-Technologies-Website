@@ -374,7 +374,29 @@ if (!intern) {
     message: "Intern not found"
   });
 }
+await WeeklyProgress.findOneAndUpdate(
+  {
+    intern: submission.intern,
+    week: submission.week
+  },
+  {
+    overallStatus:
+      status === "Approved"
+        ? "Completed"
+        : "In Progress",
 
+    "task.status":
+      status === "Approved"
+        ? "Reviewed"
+        : "Submitted",
+
+    remarks: mentorFeedback || null
+  },
+  {
+    new: true,
+    upsert: false
+  }
+);
 
     res.json(submission);
   } catch (err) {
