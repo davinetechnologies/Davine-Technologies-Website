@@ -318,8 +318,25 @@ router.get("/:id", async (req, res, next) => {
       "intern",
       "name email internId domain batch"
     );
-    if (!submission) return res.status(404).json({ message: "Submission not found" });
-    res.json(submission);
+
+    if (!submission) {
+      return res.status(404).json({
+        message: "Submission not found"
+      });
+    }
+
+    const data = submission.toObject();
+
+    if (data.submissionFile) {
+      data.submissionUrl = await getPresignedUrl(
+        data.submissionFile
+      );
+    } else {
+      data.submissionUrl = null;
+    }
+
+    res.json(data);
+
   } catch (err) {
     next(err);
   }
