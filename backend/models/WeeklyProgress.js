@@ -138,7 +138,6 @@ const weeklyProgressSchema = new mongoose.Schema(
   }
 );
 
-
 // One intern = one record for one week
 weeklyProgressSchema.index(
   {
@@ -149,7 +148,6 @@ weeklyProgressSchema.index(
     unique: true
   }
 );
-
 
 module.exports =
   mongoose.models.WeeklyProgress ||

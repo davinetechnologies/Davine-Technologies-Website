@@ -357,28 +357,7 @@ if (!intern) {
     message: "Intern not found"
   });
 }
-await WeeklyProgress.findOneAndUpdate(
-  {
-    intern: submission.intern,
-    week: submission.week
-  },
-  {
-    intern: submission.intern,
-    internEmail: submission.email,
-    internName: submission.fullName,
-    domain: submission.domain,
-    week: submission.week,
 
-    overallStatus: "In Progress",
-
-    "task.status": "Submitted"
-  },
-  {
-    upsert: true,
-    new: true,
-    setDefaultsOnInsert: true
-  }
-);
 
     res.json(submission);
   } catch (err) {
