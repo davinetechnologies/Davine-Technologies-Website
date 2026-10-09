@@ -22,6 +22,7 @@
       <button class="nav-item" data-section="weekly-progress"><span class="nav-icon">◆</span> Weekly Progress</button>
       <button class="nav-item" data-section="batches"><span class="nav-icon">◆</span> Batches</button>
       <button class="nav-item" data-section="announcements"><span class="nav-icon">◆</span> Announcements</button>
+      <button class="nav-item" data-section="resources"><span class="nav-icon">◆</span> Resources</button>
       <button class="nav-item" data-section="documents"><span class="nav-icon">◆</span> Documents</button>
       <button class="nav-item" data-section="attendance"><span class="nav-icon">◆</span> Attendance</button>
       <button class="nav-item" data-section="settings"><span class="nav-icon">◆</span> Settings</button>
@@ -157,6 +158,22 @@
         <div id="announcementsList"></div>
       </section>
 
+      <!-- RESOURCES -->
+<section class="section" id="section-resources">
+  <div class="section-head">
+    <div>
+      <h1>Resources</h1>
+      <p class="sub">Manage resources and links available to interns.</p>
+    </div>
+
+    <button class="btn btn-primary" id="addResourceBtn">
+      + Add Resource
+    </button>
+  </div>
+
+  <div id="resourcesList"></div>
+</section>
+
       <!-- DOCUMENTS -->
       <section class="section" id="section-documents">
         <div class="section-head">
@@ -286,6 +303,67 @@
   </div>
 </div>
 
+
+<!-- Issue Certificate Modal -->
+<div class="overlay" id="modal-certificate">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Issue Internship Certificate</h3>
+      <button class="close-x" data-close="modal-certificate">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <form id="certificateForm">
+        <input type="hidden" id="certificateInternId">
+
+        <div class="field">
+          <label for="certificateInternName">Intern Name</label>
+          <input id="certificateInternName" type="text" readonly>
+        </div>
+
+        <div class="field">
+          <label for="certificateDomain">Domain</label>
+          <select id="certificateDomain" required>
+            <option value="DevOps">DevOps</option>
+            <option value="Cloud">Cloud</option>
+            <option value="Data Analyst">Data Analyst</option>
+            <option value="Gen AI">Gen AI</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="certificateRole">Certificate Role</label>
+          <input id="certificateRole" type="text" required>
+        </div>
+
+        <div class="field">
+          <label for="certificateDescription">Description</label>
+          <textarea id="certificateDescription" rows="3"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="certificateCredentialId">Credential / Certificate ID</label>
+          <input
+            id="certificateCredentialId"
+            type="text"
+            placeholder="Enter unique certificate ID"
+            required
+          >
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-foot">
+      <button class="btn btn-secondary" type="button" data-close="modal-certificate">
+        Cancel
+      </button>
+      <button class="btn btn-primary" type="button" id="issueCertificateBtn">
+        Issue &amp; Save
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Batch modal -->
 <div class="overlay" id="modal-batch">
   <div class="modal">
@@ -331,6 +409,107 @@
       <button class="btn btn-secondary" data-close="modal-announcement">Cancel</button>
       <button class="btn btn-primary" id="saveAnnouncementBtn">Publish</button>
     </div>
+  </div>
+</div>
+
+<!-- Resource modal -->
+<div class="overlay" id="modal-resource">
+
+  <div class="modal">
+
+    <div class="modal-head">
+      <h3>Add Resource</h3>
+      <button class="close-x" data-close="modal-resource">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <form id="resourceForm">
+
+        <div class="field">
+          <label>Resource Name</label>
+          <input
+            id="resourceName"
+            placeholder="e.g. AWS Documentation"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label>Resource URL</label>
+          <input
+            type="url"
+            id="resourceUrl"
+            placeholder="https://example.com"
+            required
+          />
+        </div>
+
+      </form>
+
+    </div>
+
+    <div class="modal-foot">
+
+      <button
+        class="btn btn-secondary"
+        data-close="modal-resource"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn btn-primary"
+        id="saveResourceBtn"
+      >
+        Add Resource
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+    <form id="resourceForm">
+      <div class="form-group">
+        <label for="resourceName">Resource Name</label>
+        <input
+          type="text"
+          id="resourceName"
+          placeholder="e.g. AWS Documentation"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="resourceUrl">Resource URL</label>
+        <input
+          type="url"
+          id="resourceUrl"
+          placeholder="https://example.com"
+          required
+        />
+      </div>
+
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="closeModal('modal-resource')"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="saveResourceBtn"
+        >
+          Add Resource
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 

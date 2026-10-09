@@ -2,6 +2,7 @@ const express = require("express");
 
 const Submission = require("../models/Submission");
 const Intern = require("../models/Intern");
+const Certificate = require("../models/Certificate");
 const WeeklyProgress = require("../models/WeeklyProgress");
 const { verifyToken, requireMentor, requireIntern } = require("../middleware/auth");
 const {
@@ -259,22 +260,49 @@ const byIntern = new Map(
     s
   ])
 );
+const certificates = await Certificate.find({
+  intern: {
+    $in: interns.map((intern) => intern._id)
+  },
+  status: "Issued"
+})
+  .select("intern credentialId issuedAt")
+  .lean();
+
+const certificatesByIntern = new Map(
+  certificates.map((certificate) => [
+    certificate.intern.toString(),
+    certificate
+  ])
+);
 
     let board = interns.map((intern) => {
       const sub = byIntern.get(intern._id.toString());
-      return {
-        intern: {
-          _id: intern._id,
-          name: intern.name,
-          internId: intern.internId,
-          email: intern.email,
-          domain: intern.domain,
-          batch: intern.batch,
-        },
-        week: weekNum,
-        submission: sub || null,
-        status: sub ? sub.status : "Pending",
-      };
+      const certificate = certificatesByIntern.get(
+  intern._id.toString()
+);
+return {
+  intern: {
+    _id: intern._id,
+    name: intern.name,
+    internId: intern.internId,
+    email: intern.email,
+    domain: intern.domain,
+    batch: intern.batch,
+  },
+  week: weekNum,
+  submission: sub || null,
+  status: sub ? sub.status : "Pending",
+
+  certificateIssued: Boolean(certificate),
+
+  certificate: certificate
+    ? {
+        credentialId: certificate.credentialId,
+        issuedAt: certificate.issuedAt,
+      }
+    : null,
+};
     });
 
     if (status) {
