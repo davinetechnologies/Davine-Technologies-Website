@@ -239,6 +239,9 @@ const weeklyContentRoutes =
 const submissionRoutes =
   require("./routes/submissionRoutes");
 
+const certificateRoutes =
+  require("./routes/certificateRoutes");
+
 const announcementRoutes =
   require("./routes/announcementRoutes");
 
@@ -331,6 +334,11 @@ app.use(
 app.use(
   "/api/submissions",
   submissionRoutes
+);
+
+app.use(
+  "/api/certificates",
+  certificateRoutes
 );
 
 app.use(
