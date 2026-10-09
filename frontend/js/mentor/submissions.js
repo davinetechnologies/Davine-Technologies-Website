@@ -52,13 +52,22 @@ export async function loadSubmissionsBoard() {
 
   try {
     const week = document.getElementById("subWeekFilter").value;
-    const rows = await api.get("/submissions/board", {
-      week,
-      domain: document.getElementById("subDomainFilter").value,
-      batch: document.getElementById("subBatchFilter").value,
-      status: document.getElementById("subStatusFilter").value,
-      search: document.getElementById("subSearch").value,
-    });
+const domain = document.getElementById("subDomainFilter").value;
+const batch = document.getElementById("subBatchFilter").value;
+const status = document.getElementById("subStatusFilter").value;
+const search = document.getElementById("subSearch").value.trim();
+
+const params = new URLSearchParams();
+
+if (week) params.set("week", week);
+if (domain) params.set("domain", domain);
+if (batch) params.set("batch", batch);
+if (status) params.set("status", status);
+if (search) params.set("search", search);
+
+const rows = await api.get(
+  `/submissions/board?${params.toString()}`
+);
 
     if (!rows.length) {
       el.innerHTML = emptyBlock("No interns match these filters", "Try a different week or clear a filter.");
@@ -79,7 +88,7 @@ export async function loadSubmissionsBoard() {
                 <td>${escapeHtml(row.intern.domain)}</td>
                 <td>${row.intern.batch ? escapeHtml(row.intern.batch.batchName) : "—"}</td>
                 <td>Week ${row.week}</td>
-                <td>${sub && sub.submissionFile ? `<a class="pdf-chip" href="${fileUrl(sub.submissionFile)}" target="_blank" rel="noopener">📄 PDF</a>` : '<span class="muted">—</span>'}</td>
+                <td>${sub && sub.submissionFile ? `<a class="pdf-chip" href="${sub.submissionUrl || fileUrl(sub.submissionFile)}" target="_blank" rel="noopener">📄 PDF</a>` : '<span class="muted">—</span>'}</td>
                 <td>${statusBadge(row.status)}</td>
                 <td class="cell-sub">${sub ? formatDateTime(sub.submittedAt) : "—"}</td>
                 <td class="text-right">
@@ -110,7 +119,7 @@ async function openReview(submissionId) {
       <p><b>Domain:</b> ${escapeHtml(sub.intern.domain)} &nbsp; <b>Week:</b> ${sub.week}</p>
       <p><b>Current status:</b> ${statusBadge(sub.status)}</p>
       <p class="mt-16">
-        <a class="pdf-chip" href="${fileUrl(sub.submissionFile)}" target="_blank" rel="noopener">📄 View submitted PDF</a>
+        <a class="pdf-chip" href="${sub.submissionUrl || fileUrl(sub.submissionFile)}" target="_blank" rel="noopener">📄 View submitted PDF</a>
       </p>
       <div class="field mt-16">
         <label>Mentor feedback ${locked ? "" : "(shown to the intern)"}</label>
