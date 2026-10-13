@@ -6,11 +6,7 @@ document.querySelectorAll("[data-year]").forEach((el) => {
 });
 
 function getToken() {
-  return (
-    localStorage.getItem("mp_token") ||
-    localStorage.getItem("mentor_token") ||
-    localStorage.getItem("mentorToken")
-  );
+  return localStorage.getItem("mp_token");
 }
 
 function setMessage(element, type, message) {
@@ -108,11 +104,11 @@ if (reviewForm) {
         })
       });
 
-      setMessage(
-        message,
-        "success",
-        "Your review has been submitted successfully. Your certificate review requirement is now complete."
-      );
+setMessage(
+  message,
+  "success",
+  "Your review has been submitted successfully."
+);
 
       reviewForm.reset();
     } catch (error) {

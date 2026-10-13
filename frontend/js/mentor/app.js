@@ -7,6 +7,7 @@ import { initInterns, loadInterns } from "./interns.js";
 import { loadWeeklyContent } from "./weeklyContent.js";
 import { initSubmissions, loadSubmissionsBoard } from "./submissions.js";
 import { initWeeklyProgress, loadProgress } from "./weeklyProgress.js";
+import { initReviews, loadReviews } from "./reviews.js";
 import { initBatches, loadBatches } from "./batches.js";
 import { initAnnouncements, loadAnnouncements } from "./announcements.js";
 import { initResources, loadResources } from "./resources.js";
@@ -24,6 +25,7 @@ const CRUMBS = {
   "weekly-content": "Weekly Content",
   submissions: "Submissions",
   "weekly-progress": "Weekly Progress",
+  reviews: "Review Moderation",
   batches: "Batches",
   announcements: "Announcements",
   resources: "Resources",
@@ -38,6 +40,7 @@ const loaders = {
   "weekly-content": loadWeeklyContent,
   submissions: loadSubmissionsBoard,
   "weekly-progress": loadProgress,
+  reviews: loadReviews,
   batches: loadBatches,
   announcements: loadAnnouncements,
   resources: loadResources,

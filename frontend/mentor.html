@@ -20,6 +20,10 @@
       <button class="nav-item" data-section="weekly-content"><span class="nav-icon">◆</span> Weekly Content</button>
       <button class="nav-item" data-section="submissions"><span class="nav-icon">◆</span> Submissions</button>
       <button class="nav-item" data-section="weekly-progress"><span class="nav-icon">◆</span> Weekly Progress</button>
+      <button class="nav-item" data-section="reviews">
+  <span class="nav-icon">◆</span>
+  Review Moderation
+</button>
       <button class="nav-item" data-section="batches"><span class="nav-icon">◆</span> Batches</button>
       <button class="nav-item" data-section="announcements"><span class="nav-icon">◆</span> Announcements</button>
       <button class="nav-item" data-section="resources"><span class="nav-icon">◆</span> Resources</button>
@@ -109,6 +113,76 @@
 <div id="weeklyContentGrid"></div>
         <div class="week-grid" id="weeklyContentGrid"></div>
       </section>
+
+<section class="section" id="section-reviews">
+  <div class="section-header">
+    <div>
+      <h2>Review Moderation</h2>
+      <p>Review intern feedback and manage approval status.</p>
+    </div>
+    <button class="btn btn-primary" id="refreshMentorReviews">
+      Refresh Reviews
+    </button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="card">
+      <h3>Total Reviews</h3>
+      <p id="totalReviews">0</p>
+    </div>
+    <div class="card">
+      <h3>Pending</h3>
+      <p id="pendingReviews">0</p>
+    </div>
+    <div class="card">
+      <h3>Approved</h3>
+      <p id="approvedReviews">0</p>
+    </div>
+    <div class="card">
+      <h3>Rejected</h3>
+      <p id="rejectedReviews">0</p>
+    </div>
+  </div>
+
+  <div id="reviewsMessage"></div>
+
+  <div class="card">
+    <div class="filters">
+      <select id="mentorReviewStatusFilter">
+        <option value="All">All Reviews</option>
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+
+      <input
+        type="search"
+        id="mentorReviewSearch"
+        placeholder="Search intern or review..."
+      />
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Intern</th>
+            <th>Domain</th>
+            <th>Rating</th>
+            <th>Review</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="mentorReviewRows">
+          <tr>
+            <td colspan="6">Open Review Moderation to load reviews.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 
       <!-- SUBMISSIONS -->
       <section class="section" id="section-submissions">

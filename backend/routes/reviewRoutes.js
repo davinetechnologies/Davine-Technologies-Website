@@ -39,17 +39,6 @@ router.post("/", verifyToken, requireIntern, async (req, res) => {
       });
     }
 
-    // Certificate must already be issued by the mentor.
-const certificate = await Certificate.findOne({
-  intern: intern._id,
-  status: "Issued",
-});
-
-if (!certificate) {
-  return res.status(403).json({
-    message: "Review is available after certificate issuance",
-  });
-}
 const existingReview = await Review.findOne({
   intern: intern._id,
 });
@@ -87,15 +76,14 @@ if (existingReview) {
       }
     );
 
-    return res.status(201).json({
-      message: "Review submitted. Certificate access is now unlocked.",
-      reviewSubmitted: true,
-      certificateUnlocked: true,
-      review: {
-        rating: savedReview.rating,
-        status: savedReview.status,
-      },
-    });
+return res.status(201).json({
+  message: "Review submitted successfully. Your review is pending moderation.",
+  reviewSubmitted: true,
+  review: {
+    rating: savedReview.rating,
+    status: savedReview.status,
+  },
+});
   } catch (error) {
     console.error("Review submission error:", error);
     return res.status(500).json({
@@ -153,8 +141,8 @@ router.patch(
     try {
       const { status } = req.body;
 
-      if (!["Approved", "Rejected"].includes(status)) {
-        return res.status(400).json({
+if (!["Approved", "Rejected", "Unpublished"].includes(status)) {
+            return res.status(400).json({
           message: "Status must be Approved or Rejected",
         });
       }

@@ -56,12 +56,13 @@ const reviewSchema = new mongoose.Schema(
       maxlength: 2000,
     },
 
-    status: {
-      type: String,
-      enum: ["Pending", "Approved", "Rejected"],
-      default: "Pending",
-      index: true,
-    },
+status: {
+  type: String,
+  enum: ["Pending", "Approved", "Rejected", "Unpublished"],
+  default: "Pending",
+  index: true,
+},
+
 
     certificateUnlocked: {
       type: Boolean,
