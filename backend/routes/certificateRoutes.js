@@ -6,6 +6,7 @@ const Certificate = require("../models/Certificate");
 const Intern = require("../models/Intern");
 const Submission = require("../models/Submission");
 const { verifyToken, requireMentor, requireIntern } = require("../middleware/auth");
+const Review = require("../models/Review");
 
 const router = express.Router();
 
@@ -140,34 +141,62 @@ if (!allowedDomains.includes(cleanDomain)) {
 );
 
 // Intern can retrieve only their own issued certificate
+
 router.get(
   "/me",
   verifyToken,
   requireIntern,
   async (req, res, next) => {
     try {
+      const userId = req.user.id || req.user._id;
+
+      const intern = await Intern.findById(userId);
+
+      if (!intern) {
+        return res.status(404).json({
+          success: false,
+          issued: false,
+          message: "Intern account not found.",
+        });
+      }
+
       const certificate = await Certificate.findOne({
-        intern: req.user.id,
-        status: "Issued"
+        intern: intern._id,
+        status: "Issued",
       });
 
       if (!certificate) {
         return res.status(404).json({
           success: false,
           issued: false,
-          message: "Your certificate has not been issued yet."
+          message: "Your certificate has not been issued yet.",
         });
       }
 
-      res.json({
+      const review = await Review.findOne({
+        intern: intern._id,
+      }).select("_id rating title review status");
+
+      if (!review) {
+        return res.status(403).json({
+          success: false,
+          issued: true,
+          certificateUnlocked: false,
+          message: "Please submit your review to access your certificate.",
+        });
+      }
+
+      return res.json({
         success: true,
         issued: true,
-        certificate
+        certificateUnlocked: true,
+        certificate,
       });
     } catch (err) {
       next(err);
     }
   }
 );
+
 
 module.exports = router;

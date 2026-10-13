@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Share Your Experience | Davine Technologies</title>
+  <link rel="stylesheet" href="assets/review.css">
+</head>
+<body>
+  <main class="page-shell">
+  
+
+    <section class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">YOUR VOICE MATTERS</p>
+        <h1>Help us make the<br><span>next experience better.</span></h1>
+        <p class="hero-description">Share an honest reflection on your internship journey with Davine Technologies. Your feedback helps us improve mentorship, learning resources, and the overall experience for future interns.</p>
+        <div class="trust-points">
+          <div><span class="trust-icon">✓</span><span><strong>Thoughtful feedback</strong><small>Tell us what worked and what could improve.</small></span></div>
+          <div><span class="trust-icon">◇</span><span><strong>Reviewed before publishing</strong><small>Your review is not public until approved.</small></span></div>
+        </div>
+      </div>
+      <aside class="quote-card">
+        <div class="quote-mark">“</div>
+        <p>Your experience can help someone take their first confident step into tech.</p>
+
+        <div class="decor decor-one"></div><div class="decor decor-two"></div>
+      </aside>
+    </section>
+
+    <section class="form-card">
+      <div class="section-heading">
+        <div><p class="eyebrow">INTERNSHIP FEEDBACK</p><h2>Tell us about your journey</h2></div>
+        <span class="required-note"><span>*</span> Required fields</span>
+      </div>
+      <div class="prototype-alert"><strong>Preview mode</strong><span>This is a frontend prototype. Submission is not yet connected to the company backend.</span></div>
+      <form id="reviewForm" novalidate>
+        <div class="form-grid">
+          <label class="field"><span>Full name <b>*</b></span><input name="fullName" autocomplete="name" placeholder="Enter your full name" required></label>
+          <label class="field"><span>Registered email <b>*</b></span><input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+          <label class="field"><span>Internship domain <b>*</b></span><select name="domain" required><option value="">Select your domain</option><option>DevOps</option><option>AWS / Cloud Computing</option><option>Generative AI</option><option>Data Analytics</option><option>Python Development</option><option>Full Stack Development</option><option>Other</option></select></label>
+          <label class="field"><span>Internship status <b>*</b></span><select name="status" required><option value="">Select status</option><option>In progress</option><option>Completed</option></select></label>
+        </div>
+        <fieldset class="rating-field"><legend>How would you rate your experience? <b>*</b></legend><div class="rating-options" role="radiogroup" aria-label="Experience rating">
+          <label><input type="radio" name="rating" value="1" required><span>★</span><small>Poor</small></label>
+          <label><input type="radio" name="rating" value="2"><span>★★</span><small>Fair</small></label>
+          <label><input type="radio" name="rating" value="3"><span>★★★</span><small>Good</small></label>
+          <label><input type="radio" name="rating" value="4"><span>★★★★</span><small>Very good</small></label>
+          <label><input type="radio" name="rating" value="5"><span>★★★★★</span><small>Excellent</small></label>
+        </div></fieldset>
+        <label class="field"><span>Your review <b>*</b></span><textarea name="review" rows="5" minlength="30" maxlength="1200" placeholder="What did you learn? How was the mentorship and project experience? What could we improve?" required></textarea><small class="field-hint">Please write at least 30 characters. Keep feedback respectful and avoid sharing private information.</small></label>
+        <label class="field"><span>One thing we could improve <small>(optional)</small></span><textarea name="improvement" rows="3" maxlength="500" placeholder="Share a constructive suggestion..."></textarea></label>
+        <div class="consent-row"><input type="checkbox" id="consent" required><label for="consent">I confirm this feedback reflects my genuine experience. I understand it may be reviewed by the Davine Technologies team and will only appear publicly if approved. <b>*</b></label></div>
+        <div class="form-footer"><p><span class="lock-icon">▣</span> Your review will be checked before it can appear on the public website.</p><button class="primary-button" type="submit">Submit review <span>→</span></button></div>
+        <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+    <footer class="page-footer"><span>© <span data-year></span> Davine Technologies</span><span>Built around learning, trust, and continuous improvement.</span></footer>
+  </main>
+<script src="assets/review.js" defer></script>
+</body>
+</html>

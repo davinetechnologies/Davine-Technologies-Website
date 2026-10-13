@@ -9,6 +9,7 @@ import { initSubmissions, loadSubmissionsBoard } from "./submissions.js";
 import { initWeeklyProgress, loadProgress } from "./weeklyProgress.js";
 import { initBatches, loadBatches } from "./batches.js";
 import { initAnnouncements, loadAnnouncements } from "./announcements.js";
+import { initResources, loadResources } from "./resources.js";
 import { initDocuments, loadDocuments } from "./documents.js";
 import { initAttendance, loadAttendance } from "./attendance.js";
 
@@ -25,6 +26,7 @@ const CRUMBS = {
   "weekly-progress": "Weekly Progress",
   batches: "Batches",
   announcements: "Announcements",
+  resources: "Resources",
   documents: "Documents",
   attendance: "Attendance",
   settings: "Settings",
@@ -38,6 +40,7 @@ const loaders = {
   "weekly-progress": loadProgress,
   batches: loadBatches,
   announcements: loadAnnouncements,
+  resources: loadResources,
   documents: loadDocuments,
   attendance: loadAttendance,
   settings: loadSettings,
@@ -90,6 +93,7 @@ initSubmissions();
 initWeeklyProgress();
 initBatches();
 initAnnouncements();
+initResources();
 initDocuments();
 initAttendance();
 loadDashboard();

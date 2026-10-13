@@ -1,0 +1,261 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+
+  <title>Review Moderation | Davine Technologies</title>
+
+  <link rel="stylesheet" href="../assets/review.css">
+  <script src="../assets/review.js" defer></script>
+</head>
+
+<body class="admin-page">
+  <main class="page-shell admin-shell">
+
+    <!-- Admin Welcome -->
+    <section class="admin-welcome">
+      <div>
+        <p class="eyebrow">MANAGE COMMUNITY FEEDBACK</p>
+        <h1>Review moderation</h1>
+        <p>
+          Inspect incoming intern feedback and control what is
+          eligible to appear publicly.
+        </p>
+      </div>
+    </section>
+
+    <!-- Statistics Cards -->
+    <section class="stats-grid">
+
+      <article class="stat-card">
+        <span class="stat-label">Pending review</span>
+        <strong>08</strong>
+        <small class="stat-muted">Awaiting moderation</small>
+        <span class="stat-symbol amber">◷</span>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-label">Published</span>
+        <strong>24</strong>
+        <small class="stat-muted">Visible on public page</small>
+        <span class="stat-symbol green">✓</span>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-label">Rejected</span>
+        <strong>03</strong>
+        <small class="stat-muted">Not approved for display</small>
+        <span class="stat-symbol red">×</span>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-label">Average rating</span>
+        <strong>
+          4.7 <span class="stars">★★★★★</span>
+        </strong>
+        <small class="stat-muted">Illustrative sample only</small>
+        <span class="stat-symbol blue">★</span>
+      </article>
+
+    </section>
+
+    <!-- Review Moderation Panel -->
+    <section class="admin-panel">
+
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">INCOMING FEEDBACK</p>
+          <h2>Recent submissions</h2>
+        </div>
+
+        <div class="filter-row">
+          <label class="sr-only" for="statusFilter">
+            Filter by status
+          </label>
+
+          <select id="statusFilter">
+            <option value="all">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="published">Published</option>
+            <option value="rejected">Rejected</option>
+          </select>
+
+          <input
+            id="reviewSearch"
+            type="search"
+            placeholder="Search intern or domain..."
+            aria-label="Search reviews"
+          >
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="review-table">
+
+          <thead>
+            <tr>
+              <th>Intern</th>
+              <th>Domain</th>
+              <th>Rating</th>
+              <th>Submitted</th>
+              <th>Status</th>
+              <th>Actions (preview)</th>
+            </tr>
+          </thead>
+
+          <tbody id="adminReviewRows">
+
+            <tr
+              data-status="pending"
+              data-search="aarav patil devops"
+            >
+              <td>
+                <div class="person-cell">
+                  <span class="avatar">AP</span>
+                  <span>
+                    <strong>Aarav Patil</strong>
+                    <small>aarav@example.com</small>
+                  </span>
+                </div>
+              </td>
+              <td>DevOps</td>
+              <td class="stars">★★★★★</td>
+              <td>Today</td>
+              <td>
+                <span class="status-badge pending">Pending</span>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="table-action approve"
+                  data-demo-action="approve"
+                >Approve</button>
+
+                <button
+                  type="button"
+                  class="table-action reject"
+                  data-demo-action="reject"
+                >Reject</button>
+              </td>
+            </tr>
+
+            <tr
+              data-status="pending"
+              data-search="sana shaikh data analytics"
+            >
+              <td>
+                <div class="person-cell">
+                  <span class="avatar violet">SS</span>
+                  <span>
+                    <strong>Sana Shaikh</strong>
+                    <small>sana@example.com</small>
+                  </span>
+                </div>
+              </td>
+              <td>Data Analytics</td>
+              <td class="stars">★★★★☆</td>
+              <td>Yesterday</td>
+              <td>
+                <span class="status-badge pending">Pending</span>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="table-action approve"
+                  data-demo-action="approve"
+                >Approve</button>
+
+                <button
+                  type="button"
+                  class="table-action reject"
+                  data-demo-action="reject"
+                >Reject</button>
+              </td>
+            </tr>
+
+            <tr
+              data-status="published"
+              data-search="rohan deshmukh aws cloud"
+            >
+              <td>
+                <div class="person-cell">
+                  <span class="avatar blue">RD</span>
+                  <span>
+                    <strong>Rohan Deshmukh</strong>
+                    <small>rohan@example.com</small>
+                  </span>
+                </div>
+              </td>
+              <td>AWS / Cloud</td>
+              <td class="stars">★★★★★</td>
+              <td>12 Oct 2026</td>
+              <td>
+                <span class="status-badge published">Published</span>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="table-action unpublish"
+                  data-demo-action="unpublish"
+                >Unpublish</button>
+              </td>
+            </tr>
+
+            <tr
+              data-status="rejected"
+              data-search="neha joshi python"
+            >
+              <td>
+                <div class="person-cell">
+                  <span class="avatar rose">NJ</span>
+                  <span>
+                    <strong>Neha Joshi</strong>
+                    <small>neha@example.com</small>
+                  </span>
+                </div>
+              </td>
+              <td>Python Development</td>
+              <td class="stars">★★★☆☆</td>
+              <td>10 Oct 2026</td>
+              <td>
+                <span class="status-badge rejected">Rejected</span>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="table-action approve"
+                  data-demo-action="approve"
+                >Reconsider</button>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <p
+        id="adminMessage"
+        class="admin-message"
+        role="status"
+        aria-live="polite"
+      >
+        Demo interactions only. Changes are not saved to a server.
+      </p>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <span>
+        © <span data-year></span> Davine Technologies
+      </span>
+      <span>Admin UI prototype · Backend integration required</span>
+    </footer>
+
+  </main>
+</body>
+</html>
+```

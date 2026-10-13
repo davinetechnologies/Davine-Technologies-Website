@@ -242,6 +242,9 @@ const submissionRoutes =
 const certificateRoutes =
   require("./routes/certificateRoutes");
 
+const reviewRoutes =
+  require("./routes/reviewRoutes");
+
 const announcementRoutes =
   require("./routes/announcementRoutes");
 
@@ -339,6 +342,11 @@ app.use(
 app.use(
   "/api/certificates",
   certificateRoutes
+);
+
+app.use(
+  "/api/reviews",
+  reviewRoutes
 );
 
 app.use(
