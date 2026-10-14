@@ -1,6 +1,6 @@
+
 const express = require("express");
 const router = express.Router();
-const Certificate = require("../models/Certificate");
 
 const {
   verifyToken,
@@ -11,7 +11,7 @@ const {
 const Intern = require("../models/Intern");
 const Review = require("../models/Review");
 
-// INTERN: Submit or update review
+// INTERN: Submit one review per intern
 router.post("/", verifyToken, requireIntern, async (req, res) => {
   try {
     const userId = req.user.id || req.user._id;
@@ -39,53 +39,55 @@ router.post("/", verifyToken, requireIntern, async (req, res) => {
       });
     }
 
-const existingReview = await Review.findOne({
-  intern: intern._id,
-});
+    const existingReview = await Review.findOne({
+      intern: intern._id,
+    });
 
-if (existingReview) {
-  return res.status(409).json({
-    success: false,
-    message: "You have already submitted your review. Only one review is allowed per intern.",
-    reviewSubmitted: true,
-    certificateUnlocked: true,
-  });
-}
-    const savedReview = await Review.findOneAndUpdate(
-      { intern: intern._id },
-      {
-        $set: {
-          internId: intern.internId,
-          name: intern.name,
-          domain: intern.domain,
-          batch: intern.batch || "",
-          rating,
-          title,
-          review: reviewText,
-          certificateUnlocked: true,
+    if (existingReview) {
+      return res.status(409).json({
+        success: false,
+        message: "You have already submitted your review.",
+        reviewSubmitted: true,
+        review: {
+          rating: existingReview.rating,
+          status: existingReview.status,
         },
-        $setOnInsert: {
-          status: "Pending",
-        },
+      });
+    }
+
+    const savedReview = await Review.create({
+      intern: intern._id,
+      internId: intern.internId,
+      name: intern.name,
+      domain: intern.domain,
+      batch: intern.batch || "",
+      rating,
+      title,
+      review: reviewText,
+      status: "Pending",
+    });
+
+    return res.status(201).json({
+      success: true,
+      message:
+        "Your review has been submitted successfully. It will be visible publicly only after approval.",
+      reviewSubmitted: true,
+      review: {
+        rating: savedReview.rating,
+        status: savedReview.status,
       },
-      {
-        new: true,
-        upsert: true,
-        runValidators: true,
-        setDefaultsOnInsert: true,
-      }
-    );
-
-return res.status(201).json({
-  message: "Review submitted successfully. Your review is pending moderation.",
-  reviewSubmitted: true,
-  review: {
-    rating: savedReview.rating,
-    status: savedReview.status,
-  },
-});
+    });
   } catch (error) {
     console.error("Review submission error:", error);
+
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "You have already submitted your review.",
+        reviewSubmitted: true,
+      });
+    }
+
     return res.status(500).json({
       message: "Unable to submit review",
     });
@@ -99,17 +101,15 @@ router.get("/my", verifyToken, requireIntern, async (req, res) => {
 
     const review = await Review.findOne({
       intern: userId,
-    }).select("rating title review status certificateUnlocked createdAt");
+    }).select("rating title review status createdAt");
 
     return res.json({
       reviewSubmitted: Boolean(review),
-      certificateUnlocked: Boolean(
-        review && review.certificateUnlocked
-      ),
       review,
     });
   } catch (error) {
     console.error("Review status error:", error);
+
     return res.status(500).json({
       message: "Unable to check review status",
     });
@@ -126,13 +126,14 @@ router.get("/admin", verifyToken, requireMentor, async (req, res) => {
     return res.json({ reviews });
   } catch (error) {
     console.error("Review moderation list error:", error);
+
     return res.status(500).json({
       message: "Unable to load reviews",
     });
   }
 });
 
-// MENTOR / ADMIN: Approve or reject public display
+// MENTOR / ADMIN: Approve, reject, or unpublish
 router.patch(
   "/admin/:id/status",
   verifyToken,
@@ -141,9 +142,10 @@ router.patch(
     try {
       const { status } = req.body;
 
-if (!["Approved", "Rejected", "Unpublished"].includes(status)) {
-            return res.status(400).json({
-          message: "Status must be Approved or Rejected",
+      if (!["Approved", "Rejected", "Unpublished"].includes(status)) {
+        return res.status(400).json({
+          message:
+            "Status must be Approved, Rejected, or Unpublished",
         });
       }
 
@@ -174,6 +176,7 @@ if (!["Approved", "Rejected", "Unpublished"].includes(status)) {
       });
     } catch (error) {
       console.error("Review moderation error:", error);
+
       return res.status(500).json({
         message: "Unable to update review status",
       });
@@ -194,6 +197,7 @@ router.get("/public", async (req, res) => {
     return res.json({ reviews });
   } catch (error) {
     console.error("Public reviews error:", error);
+
     return res.status(500).json({
       message: "Unable to load public reviews",
     });
