@@ -15,6 +15,8 @@ router.get("/", verifyToken, async (req, res, next) => {
     }
 
     const intern = await Intern.findById(req.user.id);
+    console.log("Intern domain:", intern?.domain);
+console.log("Intern currentWeek:", intern?.currentWeek);
 
     if (!intern) {
       return res.status(404).json({ message: "Intern not found" });
