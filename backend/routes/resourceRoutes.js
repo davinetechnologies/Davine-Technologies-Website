@@ -29,8 +29,16 @@ console.log("Intern currentWeek:", intern?.currentWeek);
             { targetDomain: null },
             { targetDomain: { $exists: false } },
             { targetDomain: "" },
-            { targetDomain: intern.domain }
-          ]
+{
+  targetDomain: {
+    $in: [
+      intern.domain,
+      ...(intern.domain === "AWS Cloud"
+        ? ["AWS", "AWS / Cloud", "Cloud"]
+        : [])
+    ]
+  }
+}          ]
         },
         {
           $or: [
