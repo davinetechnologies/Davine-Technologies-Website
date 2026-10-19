@@ -11,9 +11,21 @@ const {
 
 const router = express.Router();
 
+function normalizeDomain(domain) {
+  const value = String(domain || "").trim().toLowerCase();
+
+  const aliases = {
+    "aws": "aws cloud",
+    "cloud": "aws cloud",
+    "aws/cloud": "aws cloud",
+    "aws / cloud": "aws cloud",
+    "aws cloud": "aws cloud"
+  };
+
+  return aliases[value] || value;
+}
+
 // GET /api/announcements
-// Mentors can view all announcements.
-// Interns see only announcements matching their audience.
 router.get("/", verifyToken, async (req, res, next) => {
   try {
     if (req.user.type === "mentor") {
@@ -42,73 +54,35 @@ router.get("/", verifyToken, async (req, res, next) => {
         }).select("_id")
       : null;
 
-    const audienceFilters = [
-      // General announcements
-      {
-        targetBatch: null,
-        targetDomain: null,
-        targetWeek: null
-      },
+    const internDomain = normalizeDomain(intern.domain);
 
-      // Matching domain and week
-      {
-        targetBatch: null,
-        targetDomain: intern.domain,
-        targetWeek: intern.currentWeek
-      },
-
-      // Matching domain, all weeks
-      {
-        targetBatch: null,
-        targetDomain: intern.domain,
-        targetWeek: null
-      },
-
-      // All domains, matching week
-      {
-        targetBatch: null,
-        targetDomain: null,
-        targetWeek: intern.currentWeek
-      }
-    ];
-
-    if (batch) {
-      audienceFilters.push(
-        // Batch only
-        {
-          targetBatch: batch._id,
-          targetDomain: null,
-          targetWeek: null
-        },
-
-        // Batch and week
-        {
-          targetBatch: batch._id,
-          targetDomain: null,
-          targetWeek: intern.currentWeek
-        },
-
-        // Batch and domain
-        {
-          targetBatch: batch._id,
-          targetDomain: intern.domain,
-          targetWeek: null
-        },
-
-        // Batch, domain and week
-        {
-          targetBatch: batch._id,
-          targetDomain: intern.domain,
-          targetWeek: intern.currentWeek
-        }
-      );
-    }
-
-    const announcements = await Announcement.find({
-      $or: audienceFilters
-    })
+    const allAnnouncements = await Announcement.find()
       .populate("targetBatch", "batchName")
       .sort({ publishedAt: -1 });
+
+    const announcements = allAnnouncements.filter((announcement) => {
+      const targetDomain = normalizeDomain(announcement.targetDomain);
+      const targetWeek = announcement.targetWeek;
+      const targetBatchId =
+        announcement.targetBatch?._id?.toString() ||
+        announcement.targetBatch?.toString() ||
+        null;
+
+      const internBatchId = batch?._id?.toString() || null;
+
+      const domainMatches =
+        !targetDomain || targetDomain === internDomain;
+
+      const weekMatches =
+        targetWeek == null ||
+        Number(targetWeek) === Number(intern.currentWeek);
+
+      const batchMatches =
+        !targetBatchId ||
+        (internBatchId && targetBatchId === internBatchId);
+
+      return domainMatches && weekMatches && batchMatches;
+    });
 
     return res.json(announcements);
   } catch (err) {
@@ -117,7 +91,6 @@ router.get("/", verifyToken, async (req, res, next) => {
 });
 
 // POST /api/announcements
-// Mentors can create announcements.
 router.post("/", verifyToken, requireMentor, async (req, res, next) => {
   try {
     const {
@@ -174,7 +147,6 @@ router.post("/", verifyToken, requireMentor, async (req, res, next) => {
 });
 
 // DELETE /api/announcements/:id
-// Mentors can delete announcements.
 router.delete(
   "/:id",
   verifyToken,
