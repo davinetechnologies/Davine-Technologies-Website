@@ -1,16 +1,19 @@
+
 const express = require("express");
 
 const Announcement = require("../models/Announcement");
 const Intern = require("../models/Intern");
 const Batch = require("../models/Batch");
-const { verifyToken, requireMentor } = require("../middleware/auth");
+const {
+  verifyToken,
+  requireMentor
+} = require("../middleware/auth");
 
 const router = express.Router();
 
-// GET /api/announcements - mentors see everything; interns see only
-// announcements targeted at their batch/domain (or untargeted/general ones),
-// and only if their access.announcements flag is on.
-
+// GET /api/announcements
+// Mentors can view all announcements.
+// Interns see only announcements matching their audience.
 router.get("/", verifyToken, async (req, res, next) => {
   try {
     if (req.user.type === "mentor") {
@@ -24,7 +27,9 @@ router.get("/", verifyToken, async (req, res, next) => {
     const intern = await Intern.findById(req.user.id);
 
     if (!intern) {
-      return res.status(404).json({ message: "Intern not found" });
+      return res.status(404).json({
+        message: "Intern not found"
+      });
     }
 
     if (intern.access?.announcements === false) {
@@ -32,24 +37,36 @@ router.get("/", verifyToken, async (req, res, next) => {
     }
 
     const batch = intern.batch
-      ? await Batch.findOne({ batchName: intern.batch }).select("_id")
+      ? await Batch.findOne({
+          batchName: intern.batch
+        }).select("_id")
       : null;
 
     const audienceFilters = [
+      // General announcements
       {
         targetBatch: null,
         targetDomain: null,
         targetWeek: null
       },
+
+      // Matching domain and week
       {
+        targetBatch: null,
         targetDomain: intern.domain,
         targetWeek: intern.currentWeek
       },
+
+      // Matching domain, all weeks
       {
+        targetBatch: null,
         targetDomain: intern.domain,
         targetWeek: null
       },
+
+      // All domains, matching week
       {
+        targetBatch: null,
         targetDomain: null,
         targetWeek: intern.currentWeek
       }
@@ -57,116 +74,34 @@ router.get("/", verifyToken, async (req, res, next) => {
 
     if (batch) {
       audienceFilters.push(
-        {
-          targetBatch: batch._id,
-          targetWeek: intern.currentWeek
-        },
-        {
-          targetBatch: batch._id,
-          targetWeek: null
-        }
-      );
-    }
-
-    const announcements = await Announcement.find({
-      $or: audienceFilters
-    })
-      .populate("targetBatch", "batchName")
-      .sort({ publishedAt: -1 });
-
-    res.json(announcements);
-  } catch (err) {
-    next(err);
-  }
-});
-
-
-
-router.get("/", verifyToken, async (req, res, next) => {
-  try {
-    if (req.user.type === "mentor") {
-      const announcements = await Announcement.find()
-        .populate("targetBatch", "batchName")
-        .sort({ publishedAt: -1 });
-
-      return res.json(announcements);
-    }
-
-    const intern = await Intern.findById(req.user.id);
-
-    if (!intern) {
-      return res.status(404).json({ message: "Intern not found" });
-    }
-
-    if (intern.access?.announcements === false) {
-      return res.json([]);
-    }
-
-    const batch = intern.batch
-      ? await Batch.findOne({ batchName: intern.batch }).select("_id")
-      : null;
-
-    const audienceFilters = [];
-
-    // General announcement: no batch, domain, or week restriction
-    audienceFilters.push({
-      targetBatch: null,
-      targetDomain: null,
-      targetWeek: null
-    });
-
-    // Domain-targeted, with optional week restriction
-    if (intern.domain) {
-      audienceFilters.push(
-        {
-          targetDomain: intern.domain,
-          targetWeek: intern.currentWeek,
-          targetBatch: null
-        },
-        {
-          targetDomain: intern.domain,
-          targetWeek: null,
-          targetBatch: null
-        }
-      );
-    }
-
-    // Week-targeted, without batch/domain restriction
-    audienceFilters.push({
-      targetBatch: null,
-      targetDomain: null,
-      targetWeek: intern.currentWeek
-    });
-
-    // Batch-targeted, with optional domain/week restrictions
-    if (batch) {
-      audienceFilters.push(
+        // Batch only
         {
           targetBatch: batch._id,
           targetDomain: null,
           targetWeek: null
         },
+
+        // Batch and week
         {
           targetBatch: batch._id,
           targetDomain: null,
           targetWeek: intern.currentWeek
+        },
+
+        // Batch and domain
+        {
+          targetBatch: batch._id,
+          targetDomain: intern.domain,
+          targetWeek: null
+        },
+
+        // Batch, domain and week
+        {
+          targetBatch: batch._id,
+          targetDomain: intern.domain,
+          targetWeek: intern.currentWeek
         }
       );
-
-      if (intern.domain) {
-        audienceFilters.push(
-          {
-            targetBatch: batch._id,
-            targetDomain: intern.domain,
-            targetWeek: null
-          },
-          {
-            targetBatch: batch._id,
-            targetDomain: intern.domain,
-            targetWeek: intern.currentWeek
-          }
-        );
-      }
     }
 
     const announcements = await Announcement.find({
@@ -181,25 +116,90 @@ router.get("/", verifyToken, async (req, res, next) => {
   }
 });
 
-
-// DELETE /api/announcements/:id - mentors can delete announcements
-router.delete("/:id", verifyToken, requireMentor, async (req, res, next) => {
+// POST /api/announcements
+// Mentors can create announcements.
+router.post("/", verifyToken, requireMentor, async (req, res, next) => {
   try {
-    const announcement = await Announcement.findById(req.params.id);
+    const {
+      title,
+      message,
+      targetBatch,
+      targetDomain,
+      targetWeek,
+      publishedAt
+    } = req.body;
 
-    if (!announcement) {
-      return res.status(404).json({
-        message: "Announcement not found"
+    if (
+      typeof title !== "string" ||
+      !title.trim() ||
+      typeof message !== "string" ||
+      !message.trim()
+    ) {
+      return res.status(400).json({
+        message: "Title and message are required"
       });
     }
 
-    await Announcement.findByIdAndDelete(req.params.id);
+    const week =
+      targetWeek === "" || targetWeek == null
+        ? null
+        : Number(targetWeek);
 
-    res.json({
-      message: "Announcement deleted successfully"
+    if (
+      week !== null &&
+      (!Number.isInteger(week) || week < 1 || week > 12)
+    ) {
+      return res.status(400).json({
+        message: "Target week must be between 1 and 12"
+      });
+    }
+
+    const announcement = await Announcement.create({
+      title: title.trim(),
+      message: message.trim(),
+      targetBatch: targetBatch || null,
+      targetDomain:
+        typeof targetDomain === "string" && targetDomain.trim()
+          ? targetDomain.trim()
+          : null,
+      targetWeek: week,
+      publishedAt: publishedAt || Date.now(),
+      createdBy: req.user.id
     });
+
+    return res.status(201).json(announcement);
   } catch (err) {
     next(err);
   }
 });
+
+// DELETE /api/announcements/:id
+// Mentors can delete announcements.
+router.delete(
+  "/:id",
+  verifyToken,
+  requireMentor,
+  async (req, res, next) => {
+    try {
+      const announcement = await Announcement.findById(
+        req.params.id
+      );
+
+      if (!announcement) {
+        return res.status(404).json({
+          message: "Announcement not found"
+        });
+      }
+
+      await Announcement.findByIdAndDelete(req.params.id);
+
+      return res.json({
+        message: "Announcement deleted successfully"
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 module.exports = router;
