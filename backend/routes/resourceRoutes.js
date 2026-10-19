@@ -4,12 +4,38 @@ const router = express.Router();
 const Resource = require("../models/Resource");
 const { verifyToken, requireMentor } = require("../middleware/auth");
 
-// GET /api/resources
-// Mentors and interns can view resources
+
 router.get("/", verifyToken, async (req, res, next) => {
   try {
-    const resources = await Resource.find()
-      .sort({ createdAt: -1 });
+    if (req.user.type === "mentor") {
+      const resources = await Resource.find().sort({ createdAt: -1 });
+      return res.json(resources);
+    }
+
+    const Intern = require("../models/Intern");
+    const intern = await Intern.findById(req.user.id);
+
+    if (!intern) {
+      return res.status(404).json({ message: "Intern not found" });
+    }
+
+    const resources = await Resource.find({
+      $and: [
+        {
+          $or: [
+            { targetDomain: null },
+            { targetDomain: "" },
+            { targetDomain: intern.domain }
+          ]
+        },
+        {
+          $or: [
+            { targetWeek: null },
+            { targetWeek: intern.currentWeek }
+          ]
+        }
+      ]
+    }).sort({ createdAt: -1 });
 
     res.json(resources);
   } catch (err) {
@@ -17,29 +43,51 @@ router.get("/", verifyToken, async (req, res, next) => {
   }
 });
 
+
 // POST /api/resources
 // Mentors can add resources
-router.post("/", verifyToken, requireMentor, async (req, res, next) => {
-  try {
-    const { name, url } = req.body;
 
-    if (!name || !url) {
-      return res.status(400).json({
-        message: "Resource name and URL are required"
-      });
+
+router.get("/", verifyToken, async (req, res, next) => {
+  try {
+    if (req.user.type === "mentor") {
+      const resources = await Resource.find().sort({ createdAt: -1 });
+      return res.json(resources);
     }
 
-    const resource = await Resource.create({
-      name: name.trim(),
-      url: url.trim(),
-      createdBy: req.user.id
-    });
+    const Intern = require("../models/Intern");
+    const intern = await Intern.findById(req.user.id);
 
-    res.status(201).json(resource);
+    if (!intern) {
+      return res.status(404).json({ message: "Intern not found" });
+    }
+
+    const resources = await Resource.find({
+      $and: [
+        {
+          $or: [
+            { targetDomain: null },
+            { targetDomain: { $exists: false } },
+            { targetDomain: "" },
+            { targetDomain: intern.domain }
+          ]
+        },
+        {
+          $or: [
+            { targetWeek: null },
+            { targetWeek: { $exists: false } },
+            { targetWeek: intern.currentWeek }
+          ]
+        }
+      ]
+    }).sort({ createdAt: -1 });
+
+    return res.json(resources);
   } catch (err) {
     next(err);
   }
 });
+
 
 // DELETE /api/resources/:id
 // Mentors can delete resources

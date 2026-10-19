@@ -65,6 +65,9 @@ export async function loadAnnouncements() {
         <p class="cell-sub mt-16">
           ${a.targetBatch ? `Batch: ${escapeHtml(a.targetBatch.batchName)}` : ""}
           ${a.targetDomain ? `Domain: ${escapeHtml(a.targetDomain)}` : ""}
+          
+${a.targetWeek ? `Week: ${a.targetWeek}` : ""}
+
           ${!a.targetBatch && !a.targetDomain ? "Visible to all interns" : ""}
         </p>
       </div>
@@ -85,19 +88,26 @@ export async function loadAnnouncements() {
   }
 }
 
+
 async function saveAnnouncement() {
+  const targetWeekValue = document.getElementById("annWeek").value;
+
   const payload = {
     title: document.getElementById("annTitle").value.trim(),
     message: document.getElementById("annMessage").value.trim(),
     targetBatch: document.getElementById("annBatch").value || null,
     targetDomain: document.getElementById("annDomain").value || null,
+    targetWeek: targetWeekValue ? Number(targetWeekValue) : null,
   };
+
   if (!payload.title || !payload.message) {
     toast("Title and message are required", "error");
     return;
   }
+
   try {
     await api.post("/announcements", payload);
+
     toast("Announcement published", "success");
     closeModal("modal-announcement");
     loadAnnouncements();
@@ -105,3 +115,4 @@ async function saveAnnouncement() {
     toastError(err);
   }
 }
+

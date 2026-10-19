@@ -475,6 +475,26 @@
           <div class="field"><label>Target batch (optional)</label><select id="annBatch"><option value="">— All batches —</option></select></div>
           <div class="field"><label>Target domain (optional)</label>
             <select id="annDomain"><option value="">— All domains —</option><option>DevOps</option><option>Cloud</option><option>Data Analyst</option><option>Gen AI</option></select>
+          
+<div class="field">
+  <label>Target Week</label>
+  <select id="annWeek">
+    <option value="">All Weeks</option>
+    <option value="1">Week 1</option>
+    <option value="2">Week 2</option>
+    <option value="3">Week 3</option>
+    <option value="4">Week 4</option>
+    <option value="5">Week 5</option>
+    <option value="6">Week 6</option>
+    <option value="7">Week 7</option>
+    <option value="8">Week 8</option>
+    <option value="9">Week 9</option>
+    <option value="10">Week 10</option>
+    <option value="11">Week 11</option>
+    <option value="12">Week 12</option>
+  </select>
+</div>
+
           </div>
         </div>
       </form>
@@ -519,6 +539,38 @@
           />
         </div>
 
+<div class="field">
+  <label>Target Domain</label>
+  <select id="resourceDomain">
+    <option value="">All Domains</option>
+    <option value="DevOps">DevOps</option>
+    <option value="AWS">AWS / Cloud</option>
+    <option value="Generative AI">Generative AI</option>
+    <option value="Data Analyst">Data Analyst</option>
+    <option value="Python Development">Python Development</option>
+    <option value="Full Stack Development">Full Stack Development</option>
+  </select>
+</div>
+
+<div class="field">
+  <label>Target Week</label>
+  <select id="resourceWeek">
+    <option value="">All Weeks</option>
+    <option value="1">Week 1</option>
+    <option value="2">Week 2</option>
+    <option value="3">Week 3</option>
+    <option value="4">Week 4</option>
+    <option value="5">Week 5</option>
+    <option value="6">Week 6</option>
+    <option value="7">Week 7</option>
+    <option value="8">Week 8</option>
+    <option value="9">Week 9</option>
+    <option value="10">Week 10</option>
+    <option value="11">Week 11</option>
+    <option value="12">Week 12</option>
+  </select>
+</div>
+
       </form>
 
     </div>
@@ -543,48 +595,6 @@
 
   </div>
 
-</div>
-
-    <form id="resourceForm">
-      <div class="form-group">
-        <label for="resourceName">Resource Name</label>
-        <input
-          type="text"
-          id="resourceName"
-          placeholder="e.g. AWS Documentation"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="resourceUrl">Resource URL</label>
-        <input
-          type="url"
-          id="resourceUrl"
-          placeholder="https://example.com"
-          required
-        />
-      </div>
-
-      <div class="modal-actions">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          onclick="closeModal('modal-resource')"
-        >
-          Cancel
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-primary"
-          id="saveResourceBtn"
-        >
-          Add Resource
-        </button>
-      </div>
-    </form>
-  </div>
 </div>
 
 <!-- Document upload modal -->

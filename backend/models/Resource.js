@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const resourceSchema = new mongoose.Schema(
@@ -12,6 +13,19 @@ const resourceSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+
+    targetDomain: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+
+    targetWeek: {
+      type: Number,
+      default: null,
+      min: 1,
+      max: 12,
     },
 
     createdBy: {
