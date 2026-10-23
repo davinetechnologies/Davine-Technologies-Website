@@ -41,6 +41,7 @@ const allowedDomains = [
   "web",
   "data",
   "ai",
+  "genai",
   "cyber",
   "uiux",
   "marketing"
@@ -54,7 +55,6 @@ if (!allowedDomains.includes(cleanDomain)) {
     message: "Please select a valid certificate domain."
   });
 }
-
 
       if (!cleanCredentialId || !cleanRole) {
         return res.status(400).json({
