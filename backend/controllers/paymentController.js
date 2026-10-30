@@ -221,31 +221,32 @@ exports.verifyPayment = async (req, res) => {
           0
         );
 
-        const counter = await InternCounter.findOneAndUpdate(
-          { _id: "internId" },
-          [
+const counter = await InternCounter.findOneAndUpdate(
+  { _id: "internId" },
+  [
+    {
+      $set: {
+        sequence: {
+          $add: [
             {
-              $set: {
-                sequence: {
-                  $max: [
-                    { $ifNull: ["$sequence", 0] },
-                    highestExistingNumber,
-                  ],
-                },
-              },
+              $max: [
+                { $ifNull: ["$sequence", 0] },
+                highestExistingNumber,
+              ],
             },
-            {
-              $set: {
-                sequence: { $add: ["$sequence", 1] },
-              },
-            },
+            1,
           ],
-          {
-            new: true,
-            upsert: true,
-            session,
-          }
-        );
+        },
+      },
+    },
+  ],
+  {
+    new: true,
+    upsert: true,
+    session,
+    updatePipeline: true,
+  }
+);
 
         const internId =
           "DT" + String(counter.sequence).padStart(2, "0");
