@@ -45,6 +45,7 @@ const allowedOrigins = [
   "https://davinetechnologies.com",
   "https://www.davinetechnologies.com",
   "https://intern.davinetechnologies.com",
+  "https://reviews.davinetechnologies.com",
 ];
 
 app.use(
