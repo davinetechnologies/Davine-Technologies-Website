@@ -5,6 +5,14 @@ const path = require('path');
 const PDFDocument = require('pdfkit');
 const QRCode = require('qrcode');
 
+
+const PROGRAM_DISPLAY_NAMES = {
+  'Career Starter': 'Career Starter Program',
+  'Professional Plus': 'Professional Plus Program',
+  'Mentorship Pro': 'Mentorship Pro Program',
+  'Master Career Program': 'Master Career Program',
+};
+
 // ---------------------------------------------------------------------------
 // Brand configuration — adjust to match your real assets/colors.
 // ---------------------------------------------------------------------------
@@ -12,6 +20,7 @@ const BRAND = {
   companyName: 'Davine Technologies',
   cardTitle: 'OFFICIAL INTERNSHIP IDENTITY CARD',
   websiteLabel: 'www.davinetechnologies.com',
+  footerNote: 'Official internship identity card',
   verifyBaseUrl: 'https://davinetechnologies.com/verify',
   colors: {
     blue: '#2563EB',
@@ -121,11 +130,20 @@ function clampY(y, elementHeight = 0) {
  * @returns {Promise<string>} absolute path to the generated PDF file
  */
 async function generateIdCard(data) {
-  const { fullName, role, internId, joiningDate, status = 'Active' } = data || {};
+const {
+  fullName,
+  role,
+  internId,
+  joiningDate,
+  packageName,
+  status = 'Active'
+} = data || {};
 
-  if (!fullName || !role || !internId || !joiningDate) {
-    throw new Error('generateIdCard: fullName, role, internId and joiningDate are required');
-  }
+if (!fullName || !role || !internId || !joiningDate || !packageName) {
+  throw new Error(
+    'generateIdCard: fullName, role, internId, joiningDate and packageName are required'
+  );
+}
 
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -171,7 +189,16 @@ async function generateIdCard(data) {
     doc.on('error', reject);
 
     try {
-      drawCard(doc, { fullName, role, internId, joiningDate, status, qrBuffer, verifyUrl });
+drawCard(doc, {
+  fullName,
+  role,
+  internId,
+  joiningDate,
+  packageName,
+  status,
+  qrBuffer,
+  verifyUrl
+});
 
       // Safety net: guarantee single-page output no matter what. If a
       // future edit accidentally causes overflow, this logs it loudly
@@ -199,20 +226,40 @@ async function generateIdCard(data) {
 //     VERIFY", QR card, intern ID, VERIFIED badge, tagline — vertically
 //     centered as one balanced group with equal internal spacing.
 // ---------------------------------------------------------------------------
-function drawCard(doc, { fullName, role, internId, joiningDate, status, qrBuffer, verifyUrl }) {
-  const { colors } = BRAND;
+function drawCard(doc, {
+  fullName,
+  role,
+  internId,
+  joiningDate,
+  packageName,
+  status,
+  qrBuffer,
+  verifyUrl
+}) {  const { colors } = BRAND;
 
   // ---- Base ----
   doc.rect(0, 0, CARD_WIDTH, CARD_HEIGHT).fill(colors.white);
   doc.rect(LEFT_WIDTH, 0, PANEL_WIDTH, CARD_HEIGHT).fill(colors.blue); // right panel
   doc.rect(0, 0, CARD_WIDTH, CARD_HEIGHT).lineWidth(1).stroke(colors.border); // outer frame
 
-  drawLeftPanel(doc, { fullName, role, internId, joiningDate, status });
-  drawRightPanel(doc, { internId, qrBuffer });
+drawLeftPanel(doc, {
+  fullName,
+  role,
+  internId,
+  joiningDate,
+  packageName,
+  status
+});  drawRightPanel(doc, { internId, qrBuffer });
 }
 
-function drawLeftPanel(doc, { fullName, role, internId, joiningDate, status }) {
-  const { colors } = BRAND;
+function drawLeftPanel(doc, {
+  fullName,
+  role,
+  internId,
+  joiningDate,
+  packageName,
+  status
+}) {  const { colors } = BRAND;
 
   // ---------------- Header: logo + wordmark (optically centered) ----------------
   const logoSize = 65;
@@ -221,16 +268,23 @@ function drawLeftPanel(doc, { fullName, role, internId, joiningDate, status }) {
   const hasLogo = safeImage(doc, BRAND.logoPath, logoX, logoY, { width: logoSize, height: logoSize });
 
 const textX = logoX + logoSize + 16;
-const textY = logoY + 10;
+const textY = logoY + 17;
 const textMaxWidth = LEFT_WIDTH - textX - PAD;
 
-doc.font('Helvetica-Bold')
-   .fontSize(21)
-   .text(BRAND.companyName, textX, textY, {
-      width: textMaxWidth,
-      height: 22,
+
+doc.font('Helvetica-Bold').fontSize(21);
+
+doc.fillColor('#000000')
+   .text('Davine ', textX, textY, {
+      continued: true,
       lineBreak: false
    });
+
+doc.fillColor('#2563EB')
+   .text('Technologies', {
+      lineBreak: false
+   });
+
 
   doc.font('Helvetica-Bold').fontSize(8.5).fillColor(colors.gray)
    .text(BRAND.cardTitle, textX, textY + 24, {
@@ -273,15 +327,17 @@ const nameY = headerDividerY + 22;
     });
 
   // ---------------- Detail table ----------------
-  const rows = [
-    ['INTERN ID', internId],
-    ['ROLE', role],
-    ['JOINING DATE', joiningDate],
-    ['STATUS', status],
-  ];
+const rows = [
+  ['INTERN ID', internId],
+  ['PROGRAM', PROGRAM_DISPLAY_NAMES[packageName] || packageName],
+  ['ROLE', role],
+  ['JOINING DATE', joiningDate],
+  ['STATUS', status],
+];
+
 
   const tableY = roleY + roleBadgeHeight + 13;
-  const rowHeight = 40;
+  const rowHeight = 34;
   const labelColWidth = 180;
   const cellInsetX = 20; // slightly increased left/right inset for the table text
 

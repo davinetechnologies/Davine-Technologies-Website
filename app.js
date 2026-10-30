@@ -270,4 +270,104 @@ const API_BASE_URL = "https://davine-technologies-website.onrender.com";
     window.addEventListener("scroll", onScroll);
     onScroll();
   }
+  ```javascript
+  // ========================================
+  // HOMEPAGE: LOAD APPROVED INTERN REVIEWS
+  // ========================================
+  async function loadHomepageReviews() {
+    var container = document.getElementById("homepageReviews");
+
+    if (!container) return;
+
+    var escapeHTML = function (value) {
+      return String(value == null ? "" : value).replace(
+        /[&<>"']/g,
+        function (char) {
+          return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+          }[char];
+        }
+      );
+    };
+
+    try {
+      var response = await fetch(
+        API_BASE_URL + "/api/reviews/public"
+      );
+
+      if (!response.ok) {
+        throw new Error("Unable to load reviews");
+      }
+
+      var data = await response.json();
+      var reviews = Array.isArray(data.reviews)
+        ? data.reviews
+        : [];
+
+      if (reviews.length === 0) {
+        container.innerHTML =
+          '<p class="reviews-status">' +
+          'No published reviews are available yet.' +
+          '</p>';
+        return;
+      }
+
+      container.innerHTML = reviews
+        .slice(0, 3)
+        .map(function (review) {
+          var rating = Math.max(
+            0,
+            Math.min(5, Number(review.rating) || 0)
+          );
+
+          var stars = "★".repeat(rating) +
+            "☆".repeat(5 - rating);
+
+          var title = review.title
+            ? '<h3 class="homepage-review-title">' +
+              escapeHTML(review.title) +
+              '</h3>'
+            : "";
+
+          var domain = review.domain
+            ? escapeHTML(review.domain)
+            : "Intern";
+
+          return (
+            '<article class="homepage-review-card">' +
+              '<div class="homepage-review-stars" ' +
+                'aria-label="' + rating + ' out of 5 stars">' +
+                stars +
+              '</div>' +
+              title +
+              '<p class="homepage-review-text">' +
+                escapeHTML(review.review) +
+              '</p>' +
+              '<div class="homepage-review-author">' +
+                '<strong>' + escapeHTML(review.name || "Intern") +
+                '</strong>' +
+                '<span>' + domain + '</span>' +
+              '</div>' +
+            '</article>'
+          );
+        })
+        .join("");
+
+    } catch (error) {
+      console.error("Homepage reviews error:", error);
+
+      container.innerHTML =
+        '<p class="reviews-status">' +
+        'Reviews are temporarily unavailable. Please try again later.' +
+        '</p>';
+    }
+  }
+
+  loadHomepageReviews();
+```
+
 })();

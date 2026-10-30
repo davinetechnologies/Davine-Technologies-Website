@@ -27,16 +27,23 @@ const CERTIFICATE_PRESETS = {
     role: "Web Development Intern",
     description: "Demonstrating strong technical skills, creativity, and dedication while gaining hands-on exposure in front-end and back-end development, responsive design, API integration, databases, and deployment."
   },
+  
   data: {
-    label: "Data Analytics",
-    role: "Data Analytics Intern",
-    description: "Demonstrating strong analytical skills, attention to detail, and dedication while gaining hands-on exposure in data collection and cleaning, exploratory analysis, visualization, reporting, and insight generation."
+    label: "Data Analyst",
+    role: "Data Analyst Intern",
+    description: "Demonstrating strong analytical skills, attention to detail, and dedication while gaining hands-on exposure in data collection, data cleaning, SQL, Python, data visualization, dashboard creation, and business insights."
   },
   ai: {
     label: "AI & Machine Learning",
     role: "AI & Machine Learning Intern",
     description: "Demonstrating strong analytical skills, curiosity, and dedication while gaining hands-on exposure in data preprocessing, model building, evaluation, and deployment of machine learning solutions."
   },
+  genai: {
+    label: "Generative AI",
+    role: "Generative AI Intern",
+    description: "Demonstrating technical aptitude, creativity, and dedication while gaining hands-on exposure in generative AI, large language models, prompt engineering, and AI application development."
+  },
+
   cyber: {
     label: "Cyber Security",
     role: "Cyber Security Intern",

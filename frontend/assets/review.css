@@ -197,3 +197,413 @@ button, input, select, textarea { font: inherit; }
   .filter-row select, .filter-row input { width: 100%; }
 }
 
+/* Review form layout fix */
+#reviewForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 20px;
+  align-items: start;
+}
+
+#reviewForm > .form-grid,
+#reviewForm > .rating-field,
+#reviewForm > .form-footer,
+#reviewForm > .form-message {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+#reviewForm > .field {
+  min-width: 0;
+}
+
+#reviewForm > .consent-row {
+  min-width: 0;
+  align-self: start;
+  overflow-wrap: anywhere;
+}
+
+#reviewForm .consent-row label {
+  min-width: 0;
+}
+
+#reviewForm .form-footer {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+  #reviewForm {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
+  }
+
+  #reviewForm > .form-grid,
+  #reviewForm > .rating-field,
+  #reviewForm > .form-footer,
+  #reviewForm > .form-message {
+    grid-column: 1;
+  }
+
+  #reviewForm > .field {
+    grid-column: 1;
+  }
+
+  #reviewForm .rating-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #reviewForm .form-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #reviewForm .primary-button {
+    width: 100%;
+  }
+}
+
+/* Final review form alignment */
+#reviewForm.review-form-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+}
+
+#reviewForm.review-form-layout > .form-grid,
+#reviewForm.review-form-layout > .rating-field,
+#reviewForm.review-form-layout > .form-footer,
+#reviewForm.review-form-layout > .form-message {
+  grid-column: 1 / -1;
+}
+
+#reviewForm.review-form-layout > .field {
+  min-width: 0;
+  margin-bottom: 20px;
+}
+
+#reviewForm.review-form-layout > .field > span {
+  display: block;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+#reviewForm.review-form-layout > .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+}
+
+#reviewForm.review-form-layout > .consent-row {
+  grid-column: 1;
+  align-self: start;
+  min-width: 0;
+}
+
+#reviewForm.review-form-layout > .form-footer {
+  grid-column: 2;
+  margin-top: 0;
+  align-self: start;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+#reviewForm.review-form-layout > .form-footer .primary-button {
+  align-self: flex-start;
+}
+
+@media (max-width: 700px) {
+  #reviewForm.review-form-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #reviewForm.review-form-layout > .form-grid,
+  #reviewForm.review-form-layout > .rating-field,
+  #reviewForm.review-form-layout > .field,
+  #reviewForm.review-form-layout > .consent-row,
+  #reviewForm.review-form-layout > .form-footer,
+  #reviewForm.review-form-layout > .form-message {
+    grid-column: 1;
+  }
+
+  #reviewForm.review-form-layout > .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #reviewForm.review-form-layout > .form-footer .primary-button {
+    width: 100%;
+  }
+}
+
+/* ===== PUBLIC REVIEWS PAGE: ALIGNMENT & CARD FIX ===== */
+
+/* Reduce excess top spacing */
+.reviews-hero {
+  padding-top: 28px;
+  padding-bottom: 24px;
+}
+
+.reviews-section {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+/* Separate each review into its own card */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.reviews-grid > article:not(.empty-state) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 24px;
+  margin: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  overflow-wrap: anywhere;
+}
+
+.reviews-grid > article:not(.empty-state) + article {
+  margin-top: 0;
+}
+
+.reviews-grid > article:not(.empty-state) p {
+  line-height: 1.75;
+}
+
+.reviews-grid > article:not(.empty-state) h3 {
+  line-height: 1.5;
+}
+
+/* Keep the bottom section clearly separated */
+.bottom-cta {
+  margin-top: 28px;
+}
+
+@media (max-width: 560px) {
+  .reviews-hero {
+    padding-top: 24px;
+    padding-bottom: 20px;
+  }
+
+  .reviews-grid {
+    gap: 14px;
+  }
+
+  .reviews-grid > article:not(.empty-state) {
+    padding: 18px;
+  }
+}
+
+/* ===== END PUBLIC REVIEWS PAGE FIX ===== */
+
+
+/* ===== FINAL REVIEW CARD DESIGN ===== */
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.reviews-grid > article:not(.empty-state) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 28px 30px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.045);
+  text-align: left;
+  overflow-wrap: anywhere;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reviews-grid > article:not(.empty-state):hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+}
+
+.reviews-grid > article:not(.empty-state) h3 {
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.reviews-grid > article:not(.empty-state) p {
+  margin: 12px 0;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.8;
+  text-align: left;
+}
+
+.reviews-grid > article:not(.empty-state) p:last-child {
+  margin-bottom: 0;
+}
+
+/* Star rating */
+.reviews-grid > article:not(.empty-state) .stars,
+.reviews-grid > article:not(.empty-state) .rating {
+  color: #d99a00;
+  letter-spacing: 2px;
+}
+
+/* Bottom call-to-action spacing */
+.bottom-cta {
+  margin-top: 28px;
+}
+
+/* Mobile layout */
+@media (max-width: 560px) {
+  .reviews-hero {
+    padding-top: 24px;
+    padding-bottom: 20px;
+  }
+
+  .reviews-grid {
+    gap: 14px;
+  }
+
+  .reviews-grid > article:not(.empty-state) {
+    padding: 20px 18px;
+    border-radius: 13px;
+  }
+
+  .reviews-grid > article:not(.empty-state) h3 {
+    font-size: 17px;
+  }
+
+  .reviews-grid > article:not(.empty-state) p {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+}
+
+/* ===== END FINAL REVIEW CARD DESIGN ===== */
+
+/* ===== PREMIUM REVIEW ENHANCEMENTS ===== */
+
+/* Main review container */
+.reviews-section {
+  padding-top: 36px;
+  padding-bottom: 44px;
+}
+
+.reviews-section .section-heading {
+  margin-bottom: 24px;
+}
+
+.reviews-section .section-heading h2 {
+  color: #0f172a;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+}
+
+/* Review cards */
+.reviews-grid > article:not(.empty-state) {
+  position: relative;
+  padding: 26px 30px;
+  border-color: #e5eaf2;
+  border-radius: 16px;
+  box-shadow: 0 3px 14px rgba(15, 23, 42, 0.035);
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.reviews-grid > article:not(.empty-state):hover {
+  transform: translateY(-2px);
+  border-color: #c7d7fe;
+  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.08);
+}
+
+/* Review title */
+.reviews-grid > article:not(.empty-state) h3 {
+  color: #111827;
+  letter-spacing: -0.2px;
+}
+
+/* Review body */
+.reviews-grid > article:not(.empty-state) p {
+  max-width: 100%;
+  color: #475569;
+  overflow-wrap: break-word;
+}
+
+/* Rating stars — supports common rating class names */
+.reviews-grid .stars,
+.reviews-grid .rating,
+.reviews-grid .review-rating {
+  color: #d99a00;
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+/* Empty state */
+.reviews-grid > .empty-state {
+  padding: 36px 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+  background: #ffffff;
+  text-align: center;
+}
+
+/* Mobile adjustments */
+@media (max-width: 560px) {
+  .reviews-section {
+    padding-top: 24px;
+    padding-bottom: 30px;
+  }
+
+  .reviews-section .section-heading {
+    margin-bottom: 18px;
+  }
+
+  .reviews-grid > article:not(.empty-state) {
+    padding: 21px 18px;
+  }
+
+  .reviews-grid > article:not(.empty-state):hover {
+    transform: none;
+  }
+}
+
+/* ===== END PREMIUM REVIEW ENHANCEMENTS ===== */
+
+/* Fix only the Community Feedback heading */
+.reviews-section .section-heading {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 24px;
+  padding: 0;
+  text-align: left;
+}
+
+.reviews-section .section-heading > div {
+  width: 100%;
+  text-align: left;
+}
+
+.reviews-section .section-heading .eyebrow {
+  margin: 0 0 8px;
+  text-align: left;
+}
+
+.reviews-section .section-heading h2 {
+  margin: 0;
+  text-align: left;
+}
+/* End heading alignment fix */

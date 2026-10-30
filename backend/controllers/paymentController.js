@@ -308,12 +308,15 @@ exports.verifyPayment = async (req, res) => {
           year: "numeric",
         });
 
-      const pdfPath = await generateIdCard({
-        fullName: updatedIntern.fullName,
-        role: updatedIntern.role,
-        internId: updatedIntern.internId,
-        joiningDate,
-      });
+
+const pdfPath = await generateIdCard({
+  fullName: updatedIntern.fullName,
+  role: updatedIntern.role,
+  internId: updatedIntern.internId,
+  joiningDate,
+  packageName: updatedIntern.package,
+});
+
 
       await sendIdCardEmail({
         toEmail: updatedIntern.email,

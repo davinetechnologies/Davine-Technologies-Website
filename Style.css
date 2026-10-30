@@ -869,3 +869,138 @@ section{ padding: 112px 0; position: relative; }
   .logo-badge{ top:-16px; left:-16px; width:52px; height:52px; }
   .trust-row{ gap: 8px 16px; }
 }
+
+
+/* ===== Homepage Intern Reviews ===== */
+.reviews-section {
+  background: var(--paper-2);
+  padding: 90px 0;
+}
+
+.reviews-heading {
+  max-width: 650px;
+  margin: 0 auto 42px;
+  text-align: center;
+}
+
+.reviews-heading .eyebrow {
+  justify-content: center;
+}
+
+.reviews-heading .section-lead {
+  margin: 0 auto;
+}
+
+.homepage-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.reviews-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--slate);
+  padding: 28px 16px;
+  margin: 0;
+}
+
+.reviews-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+}
+
+@media (max-width: 900px) {
+  .homepage-reviews-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .reviews-section {
+    padding: 65px 0;
+  }
+
+  .homepage-reviews-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* ===== End Homepage Intern Reviews ===== */
+
+/* Homepage Review Cards */
+.homepage-review-card {
+  min-width: 0;
+  padding: 26px;
+  background: #ffffff;
+  border: 1px solid #e5eaf0;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.homepage-review-stars {
+  color: #e8a317;
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+
+.homepage-review-title {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.homepage-review-text {
+  margin: 0;
+  color: var(--slate);
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.homepage-review-author {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid #edf0f4;
+}
+
+.homepage-review-author strong {
+  color: var(--ink);
+}
+
+.homepage-review-author span {
+  color: var(--slate);
+  font-size: 13px;
+}
+/* End Homepage Review Cards */
+/* Reduce excess spacing around homepage reviews */
+
+.reviews-section {
+  padding-top: 45px;
+  padding-bottom: 45px;
+}
+
+.reviews-heading {
+  margin-bottom: 24px;
+}
+
+.reviews-cta {
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .reviews-section {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  .reviews-heading {
+    margin-bottom: 20px;
+  }
+}
