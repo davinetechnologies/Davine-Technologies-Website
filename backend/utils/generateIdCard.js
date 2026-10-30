@@ -21,7 +21,7 @@ const BRAND = {
   cardTitle: 'OFFICIAL INTERNSHIP IDENTITY CARD',
   websiteLabel: 'www.davinetechnologies.com',
   footerNote: 'Official internship identity card',
-  verifyBaseUrl: 'https://davinetechnologies.com/verify',
+  verifyBaseUrl: 'https://davinetechnologies.com/Authorized-ID/',
   colors: {
     blue: '#2563EB',
     blueDark: '#1D4ED8',
@@ -152,7 +152,7 @@ if (!fullName || !role || !internId || !joiningDate || !packageName) {
   const outputPath = path.join(OUTPUT_DIR, `${internId}.pdf`);
   console.log('📄 Generating PDF for:', internId);
   console.log('📂 Output Path:', outputPath);
-  const verifyUrl = `${BRAND.verifyBaseUrl}/${internId}`;
+  const verifyUrl = BRAND.verifyBaseUrl;
 
   // Generate the QR code as a PNG buffer up front so it's ready to embed.
   const qrBuffer = await QRCode.toBuffer(verifyUrl, {
