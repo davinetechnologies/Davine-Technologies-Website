@@ -72,7 +72,13 @@ amount: {
 
 });
 
-module.exports = mongoose.model(
-  "Onboarding",
-  onboardingSchema
+onboardingSchema.index(
+  { internId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      internId: { $type: "string" }
+    }
+  }
 );
+module.exports = mongoose.model("Onboarding", onboardingSchema);
